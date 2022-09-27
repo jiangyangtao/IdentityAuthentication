@@ -7,12 +7,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="6.0.0" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\src\Authentication.Local\Authentication.Local.csproj" />
-    <ProjectReference Include="..\src\IdentityAuthentication.Abstractions\IdentityAuthentication.Abstractions.csproj" />
+    <ProjectReference Include="..\Authentication.Local\Authentication.Local.csproj" />
+    <ProjectReference Include="..\IdentityAuthentication.Abstractions\IdentityAuthentication.Abstractions.csproj" />
   </ItemGroup>
 
 </Project>

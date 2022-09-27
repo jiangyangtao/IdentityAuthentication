@@ -1,4 +1,5 @@
 ﻿using IdentityAuthentication.Abstractions;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,7 +10,7 @@ namespace IdentityAuthentication.Core
 {
     internal class AuthenticationProvider : IAuthenticationProvider
     {
-        public Task<IToken> Authenticate(object credential)
+        public Task<IToken> AuthenticateAsync(JObject credentialObject)
         {
             throw new NotImplementedException();
         }

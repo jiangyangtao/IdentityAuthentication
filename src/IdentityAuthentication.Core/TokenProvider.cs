@@ -5,6 +5,10 @@ namespace IdentityAuthentication.Core
 {
     internal class TokenProvider : ITokenProvider
     {
+        public TokenProvider()
+        {
+        }
+
         public IToken GenerateToken(JObject values)
         {
             throw new NotImplementedException();
