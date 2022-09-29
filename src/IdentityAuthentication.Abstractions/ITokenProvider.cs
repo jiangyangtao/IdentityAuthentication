@@ -4,12 +4,12 @@ namespace IdentityAuthentication.Abstractions
 {
     public interface ITokenProvider
     {
-        IToken GenerateToken(JObject values);
+        IToken GenerateToken(string id, JObject values);
 
-        Task<IToken> GenerateTokenAsync(JObject values);
+        Task<IToken> GenerateTokenAsync(string id, JObject values);
 
-        IToken RefreshToken(JObject values);
+        IToken RefreshToken(string id, JObject values);
 
-        Task<IToken> RefreshTokenAsync(JObject values);
+        Task<IToken> RefreshTokenAsync(string id, JObject values);
     }
 }

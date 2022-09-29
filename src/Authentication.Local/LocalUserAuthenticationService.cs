@@ -1,20 +1,27 @@
 ﻿using Authentication.Abstractions;
 using Authentication.Abstractions.Credentials;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
 
 namespace Authentication.Local
 {
     internal class LocalUserAuthenticationService : IAuthenticationService<PasswordCredential>
     {
-        public string AuthenticationSource => throw new NotImplementedException();
+        private readonly ILogger<LocalUserAuthenticationService> _logger;
 
-        public Task<IAuthenticationResult> Authenticate(PasswordCredential credential, CancellationToken cancellationToken)
+        public LocalUserAuthenticationService(ILogger<LocalUserAuthenticationService> logger)
         {
-            throw new NotImplementedException();
+            _logger = logger;
+        }
+
+        public string AuthenticationSource => "Local";
+
+        public Task<AuthenticationResult> AuthenticateAsync(PasswordCredential credential)
+        {
+            var json = JsonConvert.SerializeObject(credential);
+            _logger.LogInformation(json);
+
+            return Task.FromResult(AuthenticationResult.CreateAuthenticationResult("1111", credential.AuthenticationType, null));
         }
     }
 }

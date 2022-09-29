@@ -20,15 +20,13 @@ namespace IdentityAuthentication.Core
 
         private static IServiceCollection AddAuthentication(this IServiceCollection services)
         {
-            var compilationLibraries = DependencyContext.Default.GetCompileLibraries("Authentication");
-            if (compilationLibraries.NotNullAndEmpty())
+            var assemblies = AssemblyProvider.Authentications;
+            if (assemblies.NotNullAndEmpty())
             {
-                var authenticationCompilationLibraries = compilationLibraries.Where(a => a.Name.Contains("Abstractions") == false).ToArray();
-                foreach (var compilationLibrary in authenticationCompilationLibraries)
+                var authenticationsAssemblies = assemblies.Where(a => a.FullName.Contains("Abstractions") == false).ToArray();
+                foreach (var assemblie in authenticationsAssemblies)
                 {
-                    var assemblie = Assembly.Load(compilationLibrary.Name);
                     var types = assemblie.GetTypes();
-
                     foreach (var type in types)
                     {
                         var interfaceType = type.GetInterface(nameof(IAuthenticationInitialization), true);
@@ -39,7 +37,7 @@ namespace IdentityAuthentication.Core
                         }
                     }
                 }
-            }
+            }           
 
             return services;
         }

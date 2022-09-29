@@ -1,9 +1,11 @@
-﻿namespace Authentication.Abstractions
+﻿
+
+namespace Authentication.Abstractions
 {
     public interface IAuthenticationService<in TCredential> where TCredential : ICredential
     {
         string AuthenticationSource { get; }
 
-        Task<IAuthenticationResult> Authenticate(TCredential credential, CancellationToken cancellationToken);
+        Task<AuthenticationResult> AuthenticateAsync(TCredential credential);
     }
 }
