@@ -1,47 +1,42 @@
-﻿using IdentityAuthentication.Extensions;
-using Newtonsoft.Json.Linq;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿
 
 namespace Authentication.Abstractions
 {
     public sealed class AuthenticationResult
     {
-        private AuthenticationResult(string userId, string authenticationSource, IReadOnlyDictionary<string, string> metadata)
+        private AuthenticationResult(string userId, string username, string authenticationSource, IReadOnlyDictionary<string, string> metadata)
         {
             UserId = userId;
+            Username = username;
             AuthenticationSource = authenticationSource;
-            Metadata = metadata;
+
+            var meta = BuildMetaData(authenticationSource);
+            foreach (var item in metadata)
+            {
+                if (item.Key.Equals(nameof(AuthenticationSource), StringComparison.OrdinalIgnoreCase)) continue;
+
+                meta.Add(item.Key, item.Value);
+            }
+            Metadata = meta;
         }
 
         public string UserId { get; }
 
+        public string Username { get; }
+
         public string AuthenticationSource { get; }
+
+        private Dictionary<string, string> BuildMetaData(string authenticationSource)
+        {
+            return new Dictionary<string, string> { { nameof(AuthenticationSource), authenticationSource } };
+        }
 
         public IReadOnlyDictionary<string, string> Metadata { get; }
 
-        public static AuthenticationResult CreateAuthenticationResult(string userId, string authenticationSource, IReadOnlyDictionary<string, string> metadata)
-            => new(userId, authenticationSource, metadata);
-
-        public JObject ToJObject()
+        public static AuthenticationResult CreateAuthenticationResult(string userId, string username, string authenticationSource, IReadOnlyDictionary<string, string> metadata)
         {
-            var result = new JObject {
-                new JProperty(nameof(UserId),UserId),
-                new JProperty(nameof(AuthenticationSource),AuthenticationSource),
-            };
-
-            if (Metadata.NotNullAndEmpty())
-            {
-                foreach (var item in Metadata)
-                {
-                    result.Add(item.Key, item.Value);
-                }
-            }
-
-            return result;
+            return new(userId, username, authenticationSource, metadata);
         }
+
     }
 }

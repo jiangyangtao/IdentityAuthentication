@@ -22,11 +22,11 @@ namespace Authentication.Local
             _logger.LogInformation(json);
 
             var metadata = new Dictionary<string, string> {
-                {"Username","admin" },
                 {"Email","admin@abc.com" }
             };
             var id = Guid.NewGuid().ToString();
-            return Task.FromResult(AuthenticationResult.CreateAuthenticationResult(id, credential.AuthenticationType, metadata));
+            var result = credential.CreateAuthenticationResult(id, metadata);
+            return Task.FromResult(result);
         }
     }
 }

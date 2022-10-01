@@ -4,6 +4,7 @@ using IdentityAuthentication.Extensions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using Newtonsoft.Json.Linq;
 using System.Reflection;
 
@@ -12,8 +13,10 @@ namespace IdentityAuthentication.Core
     internal class AuthenticationProvider : IAuthenticationProvider
     {
         private readonly ITokenProvider _tokenProvider;
+        private readonly IClaimProvider _claimProvider;
         private readonly IServiceProvider _serviceProvider;
         private readonly ILogger<AuthenticationProvider> _logger;
+        private readonly AuthenticationConfig authenticationConfig;
 
         private readonly IDictionary<string, Type> CredentialTypes;
         private readonly MethodInfo GenericAuthenticationMethod;
@@ -26,14 +29,18 @@ namespace IdentityAuthentication.Core
         public AuthenticationProvider(
             ITokenProvider tokenProvider,
             IServiceProvider serviceProvider,
-            ILogger<AuthenticationProvider> logger)
+            ILogger<AuthenticationProvider> logger,
+            IOptions<AuthenticationConfig> options,
+            IClaimProvider claimProvider)
         {
             _tokenProvider = tokenProvider;
             _serviceProvider = serviceProvider;
             _logger = logger;
+            authenticationConfig = options.Value;
 
             CredentialTypes = GetCredentialTypes();
             GenericAuthenticationMethod = typeof(AuthenticationProvider).GetMethod(nameof(ExecuteAuthenticateAsync), BindingFlags.NonPublic | BindingFlags.Instance);
+            _claimProvider = claimProvider;
         }
 
         private static IDictionary<string, Type> GetCredentialTypes()
@@ -63,8 +70,9 @@ namespace IdentityAuthentication.Core
         public async Task<IToken> AuthenticateAsync(JObject credentialObject)
         {
             var credential = GetCredential(credentialObject);
-            var result = await GetAuthenticationResultAsync(credential);
-            var token = _tokenProvider.GenerateToken(result.UserId, result.ToJObject());
+            var authenticationResult = await GetAuthenticationResultAsync(credential);
+            var claims = _claimProvider.BuildClaim(authenticationResult.UserId, authenticationResult.Username, authenticationResult.Metadata);
+            var token = _tokenProvider.GenerateToken(claims.ToArray());
 
             return await Task.FromResult(token);
         }

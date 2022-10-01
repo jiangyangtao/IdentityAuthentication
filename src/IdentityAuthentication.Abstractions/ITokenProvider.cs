@@ -1,10 +1,11 @@
 ﻿using Newtonsoft.Json.Linq;
+using System.Security.Claims;
 
 namespace IdentityAuthentication.Abstractions
 {
     public interface ITokenProvider
     {
-        IToken GenerateToken(string id, JObject values);
+        IToken GenerateToken(Claim[] claims);
 
         Task<IToken> GenerateTokenAsync(string id, JObject values);
 

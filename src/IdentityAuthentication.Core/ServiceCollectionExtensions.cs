@@ -8,11 +8,12 @@ namespace IdentityAuthentication.Core
 {
     public static class ServiceCollectionExtensions
     {
-        public static IServiceCollection AddIdentityAuthentication(this IServiceCollection services,IConfiguration configuration)
+        public static IServiceCollection AddIdentityAuthentication(this IServiceCollection services, IConfiguration configuration)
         {
             services.AddHttpContextAccessor();
             services.AddAuthenticationSources();
 
+            services.AddSingleton<IClaimProvider, ClaimProvider>();
             services.AddSingleton<ITokenProvider, TokenProvider>();
             services.AddSingleton<IAuthenticationProvider, AuthenticationProvider>();
             services.Configure<AuthenticationConfig>(configuration.GetSection("Autnentication"));
