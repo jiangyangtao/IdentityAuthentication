@@ -81,7 +81,7 @@ namespace IdentityAuthentication.Core
 
         public IToken RefreshToken()
         {
-            if (IsImmediatelyExpire == false) return null;
+            CheckTokenImmediatelyExpire();
 
             var claims = new List<Claim>();
             foreach (var item in Claims)
@@ -101,23 +101,18 @@ namespace IdentityAuthentication.Core
         /// <summary>
         /// 是否即将过期
         /// </summary>
-        private bool IsImmediatelyExpire
+        private void CheckTokenImmediatelyExpire()
         {
-            get
-            {
-                if (Claims.IsNullOrEmpty()) return false;
+            if (Claims.IsNullOrEmpty()) throw new Exception("Authentication failed");
 
-                var result = Claims.FirstOrDefault(a => a.Type == ClaimTypes.Expiration);
-                if (result == null) return false;
+            var result = Claims.FirstOrDefault(a => a.Type == ClaimTypes.Expiration);
+            if (result == null) throw new Exception("Authentication failed");
 
-                var parseResult = DateTime.TryParse(result.Value, out DateTime expirationTime);
-                if (parseResult == false) return false;
+            var parseResult = DateTime.TryParse(result.Value, out DateTime expirationTime);
+            if (parseResult == false) throw new Exception("Authentication failed");
 
-                var timeSpan = expirationTime - DateTime.Now;
-                if (timeSpan.TotalSeconds > authenticationConfig.TokenRefreshTime) return false;
-
-                return true;
-            }
+            var timeSpan = expirationTime - DateTime.Now;
+            if (timeSpan.TotalSeconds > authenticationConfig.TokenRefreshTime) throw new Exception("Token do not expire immediately");
         }
 
         private IReadOnlyCollection<Claim> Claims

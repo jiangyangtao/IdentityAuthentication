@@ -21,7 +21,12 @@ namespace Authentication.Local
             var json = JsonConvert.SerializeObject(credential);
             _logger.LogInformation(json);
 
-            return Task.FromResult(AuthenticationResult.CreateAuthenticationResult("1111", credential.AuthenticationType, null));
+            var metadata = new Dictionary<string, string> {
+                {"Username","admin" },
+                {"Email","admin@abc.com" }
+            };
+            var id = Guid.NewGuid().ToString();
+            return Task.FromResult(AuthenticationResult.CreateAuthenticationResult(id, credential.AuthenticationType, metadata));
         }
     }
 }

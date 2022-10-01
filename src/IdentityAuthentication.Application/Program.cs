@@ -1,7 +1,6 @@
 
 using IdentityAuthentication.Application.Filters;
 using IdentityAuthentication.Core;
-using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
@@ -33,7 +32,6 @@ services.AddAuthentication(options =>
 
     var keyByteArray = Encoding.ASCII.GetBytes(secretKey);
     var signingKey = new SymmetricSecurityKey(keyByteArray);
-    var signingCredentials = new SigningCredentials(signingKey, SecurityAlgorithms.HmacSha256);
 
     options.TokenValidationParameters = new TokenValidationParameters
     {
@@ -44,8 +42,26 @@ services.AddAuthentication(options =>
         ValidateAudience = true,
         ValidAudience = Audience,
         ValidateLifetime = true,
-        ClockSkew = TimeSpan.FromSeconds(30),
+        ClockSkew = TimeSpan.Zero,
         RequireExpirationTime = true,
+    };
+
+    options.Events = new JwtBearerEvents
+    {
+        OnMessageReceived = context =>
+        {
+            context.Token = context.Request.Query["access_token"];
+            return Task.CompletedTask;
+        },
+        OnAuthenticationFailed = context =>
+        {
+            // 如果过期，则把<是否过期>添加到，返回头信息中
+            if (context.Exception.GetType() == typeof(SecurityTokenExpiredException))
+            {
+                context.Response.Headers.Add("Token-Expired", "true");
+            }
+            return Task.CompletedTask;
+        }
     };
 });
 
@@ -59,6 +75,7 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+app.UseAuthentication();
 
 app.UseAuthorization();
 

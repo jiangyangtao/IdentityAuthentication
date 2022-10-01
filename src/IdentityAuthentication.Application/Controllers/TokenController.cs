@@ -37,7 +37,13 @@ namespace IdentityAuthentication.Application.Controllers
         public IActionResult Refresh()
         {
             var token = _authenticationProvider.RefreshToken();
-            return Ok(token);
+
+            return Ok(new AuthenticationDto
+            {
+                access_token = token.Token,
+                expires_in = token.ExpiresIn,
+                token_type = token.TokenType
+            });
         }
     }
 }
