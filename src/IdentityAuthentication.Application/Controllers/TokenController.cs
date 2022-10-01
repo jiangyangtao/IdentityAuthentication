@@ -1,23 +1,23 @@
 ﻿using IdentityAuthentication.Abstractions;
 using IdentityAuthentication.Application.Dto;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json.Linq;
 
 namespace IdentityAuthentication.Application.Controllers
 {
-    [Route("v1/api/[controller]/[action]")]
-    [ApiController]
-    public class AuthenticationController : Controller
+    public class TokenController : BaseController
     {
         private readonly IAuthenticationProvider _authenticationProvider;
 
-        public AuthenticationController(IAuthenticationProvider authenticationProvider)
+        public TokenController(IAuthenticationProvider authenticationProvider)
         {
             _authenticationProvider = authenticationProvider;
         }
 
         [HttpPost]
-        public async Task<IActionResult> Authenticate()
+        [AllowAnonymous]
+        public async Task<IActionResult> Generate()
         {
             var streamReader = new StreamReader(Request.Body);
             var data = await streamReader.ReadToEndAsync();
@@ -31,6 +31,13 @@ namespace IdentityAuthentication.Application.Controllers
                 expires_in = token.ExpiresIn,
                 token_type = token.TokenType
             });
+        }
+
+        [HttpPost]
+        public IActionResult Refresh()
+        {
+            var token = _authenticationProvider.RefreshToken();
+            return Ok(token);
         }
     }
 }

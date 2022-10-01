@@ -8,8 +8,8 @@ namespace IdentityAuthentication.Abstractions
 
         Task<IToken> GenerateTokenAsync(string id, JObject values);
 
-        IToken RefreshToken(string id, JObject values);
+        IToken RefreshToken();
 
-        Task<IToken> RefreshTokenAsync(string id, JObject values);
+        Task<IToken> RefreshTokenAsync();
     }
 }

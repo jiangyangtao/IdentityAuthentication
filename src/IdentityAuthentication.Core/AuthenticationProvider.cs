@@ -1,6 +1,7 @@
 ﻿using Authentication.Abstractions;
 using IdentityAuthentication.Abstractions;
 using IdentityAuthentication.Extensions;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json.Linq;
@@ -14,13 +15,13 @@ namespace IdentityAuthentication.Core
         private readonly IServiceProvider _serviceProvider;
         private readonly ILogger<AuthenticationProvider> _logger;
 
+        private readonly IDictionary<string, Type> CredentialTypes;
+        private readonly MethodInfo GenericAuthenticationMethod;
+
         private const string AuthenticationTypeKey = "AuthenticationType";
         private const string AuthenticationSourceKey = "AuthenticationSource";
         private const string AuthenticationTypeDefault = "Password";
         private const string AuthenticationSourceDefault = "Local";
-
-        private readonly IDictionary<string, Type> CredentialTypes;
-        private readonly MethodInfo GenericAuthenticationMethod;
 
         public AuthenticationProvider(
             ITokenProvider tokenProvider,
@@ -68,6 +69,17 @@ namespace IdentityAuthentication.Core
             return await Task.FromResult(token);
         }
 
+
+        public IToken RefreshToken()
+        {
+            return _tokenProvider.RefreshToken();
+        }
+
+        public async Task<IToken> RefreshTokenAsync()
+        {
+            return await _tokenProvider.RefreshTokenAsync();
+        }
+
         private ICredential GetCredential(JObject credentialObject)
         {
             var authenticationType = credentialObject[AuthenticationTypeKey].Value<string>();
@@ -109,5 +121,6 @@ namespace IdentityAuthentication.Core
 
             return result;
         }
+
     }
 }

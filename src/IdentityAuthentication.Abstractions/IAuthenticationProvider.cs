@@ -7,8 +7,12 @@ using System.Threading.Tasks;
 
 namespace IdentityAuthentication.Abstractions
 {
-  public interface IAuthenticationProvider
+    public interface IAuthenticationProvider
     {
         Task<IToken> AuthenticateAsync(JObject credentialObject);
+
+        IToken RefreshToken();
+
+        Task<IToken> RefreshTokenAsync();
     }
 }

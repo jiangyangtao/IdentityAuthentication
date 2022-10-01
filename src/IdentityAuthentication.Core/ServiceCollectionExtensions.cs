@@ -1,24 +1,26 @@
 ﻿using Authentication.Abstractions;
 using IdentityAuthentication.Abstractions;
 using IdentityAuthentication.Extensions;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.DependencyModel;
-using System.Reflection;
 
 namespace IdentityAuthentication.Core
 {
     public static class ServiceCollectionExtensions
     {
-        public static IServiceCollection AddIdentityAuthentication(this IServiceCollection services)
+        public static IServiceCollection AddIdentityAuthentication(this IServiceCollection services,IConfiguration configuration)
         {
-            services.AddAuthentication();
+            services.AddHttpContextAccessor();
+            services.AddAuthenticationSources();
+
             services.AddSingleton<ITokenProvider, TokenProvider>();
             services.AddSingleton<IAuthenticationProvider, AuthenticationProvider>();
+            services.Configure<AuthenticationConfig>(configuration.GetSection("Autnentication"));
 
             return services;
         }
 
-        private static IServiceCollection AddAuthentication(this IServiceCollection services)
+        private static IServiceCollection AddAuthenticationSources(this IServiceCollection services)
         {
             var assemblies = AssemblyProvider.Authentications;
             if (assemblies.NotNullAndEmpty())
@@ -37,7 +39,7 @@ namespace IdentityAuthentication.Core
                         }
                     }
                 }
-            }           
+            }
 
             return services;
         }

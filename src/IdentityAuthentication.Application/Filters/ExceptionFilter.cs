@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.AspNetCore.Mvc;
+using System.Net.Mime;
 
 namespace IdentityAuthentication.Application.Filters
 {
@@ -25,7 +26,7 @@ namespace IdentityAuthentication.Application.Filters
         {
             context.HttpContext.Response.Clear();
             context.HttpContext.Response.StatusCode = 400;
-            context.HttpContext.Response.ContentType = "application/json";
+            context.HttpContext.Response.ContentType = $"{MediaTypeNames.Text.Plain};charset=utf-8";
 
             var result = ErrorContext.Exception.Message;
             await context.HttpContext.Response.WriteAsync(result);
