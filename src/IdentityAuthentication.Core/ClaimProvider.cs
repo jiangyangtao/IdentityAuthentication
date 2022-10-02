@@ -49,6 +49,10 @@ namespace IdentityAuthentication.Core
             if (timeSpan.TotalSeconds > authenticationConfig.TokenRefreshTime) throw new Exception("Token do not expire immediately");
         }
 
+        /// <summary>
+        /// 重置 token 的过期时间
+        /// </summary>
+        /// <returns></returns>
         public Claim[] ResetTokenExpiration()
         {
             CheckTokenImmediatelyExpire();

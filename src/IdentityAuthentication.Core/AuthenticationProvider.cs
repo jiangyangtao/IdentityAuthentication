@@ -33,14 +33,14 @@ namespace IdentityAuthentication.Core
             IOptions<AuthenticationConfig> options,
             IClaimProvider claimProvider)
         {
-            _tokenProvider = tokenProvider;
-            _serviceProvider = serviceProvider;
             _logger = logger;
+            _tokenProvider = tokenProvider;
+            _claimProvider = claimProvider;
+            _serviceProvider = serviceProvider;
             authenticationConfig = options.Value;
 
             CredentialTypes = GetCredentialTypes();
             GenericAuthenticationMethod = typeof(AuthenticationProvider).GetMethod(nameof(ExecuteAuthenticateAsync), BindingFlags.NonPublic | BindingFlags.Instance);
-            _claimProvider = claimProvider;
         }
 
         private static IDictionary<string, Type> GetCredentialTypes()
@@ -90,12 +90,13 @@ namespace IdentityAuthentication.Core
 
         private ICredential GetCredential(JObject credentialObject)
         {
+            if (credentialObject.ContainsKey(AuthenticationTypeKey) == false)
+                credentialObject[AuthenticationTypeKey] = AuthenticationTypeDefault;
+
+            if (credentialObject.ContainsKey(AuthenticationSourceKey) == false)
+                credentialObject[AuthenticationSourceKey] = AuthenticationSourceDefault;
+
             var authenticationType = credentialObject[AuthenticationTypeKey].Value<string>();
-            if (authenticationType.IsNullOrEmpty()) credentialObject[AuthenticationTypeKey] = AuthenticationTypeDefault;
-
-            var authenticationSource = credentialObject[AuthenticationSourceKey].Value<string>();
-            if (authenticationSource.IsNullOrEmpty()) credentialObject[AuthenticationSourceKey] = AuthenticationSourceDefault;
-
             if (CredentialTypes.ContainsKey(authenticationType) == false) throw new Exception($"Unknown AuthenticationType: {authenticationType}");
 
             var type = CredentialTypes[authenticationType];
