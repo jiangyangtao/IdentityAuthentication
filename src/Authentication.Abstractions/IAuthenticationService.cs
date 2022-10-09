@@ -7,5 +7,7 @@ namespace Authentication.Abstractions
         string AuthenticationSource { get; }
 
         Task<AuthenticationResult> AuthenticateAsync(TCredential credential);
+
+        Task<bool> IdentityCheckAsync(string id, string username);
     }
 }

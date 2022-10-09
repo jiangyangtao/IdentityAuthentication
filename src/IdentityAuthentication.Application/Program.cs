@@ -23,7 +23,8 @@ services.AddIdentityAuthentication(configuration);
 services.AddAuthentication(options =>
 {
     options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
-
+    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
 }).AddJwtBearer(options =>
 {
     var secretKey = configuration.GetValue<string>("Autnentication:Secret");
@@ -45,7 +46,7 @@ services.AddAuthentication(options =>
         ClockSkew = TimeSpan.Zero,
         RequireExpirationTime = true,
     };
-
+    options.SaveToken = true;
     options.Events = new JwtBearerEvents
     {
         OnMessageReceived = context =>

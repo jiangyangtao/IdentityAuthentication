@@ -34,9 +34,9 @@ namespace IdentityAuthentication.Application.Controllers
         }
 
         [HttpPost]
-        public IActionResult Refresh()
+        public async Task<IActionResult> Refresh()
         {
-            var token = _authenticationProvider.RefreshToken();
+            var token = await _authenticationProvider.RefreshTokenAsync();
 
             return Ok(new AuthenticationDto
             {

@@ -28,5 +28,10 @@ namespace Authentication.Local
             var result = credential.CreateAuthenticationResult(id, metadata);
             return Task.FromResult(result);
         }
+
+        public Task<bool> IdentityCheckAsync(string id, string username)
+        {
+            return Task.FromResult(true);
+        }
     }
 }

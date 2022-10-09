@@ -16,7 +16,12 @@ namespace Authentication.Abstractions.Credentials
 
         public AuthenticationResult CreateAuthenticationResult(string id, IReadOnlyDictionary<string, string> metadata, string username = "")
         {
-            return AuthenticationResult.CreateAuthenticationResult(id, username.NotNullAndEmpty() ? username : Username, AuthenticationType, metadata);
+            return AuthenticationResult.CreateAuthenticationResult(
+                userId: id,
+                username: username.NotNullAndEmpty() ? username : Username,
+                authenticationSource: AuthenticationSource,
+                authenticationType: AuthenticationType,
+                metadata: metadata);
         }
     }
 }
