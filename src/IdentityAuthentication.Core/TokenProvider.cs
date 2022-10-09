@@ -12,15 +12,15 @@ using System.Text;
 
 namespace IdentityAuthentication.Core
 {
-    internal class TokenProvider : ITokenProvider
+    internal class TokenProvider
     {
-        private readonly IClaimProvider _claimProvider;
+        private readonly ClaimService _claimService;
         private readonly AuthenticationConfig authenticationConfig;
 
-        public TokenProvider(IOptions<AuthenticationConfig> options, IClaimProvider claimProvider)
+        public TokenProvider(IOptions<AuthenticationConfig> options, ClaimService claimService)
         {
             authenticationConfig = options.Value;
-            _claimProvider = claimProvider;
+            _claimService = claimService;
         }
 
         public IToken GenerateToken(Claim[] claims)
@@ -60,7 +60,7 @@ namespace IdentityAuthentication.Core
 
         public IToken RefreshToken()
         {
-            var claims = _claimProvider.ResetTokenExpiration();
+            var claims = _claimService.ResetTokenExpiration();
             return BuildToken(claims.ToArray());
         }
 

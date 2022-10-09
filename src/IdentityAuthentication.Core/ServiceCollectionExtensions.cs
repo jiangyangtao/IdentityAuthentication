@@ -13,8 +13,8 @@ namespace IdentityAuthentication.Core
             services.AddHttpContextAccessor();
             services.AddAuthenticationSources();
 
-            services.AddSingleton<IClaimProvider, ClaimProvider>();
-            services.AddSingleton<ITokenProvider, TokenProvider>();
+            services.AddSingleton<ClaimService>();
+            services.AddSingleton<TokenProvider>();
             services.AddSingleton<IAuthenticationProvider, AuthenticationProvider>();
             services.Configure<AuthenticationConfig>(configuration.GetSection("Autnentication"));
 

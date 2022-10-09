@@ -12,12 +12,12 @@ namespace IdentityAuthentication.Core
 {
     internal class AuthenticationProvider : IAuthenticationProvider
     {
-        private readonly ITokenProvider _tokenProvider;
-        private readonly IClaimProvider _claimProvider;
+        private readonly TokenProvider _tokenProvider;
         private readonly IServiceProvider _serviceProvider;
         private readonly ILogger<AuthenticationProvider> _logger;
         private readonly AuthenticationConfig authenticationConfig;
 
+        private readonly ClaimService _claimService;
         private readonly IDictionary<string, Type> CredentialTypes;
         private readonly MethodInfo GenericAuthenticationMethod;
 
@@ -27,15 +27,15 @@ namespace IdentityAuthentication.Core
         private const string AuthenticationSourceDefault = "Local";
 
         public AuthenticationProvider(
-            ITokenProvider tokenProvider,
+            TokenProvider tokenProvider,
             IServiceProvider serviceProvider,
             ILogger<AuthenticationProvider> logger,
             IOptions<AuthenticationConfig> options,
-            IClaimProvider claimProvider)
+           ClaimService claimService)
         {
             _logger = logger;
             _tokenProvider = tokenProvider;
-            _claimProvider = claimProvider;
+            _claimService = claimService;
             _serviceProvider = serviceProvider;
             authenticationConfig = options.Value;
 
@@ -71,7 +71,7 @@ namespace IdentityAuthentication.Core
         {
             var credential = GetCredential(credentialObject);
             var authenticationResult = await GetAuthenticationResultAsync(credential);
-            var claims = _claimProvider.BuildClaim(authenticationResult.UserId, authenticationResult.Username, authenticationResult.Metadata);
+            var claims = _claimService.BuildClaim(authenticationResult.UserId, authenticationResult.Username, authenticationResult.Metadata);
             var token = _tokenProvider.GenerateToken(claims.ToArray());
 
             return await Task.FromResult(token);
@@ -108,12 +108,12 @@ namespace IdentityAuthentication.Core
         private async Task<AuthenticationResult> GetAuthenticationResultAsync(ICredential credential)
         {
             var method = GenericAuthenticationMethod.MakeGenericMethod(credential.GetType());
-            var result = await (Task<AuthenticationResult>)method.Invoke(this, new object[] { credential });
+            var result = await (Task<AuthenticationResult>)method.Invoke(this, new object[] { credential, 10 });
 
             return result;
         }
 
-        private async Task<AuthenticationResult?> ExecuteAuthenticateAsync<T>(T credential) where T : ICredential
+        private async Task<AuthenticationResult?> ExecuteAuthenticateAsync<T>(T credential, int i) where T : ICredential
         {
             var services = _serviceProvider.GetServices<IAuthenticationService<T>>();
             if (services.Any() == false) throw new Exception($"Not support authentication type {credential.AuthenticationSource}");
@@ -123,10 +123,10 @@ namespace IdentityAuthentication.Core
             if (authenticationServices.Length >= 2) throw new Exception($"Uncertain authentication source [{credential.AuthenticationSource}]");
 
             var authenticationService = authenticationServices.FirstOrDefault();
-            if (authenticationService == null) throw new Exception($"authenticate failed, credential: {credential},source: {credential.AuthenticationSource}");
+            if (authenticationService == null) throw new Exception($"Authenticate failed, credential: {credential.AuthenticationType},source: {credential.AuthenticationSource}");
 
             var result = await authenticationService.AuthenticateAsync(credential);
-            if (result == null) throw new Exception($"[{authenticationService.GetType().FullName}]authenticate failed, credential: {credential}, source: {credential.AuthenticationSource}");
+            if (result == null) throw new Exception($"[{authenticationService.GetType().FullName}]authenticate failed, credential: {credential.AuthenticationType}, source: {credential.AuthenticationSource}");
 
             return result;
         }

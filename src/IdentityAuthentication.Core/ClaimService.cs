@@ -1,17 +1,16 @@
-﻿using IdentityAuthentication.Abstractions;
-using IdentityAuthentication.Extensions;
+﻿using IdentityAuthentication.Extensions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Options;
 using System.Security.Claims;
 
 namespace IdentityAuthentication.Core
 {
-    internal class ClaimProvider : IClaimProvider
+    internal class ClaimService
     {
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly AuthenticationConfig authenticationConfig;
 
-        public ClaimProvider(IOptions<AuthenticationConfig> options, IHttpContextAccessor httpContextAccessor)
+        public ClaimService(IOptions<AuthenticationConfig> options, IHttpContextAccessor httpContextAccessor)
         {
             authenticationConfig = options.Value;
             _httpContextAccessor = httpContextAccessor;
