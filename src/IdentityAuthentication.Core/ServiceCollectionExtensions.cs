@@ -16,6 +16,8 @@ namespace IdentityAuthentication.Core
             services.AddSingleton<TokenProvider>();
             services.AddSingleton<AuthenticationHandle>();
             services.AddSingleton<IAuthenticationProvider, AuthenticationProvider>();
+
+            services.Configure<SecretKeyConfig>(configuration.GetSection("SecretKey"));
             services.Configure<AuthenticationConfig>(configuration.GetSection("Autnentication"));
 
             return services;

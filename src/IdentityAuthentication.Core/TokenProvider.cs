@@ -4,14 +4,17 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
+using RSAExtensions;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
+using System.Security.Cryptography;
 using System.Text;
 
 namespace IdentityAuthentication.Core
 {
     internal class TokenProvider
     {
+        private readonly SecretKeyConfig secretKeyConfig;
         private readonly AuthenticationConfig authenticationConfig;
 
         private readonly IHttpContextAccessor _httpContextAccessor;
@@ -23,11 +26,14 @@ namespace IdentityAuthentication.Core
         private readonly string ExpirationType = ClaimTypes.Expiration;
 
         public TokenProvider(
-            IOptions<AuthenticationConfig> options,
+            IOptions<SecretKeyConfig> secretKeyOption,
+            IOptions<AuthenticationConfig> authenticationOption,
             IHttpContextAccessor httpContextAccessor,
             AuthenticationHandle authenticationHandle)
         {
-            authenticationConfig = options.Value;
+            secretKeyConfig = secretKeyOption.Value;
+            authenticationConfig = authenticationOption.Value;
+
             _httpContextAccessor = httpContextAccessor;
             _authenticationHandle = authenticationHandle;
         }
@@ -81,12 +87,12 @@ namespace IdentityAuthentication.Core
             var signingCredentials = GenerateSigningCredentials();
 
             var securityToken = new JwtSecurityToken(
-               issuer: authenticationConfig.Issuer,
-               audience: authenticationConfig.Audience,
-               claims: claims,
-               notBefore: notBefore ?? DateTime.Now,
-               expires: expirationTime ?? TokenExpirationTime,
-               signingCredentials: signingCredentials);
+                    issuer: authenticationConfig.AccessIssuer,
+                    audience: authenticationConfig.Audience,
+                    claims: claims,
+                    notBefore: notBefore ?? DateTime.Now,
+                    expires: expirationTime ?? TokenExpirationTime,
+                    signingCredentials: signingCredentials);
             var jwtToken = new JwtSecurityTokenHandler().WriteToken(securityToken);
 
             return TokenResult.CreateReulst(jwtToken, authenticationConfig.TokenExpirationTime, JwtBearerDefaults.AuthenticationScheme);
@@ -94,11 +100,10 @@ namespace IdentityAuthentication.Core
 
         private SigningCredentials GenerateSigningCredentials()
         {
-            var secretKey = authenticationConfig.Secret;
-            var keyByteArray = Encoding.ASCII.GetBytes(secretKey);
-            var signingKey = new SymmetricSecurityKey(keyByteArray);
+            var key = secretKeyConfig.HmacSha256Key;
+            if (authenticationConfig.EncryptionAlgorithm == SecurityAlgorithms.RsaSha256) key = secretKeyConfig.RsaPrivateKey;
 
-            return new SigningCredentials(signingKey, SecurityAlgorithms.HmacSha256);
+            return SecurityKeyHandle.GetSigningCredentials(authenticationConfig.EncryptionAlgorithm, key, true);
         }
 
         private void CheckTokenImmediatelyExpire()

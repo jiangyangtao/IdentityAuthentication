@@ -1,4 +1,6 @@
 ﻿
+using Microsoft.IdentityModel.Tokens;
+
 namespace IdentityAuthentication.Core
 {
     internal class AuthenticationConfig
@@ -7,10 +9,24 @@ namespace IdentityAuthentication.Core
 
         public long TokenRefreshTime { set; get; }
 
-        public string Secret { set; get; }
+        public string AccessIssuer { set; get; }
 
-        public string Issuer { set; get; }
+        public string RefreshIssuer { set; get; }
 
         public string Audience { set; get; }
+
+        public string EncryptionAlgorithm { set; get; } = SecurityAlgorithms.RsaSha256;
+    }
+
+    internal class SecretKeyConfig
+    {
+        /// <summary>
+        /// HmacSha256
+        /// </summary>
+        public string HmacSha256Key { set; get; }
+
+        public string RsaPublicKey { set; get; }
+
+        public string RsaPrivateKey { set; get; }
     }
 }

@@ -3,7 +3,6 @@ using IdentityAuthentication.Application.Filters;
 using IdentityAuthentication.Core;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
-using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 var services = builder.Services;
@@ -27,21 +26,22 @@ services.AddAuthentication(options =>
     options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
 }).AddJwtBearer(options =>
 {
-    var secretKey = configuration.GetValue<string>("Autnentication:Secret");
-    var Issuer = configuration.GetValue<string>("Autnentication:Issuer");
-    var Audience = configuration.GetValue<string>("Autnentication:Audience");
+    var accessIssuer = configuration.GetValue<string>("Autnentication:AccessIssuer");
+    var audience = configuration.GetValue<string>("Autnentication:Audience");
+    var encryptionAlgorithm = configuration.GetValue<string>("Autnentication:EncryptionAlgorithm");
 
-    var keyByteArray = Encoding.ASCII.GetBytes(secretKey);
-    var signingKey = new SymmetricSecurityKey(keyByteArray);
+    var rsaPublicKey = configuration.GetValue<string>("SecretKey:RsaPublicKey");
+    var hmacSha256Key = configuration.GetValue<string>("SecretKey:HmacSha256Key");
+    var signingKey = SecurityKeyHandle.GetSecurityKey(encryptionAlgorithm, encryptionAlgorithm == SecurityAlgorithms.RsaSha256 ? rsaPublicKey : hmacSha256Key);
 
     options.TokenValidationParameters = new TokenValidationParameters
     {
         ValidateIssuerSigningKey = true,
         IssuerSigningKey = signingKey,
         ValidateIssuer = true,
-        ValidIssuer = Issuer,
+        ValidIssuer = accessIssuer,
         ValidateAudience = true,
-        ValidAudience = Audience,
+        ValidAudience = audience,
         ValidateLifetime = true,
         ClockSkew = TimeSpan.Zero,
         RequireExpirationTime = true,
