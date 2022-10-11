@@ -1,4 +1,5 @@
 ﻿using IdentityAuthentication.Abstractions;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 
 namespace IdentityAuthentication.Core
 {
@@ -17,7 +18,7 @@ namespace IdentityAuthentication.Core
 
         public string RefreshToken { set; get; }
 
-        public static TokenResult CreateReulst(string accessToken, long expiresIn, string tokenType, string refreshToken) =>
+        public static TokenResult Create(string accessToken, string refreshToken = "", long expiresIn = 0, string tokenType = JwtBearerDefaults.AuthenticationScheme) =>
             new()
             {
                 AccessToken = accessToken,

@@ -1,6 +1,7 @@
 ﻿
 
 using IdentityAuthentication.Extensions;
+using System.Security.Claims;
 
 namespace Authentication.Abstractions
 {
@@ -12,20 +13,7 @@ namespace Authentication.Abstractions
             Username = username;
             AuthenticationSource = authenticationSource;
             AuthenticationType = authenticationType;
-
-            var meta = BuildMetaData();
-            if (metadata.NotNullAndEmpty())
-            {
-                foreach (var item in metadata)
-                {
-                    if (item.Key.Equals(nameof(AuthenticationSource), StringComparison.OrdinalIgnoreCase)) continue;
-                    if (item.Key.Equals(nameof(AuthenticationType), StringComparison.OrdinalIgnoreCase)) continue;
-
-                    meta.Add(item.Key, item.Value);
-                }
-            }
-
-            Metadata = meta;
+            Metadata = metadata;
         }
 
         public string UserId { get; }
@@ -36,15 +24,20 @@ namespace Authentication.Abstractions
 
         public string AuthenticationType { get; }
 
-        private Dictionary<string, string> BuildMetaData()
-        {
-            return new Dictionary<string, string> {
-                { nameof(AuthenticationSource), AuthenticationSource },
-                { nameof(AuthenticationType), AuthenticationType }
-            };
-        }
-
         public IReadOnlyDictionary<string, string> Metadata { get; }
+
+        public IReadOnlyList<Claim> GetMetadataClaims()
+        {
+            var claims = new List<Claim>();
+            if (Metadata.IsNullOrEmpty()) return claims;
+
+            foreach (var item in Metadata)
+            {
+                claims.Add(new Claim(item.Key, item.Value));
+            }
+
+            return claims;
+        }
 
         public static AuthenticationResult CreateAuthenticationResult(string userId, string username, string authenticationSource, string authenticationType, IReadOnlyDictionary<string, string> metadata)
         {

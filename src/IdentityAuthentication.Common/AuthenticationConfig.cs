@@ -5,17 +5,23 @@ namespace IdentityAuthentication.Common
 {
     public class AuthenticationConfig
     {
-        public long TokenExpirationTime { set; get; }
+        public string EncryptionAlgorithm { set; get; } = SecurityAlgorithms.RsaSha256;
+    }
 
-        public long TokenRefreshTime { set; get; }
+    public class AccessTokenConfig
+    {
+        public long ExpirationTime { set; get; }
 
-        public string AccessIssuer { set; get; }
+        public long RefreshTime { set; get; } = 0;
 
-        public string RefreshIssuer { set; get; }
+        public string Issuer { set; get; }
 
         public string Audience { set; get; }
+    }
 
-        public string EncryptionAlgorithm { set; get; } = SecurityAlgorithms.RsaSha256;
+    public class RefreshTokenConfig : AccessTokenConfig
+    {
+
     }
 
     public class SecretKeyConfig

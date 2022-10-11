@@ -43,7 +43,7 @@ services.AddAuthentication(options =>
         ClockSkew = TimeSpan.Zero,
         RequireExpirationTime = true,
     };
-    options.SaveToken = true;
+
     options.Events = new JwtBearerEvents
     {
         OnMessageReceived = context =>

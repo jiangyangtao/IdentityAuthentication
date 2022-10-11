@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
+using Newtonsoft.Json.Linq;
 using RSAExtensions;
 using System.IdentityModel.Tokens.Jwt;
 using System.Net;
@@ -16,6 +17,8 @@ namespace IdentityAuthentication.Core
 {
     internal class TokenProvider
     {
+        private readonly AccessTokenConfig accessTokenConfig;
+        private readonly RefreshTokenConfig refreshTokenConfig;
         private readonly SecretKeyConfig secretKeyConfig;
         private readonly AuthenticationConfig authenticationConfig;
         private readonly Credentials _credentials;
@@ -29,15 +32,18 @@ namespace IdentityAuthentication.Core
         private readonly string ExpirationType = ClaimTypes.Expiration;
 
         public TokenProvider(
+            IOptions<AccessTokenConfig> accessTokenOption,
+            IOptions<RefreshTokenConfig> refreshTokenOption,
             IOptions<SecretKeyConfig> secretKeyOption,
             IOptions<AuthenticationConfig> authenticationOption,
             IHttpContextAccessor httpContextAccessor,
             AuthenticationHandle authenticationHandle)
         {
+            accessTokenConfig = accessTokenOption.Value;
+            refreshTokenConfig = refreshTokenOption.Value;
             secretKeyConfig = secretKeyOption.Value;
             authenticationConfig = authenticationOption.Value;
             _credentials = new Credentials(authenticationConfig, secretKeyConfig);
-
 
             _httpContextAccessor = httpContextAccessor;
             _authenticationHandle = authenticationHandle;
@@ -51,18 +57,24 @@ namespace IdentityAuthentication.Core
                 new Claim(UsernameType,result.Username),
                 new Claim(IssueTimeType,DateTime.Now.ToString()),
                 new Claim(ExpirationType,TokenExpirationTime.ToString()),
+                new Claim(nameof(AuthenticationResult.AuthenticationType),result.AuthenticationType),
+                new Claim(nameof(AuthenticationResult.AuthenticationSource),result.AuthenticationSource)
             };
 
-            foreach (var item in result.Metadata)
-            {
-                claims.Add(new Claim(item.Key, item.Value));
-            }
-            return BuildToken(claims.ToArray());
+            claims.AddRange(result.GetMetadataClaims());
+            var accessToken = BuildAccessToken(claims.ToArray());
+            var refreshToken = BuildRefreshToken(result);
+
+            return TokenResult.Create(
+                accessToken: accessToken,
+                refreshToken: refreshToken,
+                expiresIn: accessTokenConfig.ExpirationTime
+            );
         }
 
         public async Task<IToken> RefreshTokenAsync()
         {
-            CheckTokenImmediatelyExpire();
+            // CheckTokenImmediatelyExpire();
 
             var expirationTime = TokenExpirationTime;
             var issueTime = GetDateTimeClaim(IssueTimeType);
@@ -76,34 +88,55 @@ namespace IdentityAuthentication.Core
                 claims.Add(item.Clone());
             }
 
-            return BuildToken(claims.ToArray(), issueTime, expirationTime);
+            var accessToken = BuildAccessToken(claims.ToArray(), issueTime, expirationTime);
+            return TokenResult.Create(accessToken: accessToken);
         }
 
-        private DateTime TokenExpirationTime => DateTime.Now.AddSeconds(authenticationConfig.TokenExpirationTime);
+        private DateTime TokenExpirationTime => DateTime.Now.AddSeconds(accessTokenConfig.ExpirationTime);
 
-        private TokenResult BuildToken(Claim[] claims, DateTime? notBefore = null, DateTime? expirationTime = null)
+        private string BuildAccessToken(Claim[] claims, DateTime? notBefore = null, DateTime? expirationTime = null)
         {
             var signingCredentials = _credentials.GenerateSigningCredentials();
 
             var securityToken = new JwtSecurityToken(
-                    issuer: authenticationConfig.AccessIssuer,
-                    audience: authenticationConfig.Audience,
+                    issuer: accessTokenConfig.Issuer,
+                    audience: accessTokenConfig.Audience,
                     claims: claims,
                     notBefore: notBefore ?? DateTime.Now,
                     expires: expirationTime ?? TokenExpirationTime,
                     signingCredentials: signingCredentials);
-            var jwtToken = new JwtSecurityTokenHandler().WriteToken(securityToken);
-
-            return TokenResult.CreateReulst(jwtToken, authenticationConfig.TokenExpirationTime, JwtBearerDefaults.AuthenticationScheme, string.Empty);
+            return new JwtSecurityTokenHandler().WriteToken(securityToken);
         }
 
+        private string BuildRefreshToken(AuthenticationResult result)
+        {
+            var signingCredentials = _credentials.GenerateSigningCredentials();
+
+            var claims = new Claim[]
+            {
+                new Claim(UserIdType, result.UserId),
+                new Claim(UsernameType,result.Username),
+                new Claim(nameof(AuthenticationResult.AuthenticationType),result.AuthenticationType),
+                new Claim(nameof(AuthenticationResult.AuthenticationSource),result.AuthenticationSource)
+            };
+
+            var securityToken = new JwtSecurityToken(
+                    issuer: refreshTokenConfig.Issuer,
+                    audience: refreshTokenConfig.Audience,
+                    claims: claims,
+                    notBefore: DateTime.Now,
+                    expires: DateTime.Now.AddDays(refreshTokenConfig.ExpirationTime),
+                    signingCredentials: signingCredentials);
+
+            return new JwtSecurityTokenHandler().WriteToken(securityToken);
+        }
 
         private void CheckTokenImmediatelyExpire()
         {
             var expirationTime = GetDateTimeClaim(ExpirationType);
 
             var timeSpan = expirationTime - DateTime.Now;
-            if (timeSpan.TotalSeconds > authenticationConfig.TokenRefreshTime) throw new Exception("Token do not expire immediately");
+            if (timeSpan.TotalSeconds > accessTokenConfig.RefreshTime) throw new Exception("Token do not expire immediately");
         }
 
         private DateTime GetDateTimeClaim(string type)
