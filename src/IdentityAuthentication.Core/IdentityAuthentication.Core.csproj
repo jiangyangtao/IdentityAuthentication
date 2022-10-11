@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
@@ -8,16 +8,13 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="6.0.9" />
-    <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="6.0.0" />
-    <PackageReference Include="Microsoft.Extensions.Configuration.Binder" Version="6.0.0" />
-    <PackageReference Include="Microsoft.IdentityModel.Tokens" Version="6.23.1" />
-    <PackageReference Include="RSAExtensions" Version="1.1.0" />
     <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.23.1" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Authentication.Local\Authentication.Local.csproj" />
     <ProjectReference Include="..\IdentityAuthentication.Abstractions\IdentityAuthentication.Abstractions.csproj" />
+    <ProjectReference Include="..\IdentityAuthentication.Common\IdentityAuthentication.Common.csproj" />
   </ItemGroup>
 
 </Project>

@@ -1,5 +1,6 @@
 
 using IdentityAuthentication.Application.Filters;
+using IdentityAuthentication.Common;
 using IdentityAuthentication.Core;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
@@ -28,11 +29,7 @@ services.AddAuthentication(options =>
 {
     var accessIssuer = configuration.GetValue<string>("Autnentication:AccessIssuer");
     var audience = configuration.GetValue<string>("Autnentication:Audience");
-    var encryptionAlgorithm = configuration.GetValue<string>("Autnentication:EncryptionAlgorithm");
-
-    var rsaPublicKey = configuration.GetValue<string>("SecretKey:RsaPublicKey");
-    var hmacSha256Key = configuration.GetValue<string>("SecretKey:HmacSha256Key");
-    var signingKey = SecurityKeyHandle.GetSecurityKey(encryptionAlgorithm, encryptionAlgorithm == SecurityAlgorithms.RsaSha256 ? rsaPublicKey : hmacSha256Key);
+    var signingKey = Credentials.GetSecurityKey(configuration);
 
     options.TokenValidationParameters = new TokenValidationParameters
     {

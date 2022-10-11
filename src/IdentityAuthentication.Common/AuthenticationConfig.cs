@@ -1,9 +1,9 @@
 ﻿
 using Microsoft.IdentityModel.Tokens;
 
-namespace IdentityAuthentication.Core
+namespace IdentityAuthentication.Common
 {
-    internal class AuthenticationConfig
+    public class AuthenticationConfig
     {
         public long TokenExpirationTime { set; get; }
 
@@ -18,7 +18,7 @@ namespace IdentityAuthentication.Core
         public string EncryptionAlgorithm { set; get; } = SecurityAlgorithms.RsaSha256;
     }
 
-    internal class SecretKeyConfig
+    public class SecretKeyConfig
     {
         /// <summary>
         /// HmacSha256

@@ -9,18 +9,21 @@ namespace IdentityAuthentication.Core
 
         }
 
-        public string Token { set; get; }
+        public string AccessToken { set; get; }
 
         public long ExpiresIn { set; get; }
 
         public string TokenType { set; get; }
 
-        public static TokenResult CreateReulst(string token, long expiresIn, string tokenType) =>
+        public string RefreshToken { set; get; }
+
+        public static TokenResult CreateReulst(string accessToken, long expiresIn, string tokenType, string refreshToken) =>
             new()
             {
-                Token = token,
+                AccessToken = accessToken,
                 ExpiresIn = expiresIn,
-                TokenType = tokenType
+                TokenType = tokenType,
+                RefreshToken = refreshToken,
             };
     }
 }

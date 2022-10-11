@@ -27,7 +27,7 @@ namespace IdentityAuthentication.Application.Controllers
 
             return Ok(new AuthenticationDto
             {
-                access_token = token.Token,
+                access_token = token.AccessToken,
                 expires_in = token.ExpiresIn,
                 token_type = token.TokenType
             });
@@ -40,7 +40,7 @@ namespace IdentityAuthentication.Application.Controllers
 
             return Ok(new AuthenticationDto
             {
-                access_token = token.Token,
+                access_token = token.AccessToken,
                 expires_in = token.ExpiresIn,
                 token_type = token.TokenType
             });

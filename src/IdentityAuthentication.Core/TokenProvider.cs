@@ -1,11 +1,13 @@
 ﻿using Authentication.Abstractions;
 using IdentityAuthentication.Abstractions;
+using IdentityAuthentication.Common;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using RSAExtensions;
 using System.IdentityModel.Tokens.Jwt;
+using System.Net;
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
@@ -16,6 +18,7 @@ namespace IdentityAuthentication.Core
     {
         private readonly SecretKeyConfig secretKeyConfig;
         private readonly AuthenticationConfig authenticationConfig;
+        private readonly Credentials _credentials;
 
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly AuthenticationHandle _authenticationHandle;
@@ -33,6 +36,8 @@ namespace IdentityAuthentication.Core
         {
             secretKeyConfig = secretKeyOption.Value;
             authenticationConfig = authenticationOption.Value;
+            _credentials = new Credentials(authenticationConfig, secretKeyConfig);
+
 
             _httpContextAccessor = httpContextAccessor;
             _authenticationHandle = authenticationHandle;
@@ -40,8 +45,19 @@ namespace IdentityAuthentication.Core
 
         public IToken GenerateToken(AuthenticationResult result)
         {
-            var claims = BuildClaim(result);
-            return BuildToken(claims);
+            var claims = new List<Claim>
+            {
+                new Claim(UserIdType, result.UserId),
+                new Claim(UsernameType,result.Username),
+                new Claim(IssueTimeType,DateTime.Now.ToString()),
+                new Claim(ExpirationType,TokenExpirationTime.ToString()),
+            };
+
+            foreach (var item in result.Metadata)
+            {
+                claims.Add(new Claim(item.Key, item.Value));
+            }
+            return BuildToken(claims.ToArray());
         }
 
         public async Task<IToken> RefreshTokenAsync()
@@ -65,26 +81,9 @@ namespace IdentityAuthentication.Core
 
         private DateTime TokenExpirationTime => DateTime.Now.AddSeconds(authenticationConfig.TokenExpirationTime);
 
-        private Claim[] BuildClaim(AuthenticationResult result)
-        {
-            var claims = new List<Claim>
-            {
-                new Claim(UserIdType, result.UserId),
-                new Claim(UsernameType,result.Username),
-                new Claim(IssueTimeType,DateTime.Now.ToString()),
-                new Claim(ExpirationType,TokenExpirationTime.ToString()),
-            };
-
-            foreach (var item in result.Metadata)
-            {
-                claims.Add(new Claim(item.Key, item.Value));
-            }
-            return claims.ToArray();
-        }
-
         private TokenResult BuildToken(Claim[] claims, DateTime? notBefore = null, DateTime? expirationTime = null)
         {
-            var signingCredentials = GenerateSigningCredentials();
+            var signingCredentials = _credentials.GenerateSigningCredentials();
 
             var securityToken = new JwtSecurityToken(
                     issuer: authenticationConfig.AccessIssuer,
@@ -95,16 +94,9 @@ namespace IdentityAuthentication.Core
                     signingCredentials: signingCredentials);
             var jwtToken = new JwtSecurityTokenHandler().WriteToken(securityToken);
 
-            return TokenResult.CreateReulst(jwtToken, authenticationConfig.TokenExpirationTime, JwtBearerDefaults.AuthenticationScheme);
+            return TokenResult.CreateReulst(jwtToken, authenticationConfig.TokenExpirationTime, JwtBearerDefaults.AuthenticationScheme, string.Empty);
         }
 
-        private SigningCredentials GenerateSigningCredentials()
-        {
-            var key = secretKeyConfig.HmacSha256Key;
-            if (authenticationConfig.EncryptionAlgorithm == SecurityAlgorithms.RsaSha256) key = secretKeyConfig.RsaPrivateKey;
-
-            return SecurityKeyHandle.GetSigningCredentials(authenticationConfig.EncryptionAlgorithm, key, true);
-        }
 
         private void CheckTokenImmediatelyExpire()
         {
