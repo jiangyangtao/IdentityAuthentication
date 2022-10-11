@@ -2,9 +2,9 @@
 
 namespace IdentityAuthentication.Application.Dto
 {
-    public class AuthenticationDtoBase
+    public class TokenDtoBase
     {
-        public AuthenticationDtoBase(IToken token)
+        public TokenDtoBase(IToken token)
         {
             access_token = token.AccessToken;
         }
@@ -12,9 +12,9 @@ namespace IdentityAuthentication.Application.Dto
         public string access_token { set; get; }
     }
 
-    public class AuthenticationDto : AuthenticationDtoBase
+    public class TokenDto : TokenDtoBase
     {
-        public AuthenticationDto(IToken token) : base(token)
+        public TokenDto(IToken token) : base(token)
         {
             expires_in = token.ExpiresIn;
             token_type = token.TokenType;

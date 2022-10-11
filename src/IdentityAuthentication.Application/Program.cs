@@ -27,23 +27,7 @@ services.AddAuthentication(options =>
     options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
 }).AddJwtBearer(options =>
 {
-    var accessIssuer = configuration.GetValue<string>("Autnentication:AccessIssuer");
-    var audience = configuration.GetValue<string>("Autnentication:Audience");
-    var signingKey = Credentials.GetSecurityKey(configuration);
-
-    options.TokenValidationParameters = new TokenValidationParameters
-    {
-        ValidateIssuerSigningKey = true,
-        IssuerSigningKey = signingKey,
-        ValidateIssuer = true,
-        ValidIssuer = accessIssuer,
-        ValidateAudience = true,
-        ValidAudience = audience,
-        ValidateLifetime = true,
-        ClockSkew = TimeSpan.Zero,
-        RequireExpirationTime = true,
-    };
-
+    options.TokenValidationParameters = TokenValidation.BuildAccessTokenValidationParameters(configuration);
     options.Events = new JwtBearerEvents
     {
         OnMessageReceived = context =>

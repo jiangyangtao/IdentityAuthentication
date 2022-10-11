@@ -17,7 +17,7 @@ namespace IdentityAuthentication.Application.Controllers
 
         [HttpPost]
         [AllowAnonymous]
-        [ProducesResponseType(typeof(AuthenticationDto), 200)]
+        [ProducesResponseType(typeof(TokenDto), 200)]
         public async Task<IActionResult> Generate()
         {
             var streamReader = new StreamReader(Request.Body);
@@ -26,16 +26,16 @@ namespace IdentityAuthentication.Application.Controllers
             var token = await _authenticationProvider.AuthenticateAsync(credentialData);
             if (token == null) return new NotFoundResult();
 
-            return Ok(new AuthenticationDto(token));
+            return Ok(new TokenDto(token));
         }
 
         [HttpPost]
-        [ProducesResponseType(typeof(AuthenticationDtoBase), 200)]
+        [ProducesResponseType(typeof(TokenDtoBase), 200)]
         public async Task<IActionResult> Refresh()
         {
             var token = await _authenticationProvider.RefreshTokenAsync();
 
-            return Ok(new AuthenticationDtoBase(token));
+            return Ok(new TokenDtoBase(token));
         }
     }
 }

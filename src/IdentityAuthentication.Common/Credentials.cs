@@ -19,27 +19,38 @@ namespace IdentityAuthentication.Common
 
         public SigningCredentials GenerateSigningCredentials()
         {
-            var signingKey = GeneratePrivateSecurityKey();
+            var signingKey = GenerateDecryptionSecurityKey();
 
             return new SigningCredentials(signingKey, _authenticationConfig.EncryptionAlgorithm);
         }
 
-        private SecurityKey GeneratePrivateSecurityKey()
+        /// <summary>
+        /// 生成加密的 <see cref="SecurityKey"/>
+        /// </summary>
+        /// <returns></returns>
+        public SecurityKey GenerateDecryptionSecurityKey() => GenerateSecurityKey(false);
+
+        /// <summary>
+        /// 生成解密的 <see cref="SecurityKey"/>
+        /// </summary>
+        /// <returns></returns>
+        public SecurityKey GenerateEncryptSecurityKey() => GenerateSecurityKey();
+
+        private SecurityKey GenerateSecurityKey(bool isPublic = true)
         {
             if (_authenticationConfig.EncryptionAlgorithm == SecurityAlgorithms.RsaSha256)
             {
                 var rsa = RSA.Create();
-                rsa.ImportPrivateKey(RSAKeyType.Pkcs8, _secretKeyConfig.RsaPrivateKey);
+                if (isPublic) rsa.ImportPublicKey(RSAKeyType.Pkcs8, _secretKeyConfig.RsaPrivateKey);
+                if (isPublic == false) rsa.ImportPrivateKey(RSAKeyType.Pkcs8, _secretKeyConfig.RsaPrivateKey);
 
                 return new RsaSecurityKey(rsa);
             }
 
-            var keyByteArray = Encoding.ASCII.GetBytes(_secretKeyConfig.HmacSha256Key);
-            return new SymmetricSecurityKey(keyByteArray);
+            return GenerateSymmetricSecurityKey(_secretKeyConfig.HmacSha256Key);
         }
 
-
-        public static SecurityKey GetSecurityKey(IConfiguration configuration)
+        public static SecurityKey GetEncryptSecurityKey(IConfiguration configuration)
         {
             var encryptionAlgorithm = configuration.GetValue<string>("Autnentication:EncryptionAlgorithm");
             var rsaPublicKey = configuration.GetValue<string>("SecretKey:RsaPublicKey");
@@ -54,7 +65,12 @@ namespace IdentityAuthentication.Common
                 return new RsaSecurityKey(rsa);
             }
 
-            var keyByteArray = Encoding.ASCII.GetBytes(hmacSha256Key);
+            return GenerateSymmetricSecurityKey(hmacSha256Key);
+        }
+
+        private static SymmetricSecurityKey GenerateSymmetricSecurityKey(string key)
+        {
+            var keyByteArray = Encoding.ASCII.GetBytes(key);
             return new SymmetricSecurityKey(keyByteArray);
         }
     }

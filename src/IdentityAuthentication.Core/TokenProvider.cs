@@ -1,6 +1,7 @@
 ﻿using Authentication.Abstractions;
 using IdentityAuthentication.Abstractions;
 using IdentityAuthentication.Common;
+using IdentityAuthentication.Extensions;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Options;
@@ -18,13 +19,11 @@ namespace IdentityAuthentication.Core
     internal class TokenProvider
     {
         private readonly AccessTokenConfig accessTokenConfig;
-        private readonly RefreshTokenConfig refreshTokenConfig;
-        private readonly SecretKeyConfig secretKeyConfig;
-        private readonly AuthenticationConfig authenticationConfig;
-        private readonly Credentials _credentials;
+        private readonly TokenValidation _tokenValidation;
 
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly AuthenticationHandle _authenticationHandle;
+        private readonly JwtSecurityTokenHandler _jwtSecurityTokenHandler;
 
         private readonly string UserIdType = ClaimTypes.Sid;
         private readonly string UsernameType = ClaimTypes.Name;
@@ -40,10 +39,8 @@ namespace IdentityAuthentication.Core
             AuthenticationHandle authenticationHandle)
         {
             accessTokenConfig = accessTokenOption.Value;
-            refreshTokenConfig = refreshTokenOption.Value;
-            secretKeyConfig = secretKeyOption.Value;
-            authenticationConfig = authenticationOption.Value;
-            _credentials = new Credentials(authenticationConfig, secretKeyConfig);
+            _tokenValidation = new TokenValidation(accessTokenConfig, refreshTokenOption.Value, secretKeyOption.Value, authenticationOption.Value);
+            _jwtSecurityTokenHandler = new JwtSecurityTokenHandler();
 
             _httpContextAccessor = httpContextAccessor;
             _authenticationHandle = authenticationHandle;
@@ -74,7 +71,7 @@ namespace IdentityAuthentication.Core
 
         public async Task<IToken> RefreshTokenAsync()
         {
-            // CheckTokenImmediatelyExpire();
+            await CheckRefreshToken();
 
             var expirationTime = TokenExpirationTime;
             var issueTime = GetDateTimeClaim(IssueTimeType);
@@ -96,22 +93,12 @@ namespace IdentityAuthentication.Core
 
         private string BuildAccessToken(Claim[] claims, DateTime? notBefore = null, DateTime? expirationTime = null)
         {
-            var signingCredentials = _credentials.GenerateSigningCredentials();
-
-            var securityToken = new JwtSecurityToken(
-                    issuer: accessTokenConfig.Issuer,
-                    audience: accessTokenConfig.Audience,
-                    claims: claims,
-                    notBefore: notBefore ?? DateTime.Now,
-                    expires: expirationTime ?? TokenExpirationTime,
-                    signingCredentials: signingCredentials);
-            return new JwtSecurityTokenHandler().WriteToken(securityToken);
+            var securityToken = _tokenValidation.GenerateAccessSecurityToken(claims, notBefore ?? DateTime.Now, expirationTime ?? TokenExpirationTime);
+            return _jwtSecurityTokenHandler.WriteToken(securityToken);
         }
 
         private string BuildRefreshToken(AuthenticationResult result)
         {
-            var signingCredentials = _credentials.GenerateSigningCredentials();
-
             var claims = new Claim[]
             {
                 new Claim(UserIdType, result.UserId),
@@ -120,15 +107,23 @@ namespace IdentityAuthentication.Core
                 new Claim(nameof(AuthenticationResult.AuthenticationSource),result.AuthenticationSource)
             };
 
-            var securityToken = new JwtSecurityToken(
-                    issuer: refreshTokenConfig.Issuer,
-                    audience: refreshTokenConfig.Audience,
-                    claims: claims,
-                    notBefore: DateTime.Now,
-                    expires: DateTime.Now.AddDays(refreshTokenConfig.ExpirationTime),
-                    signingCredentials: signingCredentials);
+            var securityToken = _tokenValidation.GenerateRefreshSecurityToken(claims);
+            return _jwtSecurityTokenHandler.WriteToken(securityToken);
+        }
 
-            return new JwtSecurityTokenHandler().WriteToken(securityToken);
+        private async Task CheckRefreshToken()
+        {
+            // CheckTokenImmediatelyExpire();        
+
+            var validationParameters = _tokenValidation.GenerateRefreshTokenValidation();
+
+            var httpContext = GetHttpContent();
+            var token = httpContext.GetRefreshToken();
+
+            var r = await _jwtSecurityTokenHandler.ValidateTokenAsync(token, validationParameters);
+            if (r.IsValid == false) throw new Exception("Authentication failed");
+
+            // todo Comparison the HttpContext.User.Claims and r.Claims
         }
 
         private void CheckTokenImmediatelyExpire()
@@ -154,14 +149,21 @@ namespace IdentityAuthentication.Core
         {
             get
             {
-                if (_httpContextAccessor == null) throw new Exception("Authentication failed");
-                if (_httpContextAccessor.HttpContext == null) throw new Exception("Authentication failed");
-                if (_httpContextAccessor.HttpContext.User == null) throw new Exception("Authentication failed");
+                var httpContext = GetHttpContent();
+                if (httpContext.User == null) throw new Exception("Authentication failed");
 
-                var claims = _httpContextAccessor.HttpContext.User.Claims.ToArray();
+                var claims = httpContext.User.Claims.ToArray();
                 if (claims.IsNullOrEmpty()) throw new Exception("Authentication failed");
                 return claims;
             }
+        }
+
+        private HttpContext GetHttpContent()
+        {
+            if (_httpContextAccessor == null) throw new Exception("Authentication failed");
+            if (_httpContextAccessor.HttpContext == null) throw new Exception("Authentication failed");
+
+            return _httpContextAccessor.HttpContext;
         }
 
         private AuthenticationResult GetAuthenticationResult()
