@@ -1,7 +1,7 @@
-﻿using Authentication.Abstractions;
-using IdentityAuthentication.Abstractions;
+﻿using IdentityAuthentication.Abstractions;
 using IdentityAuthentication.Common;
 using IdentityAuthentication.Extensions;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -12,7 +12,7 @@ namespace IdentityAuthentication.Core
         public static IServiceCollection AddIdentityAuthentication(this IServiceCollection services, IConfiguration configuration)
         {
             services.AddHttpContextAccessor();
-            services.AddAuthenticationSources();
+            services.AddAuthenticationSources(configuration);
 
             services.AddSingleton<TokenProvider>();
             services.AddSingleton<AuthenticationHandle>();
@@ -26,28 +26,32 @@ namespace IdentityAuthentication.Core
             return services;
         }
 
-        private static IServiceCollection AddAuthenticationSources(this IServiceCollection services)
+        private static IServiceCollection AddAuthenticationSources(this IServiceCollection services, IConfiguration configuration)
         {
-            var assemblies = AssemblyProvider.Authentications;
-            if (assemblies.NotNullAndEmpty())
+            var authenticationInitializations = AssemblyProvider.AuthenticationInitializations;
+            if (authenticationInitializations.NotNullAndEmpty())
             {
-                var authenticationsAssemblies = assemblies.Where(a => a.FullName.Contains("Abstractions") == false).ToArray();
-                foreach (var assemblie in authenticationsAssemblies)
+                foreach (var authenticationInitialization in authenticationInitializations)
                 {
-                    var types = assemblie.GetTypes();
-                    foreach (var type in types)
-                    {
-                        var interfaceType = type.GetInterface(nameof(IAuthenticationInitialization), true);
-                        if (interfaceType != null)
-                        {
-                            var authenticationInitialization = (IAuthenticationInitialization)Activator.CreateInstance(type);
-                            if (authenticationInitialization != null) authenticationInitialization.Initialization(services);
-                        }
-                    }
+                    if (authenticationInitialization != null) authenticationInitialization.InitializationService(services, configuration);
                 }
             }
 
             return services;
+        }
+
+        public static IApplicationBuilder UseIdentityAuthentication(this IApplicationBuilder builder)
+        {
+            var authenticationInitializations = AssemblyProvider.AuthenticationInitializations;
+            if (authenticationInitializations.NotNullAndEmpty())
+            {
+                foreach (var authenticationInitialization in authenticationInitializations)
+                {
+                    if (authenticationInitialization != null) authenticationInitialization.InitializationApplication(builder);
+                }
+            }
+
+            return builder;
         }
     }
 }

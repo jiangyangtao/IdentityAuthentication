@@ -4,15 +4,16 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Authentication.Local
+namespace Authentication.LDAP
 {
-    internal class LocalUserAuthenticationInitialization : IAuthenticationInitialization
+    internal class LdapAuthenticationInitialization : IAuthenticationInitialization
     {
         public IApplicationBuilder InitializationApplication(IApplicationBuilder builder) => builder;
 
         public IServiceCollection InitializationService(IServiceCollection services, IConfiguration configuration)
         {
-            services.AddSingleton<IAuthenticationService<PasswordCredential>, LocalUserAuthenticationService>();
+            services.Configure<LdapConfiguration>(configuration.GetSection("Authentication:LDAP"));
+            services.AddSingleton<IAuthenticationService<PasswordCredential>, LdapAuthenticationService>();
             return services;
         }
     }

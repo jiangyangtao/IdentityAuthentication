@@ -1,4 +1,5 @@
-﻿using IdentityAuthentication.Extensions;
+﻿using Authentication.Abstractions;
+using IdentityAuthentication.Extensions;
 using Microsoft.Extensions.DependencyModel;
 using System.Reflection;
 
@@ -28,6 +29,43 @@ namespace IdentityAuthentication.Core
                 }
 
                 return AuthenticationAssemblies;
+            }
+        }
+
+        private static IReadOnlyCollection<IAuthenticationInitialization> AuthenticationInitializationInterfaces;
+
+        public static IReadOnlyCollection<IAuthenticationInitialization> AuthenticationInitializations
+        {
+            get
+            {
+                if (AuthenticationInitializationInterfaces.IsNullOrEmpty())
+                {
+                    if (Authentications.IsNullOrEmpty()) return Array.Empty<IAuthenticationInitialization>();
+
+                    var authenticationsAssemblies = Authentications.Where(a => a.FullName.Contains("Abstractions") == false).ToArray();
+                    if (authenticationsAssemblies.IsNullOrEmpty()) return Array.Empty<IAuthenticationInitialization>();
+
+                    var authenticationInitializations = new List<IAuthenticationInitialization>();
+                    foreach (var assemblie in authenticationsAssemblies)
+                    {
+                        var types = assemblie.GetTypes();
+                        if (types.IsNullOrEmpty()) continue;
+
+                        foreach (var type in types)
+                        {
+                            var interfaceType = type.GetInterface(nameof(IAuthenticationInitialization), true);
+                            if (interfaceType != null)
+                            {
+                                var instance = (IAuthenticationInitialization)Activator.CreateInstance(type);
+                                if (instance != null) authenticationInitializations.Add(instance);
+                            }
+                        }
+                    }
+
+                    AuthenticationInitializationInterfaces = authenticationInitializations;
+                }
+
+                return AuthenticationInitializationInterfaces;
             }
         }
     }
