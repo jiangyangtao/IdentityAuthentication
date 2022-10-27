@@ -13,9 +13,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IdentityAuthentication.Appl
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Authentications", "Authentications", "{255F7F1B-EBE9-4967-BCBA-C457C436A636}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Authentication.Abstractions", "src\Authentication.Abstractions\Authentication.Abstractions.csproj", "{BC01459B-85C3-4D35-9B31-771FA0C1512B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Authentication.Abstractions", "src\Authentications\Authentication.Abstractions\Authentication.Abstractions.csproj", "{BC01459B-85C3-4D35-9B31-771FA0C1512B}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Authentication.Local", "src\Authentication.Local\Authentication.Local.csproj", "{B3053F93-9E2A-4F26-8ADA-FC875ECE4F3C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Authentication.Local", "src\Authentications\Authentication.Local\Authentication.Local.csproj", "{B3053F93-9E2A-4F26-8ADA-FC875ECE4F3C}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IdentityAuthentication.Core", "src\IdentityAuthentication.Core\IdentityAuthentication.Core.csproj", "{95258A25-6B49-47A0-AA74-D07E5CF5198A}"
 EndProject

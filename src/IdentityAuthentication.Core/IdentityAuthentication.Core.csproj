@@ -11,7 +11,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Authentication.Local\Authentication.Local.csproj" />
+    <ProjectReference Include="..\Authentications\Authentication.Local\Authentication.Local.csproj" />
     <ProjectReference Include="..\IdentityAuthentication.Abstractions\IdentityAuthentication.Abstractions.csproj" />
     <ProjectReference Include="..\IdentityAuthentication.Common\IdentityAuthentication.Common.csproj" />
   </ItemGroup>
