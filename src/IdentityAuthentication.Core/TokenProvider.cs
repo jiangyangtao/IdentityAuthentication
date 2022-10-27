@@ -71,7 +71,7 @@ namespace IdentityAuthentication.Core
 
         public async Task<IToken> RefreshTokenAsync()
         {
-            await CheckRefreshToken();
+            await CheckRefreshTokenAsync();
 
             var expirationTime = TokenExpirationTime;
             var issueTime = GetDateTimeClaim(IssueTimeType);
@@ -111,19 +111,23 @@ namespace IdentityAuthentication.Core
             return _jwtSecurityTokenHandler.WriteToken(securityToken);
         }
 
-        private async Task CheckRefreshToken()
+        private async Task CheckRefreshTokenAsync()
         {
-            // CheckTokenImmediatelyExpire();        
+            // CheckTokenImmediatelyExpire();       
+
+            var token = HttpContent.GetRefreshToken();
+            if (token.IsNullOrEmpty()) throw new Exception("refresh-token not detected in header");
 
             var validationParameters = _tokenValidation.GenerateRefreshTokenValidation();
+            var tokenValidationResult = await _jwtSecurityTokenHandler.ValidateTokenAsync(token, validationParameters);
+            if (tokenValidationResult.IsValid == false) throw new Exception("Refresh token validation failed");
 
-            var httpContext = GetHttpContent();
-            var token = httpContext.GetRefreshToken();
-
-            var r = await _jwtSecurityTokenHandler.ValidateTokenAsync(token, validationParameters);
-            if (r.IsValid == false) throw new Exception("Authentication failed");
-
-            // todo Comparison the HttpContext.User.Claims and r.Claims
+            foreach (var refreshClaim in tokenValidationResult.Claims)
+            {
+                var accessClaim = Claims.FirstOrDefault(a => a.Type == refreshClaim.Key);
+                if (accessClaim == null) throw new Exception("Refresh token validation failed");
+                if (refreshClaim.Value.ToString() != accessClaim.Value) throw new Exception("Refresh token validation failed");
+            }
         }
 
         private void CheckTokenImmediatelyExpire()
@@ -149,21 +153,25 @@ namespace IdentityAuthentication.Core
         {
             get
             {
-                var httpContext = GetHttpContent();
-                if (httpContext.User == null) throw new Exception("Authentication failed");
+                var claimsPrincipal = HttpContent.User;
+                if (claimsPrincipal == null) throw new Exception("Authentication failed");
 
-                var claims = httpContext.User.Claims.ToArray();
+                var claims = claimsPrincipal.Claims.ToArray();
                 if (claims.IsNullOrEmpty()) throw new Exception("Authentication failed");
+
                 return claims;
             }
         }
 
-        private HttpContext GetHttpContent()
+        private HttpContext HttpContent
         {
-            if (_httpContextAccessor == null) throw new Exception("Authentication failed");
-            if (_httpContextAccessor.HttpContext == null) throw new Exception("Authentication failed");
+            get
+            {
+                if (_httpContextAccessor == null) throw new Exception("Authentication failed");
+                if (_httpContextAccessor.HttpContext == null) throw new Exception("Authentication failed");
 
-            return _httpContextAccessor.HttpContext;
+                return _httpContextAccessor.HttpContext;
+            }
         }
 
         private AuthenticationResult GetAuthenticationResult()

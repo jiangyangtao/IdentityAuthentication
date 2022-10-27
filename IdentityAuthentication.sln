@@ -21,7 +21,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IdentityAuthentication.Core
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IdentityAuthentication.Extensions", "src\IdentityAuthentication.Extensions\IdentityAuthentication.Extensions.csproj", "{90BE5A36-2852-4C31-84A2-13B8BC47D6BA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IdentityAuthentication.Common", "src\IdentityAuthentication.Common\IdentityAuthentication.Common.csproj", "{01942C9F-42E7-4CDA-B1E2-12E1592E7F1E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IdentityAuthentication.Common", "src\IdentityAuthentication.Common\IdentityAuthentication.Common.csproj", "{01942C9F-42E7-4CDA-B1E2-12E1592E7F1E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
