@@ -37,5 +37,17 @@ namespace IdentityAuthentication.Application.Controllers
 
             return Ok(new TokenDtoBase(token));
         }
+
+        [HttpPost]
+        public async Task<IActionResult> Authorize()
+        {
+            return Ok();
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Info()
+        {
+            return Ok();
+        }
     }
 }

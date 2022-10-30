@@ -21,7 +21,7 @@ services.AddEndpointsApiExplorer();
 services.AddSwaggerGen();
 services.AddIdentityAuthentication(configuration);
 services.AddAuthentication(options =>
-{    
+{
     options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
     options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
     options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
