@@ -1,6 +1,6 @@
 
+using IdentityAuthenticaion.Model;
 using IdentityAuthentication.Application.Filters;
-using IdentityAuthentication.Common;
 using IdentityAuthentication.Core;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;

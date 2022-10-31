@@ -8,12 +8,13 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="6.0.9" />
+	<PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.25.0.0" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Authentications\Authentication.Local\Authentication.Local.csproj" />
+    <ProjectReference Include="..\IdentityAuthenticaion.Model\IdentityAuthenticaion.Model.csproj" />
     <ProjectReference Include="..\IdentityAuthentication.Abstractions\IdentityAuthentication.Abstractions.csproj" />
-    <ProjectReference Include="..\IdentityAuthentication.Common\IdentityAuthentication.Common.csproj" />
   </ItemGroup>
 
 </Project>

@@ -1,24 +1,19 @@
 ﻿using Authentication.Abstractions;
+using IdentityAuthenticaion.Model;
+using IdentityAuthenticaion.Model.Configurations;
 using IdentityAuthentication.Abstractions;
-using IdentityAuthentication.Common;
 using IdentityAuthentication.Extensions;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Options;
-using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json.Linq;
-using RSAExtensions;
 using System.IdentityModel.Tokens.Jwt;
-using System.Net;
 using System.Security.Claims;
-using System.Security.Cryptography;
-using System.Text;
 
 namespace IdentityAuthentication.Core
 {
     internal class TokenProvider
     {
-        private readonly AccessTokenConfig accessTokenConfig;
+        private readonly AccessTokenConfiguration accessTokenConfig;
         private readonly TokenValidation _tokenValidation;
 
         private readonly IHttpContextAccessor _httpContextAccessor;
@@ -31,10 +26,10 @@ namespace IdentityAuthentication.Core
         private readonly string ExpirationType = ClaimTypes.Expiration;
 
         public TokenProvider(
-            IOptions<AccessTokenConfig> accessTokenOption,
-            IOptions<RefreshTokenConfig> refreshTokenOption,
-            IOptions<SecretKeyConfig> secretKeyOption,
-            IOptions<AuthenticationConfig> authenticationOption,
+            IOptions<AccessTokenConfiguration> accessTokenOption,
+            IOptions<RefreshTokenConfiguration> refreshTokenOption,
+            IOptions<SecretKeyConfiguration> secretKeyOption,
+            IOptions<AuthenticationConfiguration> authenticationOption,
             IHttpContextAccessor httpContextAccessor,
             AuthenticationHandle authenticationHandle)
         {
