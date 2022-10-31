@@ -67,11 +67,11 @@ namespace IdentityAuthenticaion.Model
             };
         }
 
-        public static TokenValidationParameters BuildAccessTokenValidationParameters(IConfiguration configuration)
+        public static TokenValidationParameters BuildAccessTokenValidationParameters(IConfiguration accessTokenConfiguration, IConfiguration secretKeyConfiguration)
         {
-            var issuer = configuration.GetValue<string>("AccessToken:Issuer");
-            var audience = configuration.GetValue<string>("AccessToken:Audience");
-            var signingKey = Credentials.GetEncryptSecurityKey(configuration);
+            var issuer = accessTokenConfiguration.GetValue<string>("Issuer");
+            var audience = accessTokenConfiguration.GetValue<string>("Audience");
+            var signingKey = Credentials.GetEncryptSecurityKey(secretKeyConfiguration);
 
             return new TokenValidationParameters
             {

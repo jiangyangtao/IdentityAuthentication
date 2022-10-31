@@ -5,14 +5,19 @@ namespace IdentityAuthentication.Extensions
 {
     public static class HttpContextExtensions
     {
-        public static string GetRefreshToken(this HttpContext context)
+        public static string GetRefreshToken(this HttpRequest request)
         {
-            if (context == null) return string.Empty;
+            if (request == null) return string.Empty;
 
-            var r = context.Request.Headers.TryGetValue("refresh-token", out StringValues token);
+            var r = request.Headers.TryGetValue("refresh-token", out StringValues token);
             if (r == false) return string.Empty;
 
             return token;
+        }
+
+        public static string GetOriginHost(this HttpRequest request)
+        {
+            return $"{request.Scheme}://{request.Host}";
         }
     }
 }

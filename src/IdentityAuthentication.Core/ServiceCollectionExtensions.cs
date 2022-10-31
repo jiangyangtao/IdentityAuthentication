@@ -18,11 +18,6 @@ namespace IdentityAuthentication.Core
             services.AddSingleton<AuthenticationHandle>();
             services.AddSingleton<IAuthenticationProvider, AuthenticationProvider>();
 
-            services.Configure<AccessTokenConfiguration>(configuration.GetSection("AccessToken"));
-            services.Configure<RefreshTokenConfiguration>(configuration.GetSection("RefreshToken"));
-            services.Configure<SecretKeyConfiguration>(configuration.GetSection("SecretKey"));
-            services.Configure<AuthenticationConfiguration>(configuration.GetSection("Autnentication"));
-
             return services;
         }
 

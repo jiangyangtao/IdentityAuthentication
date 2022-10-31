@@ -29,5 +29,11 @@ namespace IdentityAuthenticaion.Model
         public string AuthorizeEndpoint { set; get; }
 
         public string InfoEndpoint { set; get; }
+
+        public static string GetDefaultConfigurationEndpoint(Uri originHost)
+        {
+            var url = new Uri(originHost, "/api/configuration");
+            return url.AbsoluteUri;
+        }
     }
 }

@@ -110,7 +110,7 @@ namespace IdentityAuthentication.Core
         {
             // CheckTokenImmediatelyExpire();       
 
-            var token = HttpContent.GetRefreshToken();
+            var token = HttpContent.Request.GetRefreshToken();
             if (token.IsNullOrEmpty()) throw new Exception("refresh-token not detected in header");
 
             var validationParameters = _tokenValidation.GenerateRefreshTokenValidation();

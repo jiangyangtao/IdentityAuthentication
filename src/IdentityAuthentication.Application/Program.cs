@@ -1,9 +1,12 @@
 
 using IdentityAuthenticaion.Model;
+using IdentityAuthenticaion.Model.Configurations;
 using IdentityAuthentication.Application.Filters;
 using IdentityAuthentication.Core;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
 var services = builder.Services;
@@ -11,9 +14,22 @@ var configuration = builder.Configuration;
 
 // Add services to the container.
 
+var accessTokenConfig = configuration.GetSection("AccessToken");
+var secretKeyConfig = configuration.GetSection("SecretKey");
+services.Configure<AccessTokenConfiguration>(accessTokenConfig);
+services.Configure<RefreshTokenConfiguration>(configuration.GetSection("RefreshToken"));
+services.Configure<SecretKeyConfiguration>(secretKeyConfig);
+services.Configure<AuthenticationConfiguration>(configuration.GetSection("Autnentication"));
+
 services.AddControllers(options =>
 {
     options.Filters.Add<ExceptionFilter>();
+}).AddNewtonsoftJson(options =>
+{
+    options.SerializerSettings.Formatting = Formatting.Indented;
+    options.SerializerSettings.DateFormatString = "yyyy-MM-dd HH:mm:ss";
+    options.SerializerSettings.ContractResolver = new DefaultContractResolver();
+    options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
 });
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -27,7 +43,7 @@ services.AddAuthentication(options =>
     options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
 }).AddJwtBearer(options =>
 {
-    options.TokenValidationParameters = TokenValidation.BuildAccessTokenValidationParameters(configuration);
+    options.TokenValidationParameters = TokenValidation.BuildAccessTokenValidationParameters(accessTokenConfig, secretKeyConfig);
     options.Events = new JwtBearerEvents
     {
         OnMessageReceived = context =>

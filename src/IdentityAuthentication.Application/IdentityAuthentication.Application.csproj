@@ -7,12 +7,17 @@
 	</PropertyGroup>
 
 	<ItemGroup>
+		<PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="6.0.10" />
 		<PackageReference Include="Swashbuckle.AspNetCore" Version="6.2.3" />
 		<!--<PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="6.0.8" />-->
 	</ItemGroup>
 
 	<ItemGroup>
 		<ProjectReference Include="..\IdentityAuthentication.Core\IdentityAuthentication.Core.csproj" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Folder Include="Protos\" />
 	</ItemGroup>
 
 </Project>
