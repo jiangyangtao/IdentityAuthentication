@@ -1,0 +1,27 @@
+syntax = "proto3";
+
+option csharp_namespace = "IdentityAuthentication.Application.Protos.Token";
+
+package Token;
+
+service TokenProto {
+	rpc RefreshToken(RefreshTokenModel) returns (RefreshTokenResponse);
+	rpc Authorize(AccessTokenModel) returns (AuthorizeResponse);
+}
+
+message AccessTokenModel{
+	string token=1;
+}
+
+message RefreshTokenModel{
+	string token=1;
+}
+
+message RefreshTokenResponse {
+	bool Result = 1;
+	string AccessToken = 2;
+}
+
+message AuthorizeResponse{
+	bool Result = 1;
+}
