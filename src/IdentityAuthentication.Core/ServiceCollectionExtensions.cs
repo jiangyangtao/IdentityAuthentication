@@ -1,6 +1,7 @@
 ﻿using IdentityAuthenticaion.Model.Configurations;
 using IdentityAuthentication.Abstractions;
 using IdentityAuthentication.Extensions;
+using IdentityAuthentication.TokenServices;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -17,6 +18,8 @@ namespace IdentityAuthentication.Core
             services.AddSingleton<TokenProvider>();
             services.AddSingleton<AuthenticationHandle>();
             services.AddSingleton<IAuthenticationProvider, AuthenticationProvider>();
+
+            services.AddTokenSerivces(configuration);
 
             return services;
         }

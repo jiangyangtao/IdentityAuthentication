@@ -8,13 +8,13 @@ namespace Authentication.Abstractions.Credentials
     {
         public string GrantType => "Password";
 
-        public string Client => "DesktopBrowser";
+        public string GrantSource { set; get; }
+
+        public string Client { set; get; }
 
         public string Username { set; get; }
 
         public string Password { set; get; }
-
-        public string GrantSource { set; get; }
 
         public AuthenticationResult CreateAuthenticationResult(string id, IReadOnlyDictionary<string, string> metadata, string username = "")
         {

@@ -14,6 +14,7 @@ namespace IdentityAuthentication.Core
     internal class TokenProvider
     {
         private readonly AccessTokenConfiguration accessTokenConfig;
+        private readonly AuthenticationConfiguration authenticationConfig;
         private readonly TokenValidation _tokenValidation;
 
         private readonly IHttpContextAccessor _httpContextAccessor;
@@ -32,7 +33,8 @@ namespace IdentityAuthentication.Core
             AuthenticationHandle authenticationHandle)
         {
             accessTokenConfig = accessTokenOption.Value;
-            _tokenValidation = new TokenValidation(accessTokenConfig, refreshTokenOption.Value, secretKeyOption.Value, authenticationOption.Value);
+            authenticationConfig = authenticationOption.Value;
+            _tokenValidation = new TokenValidation(accessTokenConfig, refreshTokenOption.Value, secretKeyOption.Value, authenticationConfig);
             _jwtSecurityTokenHandler = new JwtSecurityTokenHandler();
 
             _httpContextAccessor = httpContextAccessor;

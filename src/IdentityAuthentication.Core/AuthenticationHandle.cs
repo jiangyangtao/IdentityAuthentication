@@ -13,8 +13,6 @@ namespace IdentityAuthentication.Core
         private readonly MethodInfo ExecuteIdentityCheckMethod;
         private readonly IDictionary<string, Type> CredentialTypes;
 
-        private const string GrantTypeKey = nameof(AuthenticationResult.GrantType);
-        private const string GrantSourceKey = nameof(AuthenticationResult.GrantSource);
         private const string GrantTypeDefault = "Password";
         private const string GrantSourceDefault = "Local";
 
@@ -65,8 +63,8 @@ namespace IdentityAuthentication.Core
         public async Task<bool> IdentityCheckAsync(AuthenticationResult authenticationResult)
         {
             var credentialObject = new JObject {
-                new JProperty(GrantTypeKey,authenticationResult.GrantType),
-                new JProperty(GrantSourceKey,authenticationResult.GrantSource),
+                new JProperty(AuthenticationResult.GrantTypePropertyName,authenticationResult.GrantType),
+                new JProperty(AuthenticationResult.GrantSourcePropertyName,authenticationResult.GrantSource),
             };
 
             var credential = GetCredential(credentialObject);
@@ -78,13 +76,13 @@ namespace IdentityAuthentication.Core
 
         private ICredential GetCredential(JObject credentialObject)
         {
-            if (credentialObject.ContainsKey(GrantTypeKey) == false)
-                credentialObject[GrantTypeKey] = GrantTypeDefault;
+            if (credentialObject.ContainsKey(AuthenticationResult.GrantTypePropertyName) == false)
+                credentialObject[AuthenticationResult.GrantTypePropertyName] = GrantTypeDefault;
 
-            if (credentialObject.ContainsKey(GrantSourceKey) == false)
-                credentialObject[GrantSourceKey] = GrantSourceDefault;
+            if (credentialObject.ContainsKey(AuthenticationResult.GrantSourcePropertyName) == false)
+                credentialObject[AuthenticationResult.GrantSourcePropertyName] = GrantSourceDefault;
 
-            var grantType = credentialObject[GrantTypeKey].Value<string>();
+            var grantType = credentialObject[AuthenticationResult.GrantSourcePropertyName].Value<string>();
             if (CredentialTypes.ContainsKey(grantType) == false) throw new Exception($"Unknown GrantType: {grantType}");
 
             var type = CredentialTypes[grantType];
