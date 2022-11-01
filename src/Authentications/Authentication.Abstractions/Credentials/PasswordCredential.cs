@@ -8,6 +8,8 @@ namespace Authentication.Abstractions.Credentials
     {
         public string AuthenticationType => "Password";
 
+        public string Client => "DesktopBrowser";
+
         public string Username { set; get; }
 
         public string Password { set; get; }

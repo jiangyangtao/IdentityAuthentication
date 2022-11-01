@@ -7,6 +7,8 @@ namespace Authentication.Abstractions
 
         public string AuthenticationSource { get; }
 
+        public string Client { get; }
+
         AuthenticationResult CreateAuthenticationResult(string id, IReadOnlyDictionary<string, string> metadata, string username = "");
     }
 }

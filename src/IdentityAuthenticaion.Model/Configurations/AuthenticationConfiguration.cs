@@ -1,9 +1,4 @@
 ﻿using Microsoft.IdentityModel.Tokens;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace IdentityAuthenticaion.Model.Configurations
 {
@@ -11,11 +6,26 @@ namespace IdentityAuthenticaion.Model.Configurations
     {
         public string EncryptionAlgorithm { set; get; } = SecurityAlgorithms.RsaSha256;
 
+        public TokenType TokenType { set; get; } = TokenType.JWT;
+
         /// <summary>
         /// Enable grpc connection
         /// </summary>
         public bool EnableGrpcConnection { get; set; } = true;
 
-        public bool EnableTokenEncrypt { get; set; } = false;
+        public bool EnableJwtEncrypt { get; set; } = false;
+    }
+
+    public enum TokenType
+    {
+        /// <summary>
+        /// Json Web Token
+        /// </summary>
+        JWT = 1,
+
+        /// <summary>
+        /// Reference Token
+        /// </summary>
+        Reference = 2
     }
 }
