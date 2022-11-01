@@ -14,7 +14,7 @@ namespace Authentication.Local
             _logger = logger;
         }
 
-        public string AuthenticationSource => "Local";
+        public string GrantSource => "Local";
 
         public Task<AuthenticationResult> AuthenticateAsync(PasswordCredential credential)
         {

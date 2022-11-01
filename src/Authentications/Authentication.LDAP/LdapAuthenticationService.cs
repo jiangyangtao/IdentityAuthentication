@@ -17,7 +17,7 @@ namespace Authentication.LDAP
             ldapConfiguration = ldapConfigurationPptions.Value;
         }
 
-        public string AuthenticationSource => "LDAP";
+        public string GrantSource => "LDAP";
 
         public Task<AuthenticationResult> AuthenticateAsync(PasswordCredential credential)
         {

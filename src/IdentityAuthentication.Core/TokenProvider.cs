@@ -20,10 +20,8 @@ namespace IdentityAuthentication.Core
         private readonly AuthenticationHandle _authenticationHandle;
         private readonly JwtSecurityTokenHandler _jwtSecurityTokenHandler;
 
-        private readonly string UserIdType = ClaimTypes.Sid;
-        private readonly string UsernameType = ClaimTypes.Name;
-        private readonly string IssueTimeType = "IssueTime";
-        private readonly string ExpirationType = ClaimTypes.Expiration;
+        private readonly string IssueTimeKey = "IssueTime";
+        private readonly string ExpirationKey = ClaimTypes.Expiration;
 
         public TokenProvider(
             IOptions<AccessTokenConfiguration> accessTokenOption,
@@ -45,15 +43,11 @@ namespace IdentityAuthentication.Core
         {
             var claims = new List<Claim>
             {
-                new Claim(UserIdType, result.UserId),
-                new Claim(UsernameType,result.Username),
-                new Claim(IssueTimeType,DateTime.Now.ToString()),
-                new Claim(ExpirationType,TokenExpirationTime.ToString()),
-                new Claim(nameof(AuthenticationResult.AuthenticationType),result.AuthenticationType),
-                new Claim(nameof(AuthenticationResult.AuthenticationSource),result.AuthenticationSource)
+                new Claim(IssueTimeKey,DateTime.Now.ToString()),
+                new Claim(ExpirationKey,TokenExpirationTime.ToString()),
             };
 
-            claims.AddRange(result.GetMetadataClaims());
+            claims.AddRange(result.GetClaims());
             var accessToken = BuildAccessToken(claims.ToArray());
             var refreshToken = BuildRefreshToken(result);
 
@@ -69,7 +63,7 @@ namespace IdentityAuthentication.Core
             await CheckRefreshTokenAsync();
 
             var expirationTime = TokenExpirationTime;
-            var issueTime = GetDateTimeClaim(IssueTimeType);
+            var issueTime = GetDateTimeClaim(IssueTimeKey);
             var authenticationResult = GetAuthenticationResult();
             var checkResult = await _authenticationHandle.IdentityCheckAsync(authenticationResult);
             if (checkResult == false) expirationTime = issueTime.AddSeconds(1);
@@ -94,14 +88,7 @@ namespace IdentityAuthentication.Core
 
         private string BuildRefreshToken(AuthenticationResult result)
         {
-            var claims = new Claim[]
-            {
-                new Claim(UserIdType, result.UserId),
-                new Claim(UsernameType,result.Username),
-                new Claim(nameof(AuthenticationResult.AuthenticationType),result.AuthenticationType),
-                new Claim(nameof(AuthenticationResult.AuthenticationSource),result.AuthenticationSource)
-            };
-
+            var claims = result.GetClaims();
             var securityToken = _tokenValidation.GenerateRefreshSecurityToken(claims);
             return _jwtSecurityTokenHandler.WriteToken(securityToken);
         }
@@ -127,7 +114,7 @@ namespace IdentityAuthentication.Core
 
         private void CheckTokenImmediatelyExpire()
         {
-            var expirationTime = GetDateTimeClaim(ExpirationType);
+            var expirationTime = GetDateTimeClaim(ExpirationKey);
 
             var timeSpan = expirationTime - DateTime.Now;
             if (timeSpan.TotalSeconds > accessTokenConfig.RefreshTime) throw new Exception("Token do not expire immediately");
@@ -171,23 +158,27 @@ namespace IdentityAuthentication.Core
 
         private AuthenticationResult GetAuthenticationResult()
         {
-            var userIdClaim = Claims.FirstOrDefault(a => a.Type == UserIdType);
+            var userIdClaim = Claims.FirstOrDefault(a => a.Type == AuthenticationResult.UserIdPropertyName);
             if (userIdClaim == null) throw new Exception("Authentication failed");
 
-            var usernameClaim = Claims.FirstOrDefault(a => a.Type == UsernameType);
+            var usernameClaim = Claims.FirstOrDefault(a => a.Type == AuthenticationResult.UsernamePropertyName);
             if (usernameClaim == null) throw new Exception("Authentication failed");
 
-            var authenticationTypeClaim = Claims.FirstOrDefault(a => a.Type == nameof(AuthenticationResult.AuthenticationType));
-            if (authenticationTypeClaim == null) throw new Exception("Authentication failed");
+            var grantTypeClaim = Claims.FirstOrDefault(a => a.Type == AuthenticationResult.GrantTypePropertyName);
+            if (grantTypeClaim == null) throw new Exception("Authentication failed");
 
-            var authenticationSourceClaim = Claims.FirstOrDefault(a => a.Type == nameof(AuthenticationResult.AuthenticationSource));
-            if (authenticationSourceClaim == null) throw new Exception("Authentication failed");
+            var grantSourceClaim = Claims.FirstOrDefault(a => a.Type == AuthenticationResult.GrantSourcePropertyName);
+            if (grantSourceClaim == null) throw new Exception("Authentication failed");
+
+            var clientClaim = Claims.FirstOrDefault(a => a.Type == AuthenticationResult.ClientPropertyName);
+            if (clientClaim == null) throw new Exception("Authentication failed");
 
             return AuthenticationResult.CreateAuthenticationResult(
                 userId: userIdClaim.Value,
                 username: usernameClaim.Value,
-                authenticationSource: authenticationSourceClaim.Value,
-                authenticationType: authenticationTypeClaim.Value,
+                grantSource: grantSourceClaim.Value,
+                grantType: grantTypeClaim.Value,
+                client: clientClaim.Value,
                 metadata: null);
         }
     }

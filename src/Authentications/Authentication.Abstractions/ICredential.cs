@@ -3,9 +3,9 @@ namespace Authentication.Abstractions
 {
     public interface ICredential
     {
-        public string AuthenticationType { get; }
+        public string GrantType { get; }
 
-        public string AuthenticationSource { get; }
+        public string GrantSource { get; }
 
         public string Client { get; }
 

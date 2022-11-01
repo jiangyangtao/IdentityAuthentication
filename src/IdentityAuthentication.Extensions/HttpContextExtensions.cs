@@ -17,6 +17,8 @@ namespace IdentityAuthentication.Extensions
 
         public static string GetOriginHost(this HttpRequest request)
         {
+            if (request == null) return string.Empty;
+
             return $"{request.Scheme}://{request.Host}";
         }
     }

@@ -6,7 +6,7 @@ namespace Authentication.Abstractions.Credentials
 {
     public class PasswordCredential : ICredential
     {
-        public string AuthenticationType => "Password";
+        public string GrantType => "Password";
 
         public string Client => "DesktopBrowser";
 
@@ -14,15 +14,16 @@ namespace Authentication.Abstractions.Credentials
 
         public string Password { set; get; }
 
-        public string AuthenticationSource { set; get; }
+        public string GrantSource { set; get; }
 
         public AuthenticationResult CreateAuthenticationResult(string id, IReadOnlyDictionary<string, string> metadata, string username = "")
         {
             return AuthenticationResult.CreateAuthenticationResult(
                 userId: id,
                 username: username.NotNullAndEmpty() ? username : Username,
-                authenticationSource: AuthenticationSource,
-                authenticationType: AuthenticationType,
+                grantSource: GrantSource,
+                grantType: GrantType,
+                client: Client,
                 metadata: metadata);
         }
     }

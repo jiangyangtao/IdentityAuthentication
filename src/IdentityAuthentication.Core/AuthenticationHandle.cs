@@ -13,10 +13,10 @@ namespace IdentityAuthentication.Core
         private readonly MethodInfo ExecuteIdentityCheckMethod;
         private readonly IDictionary<string, Type> CredentialTypes;
 
-        private const string AuthenticationTypeKey = nameof(AuthenticationResult.AuthenticationType);
-        private const string AuthenticationSourceKey = nameof(AuthenticationResult.AuthenticationSource);
-        private const string AuthenticationTypeDefault = "Password";
-        private const string AuthenticationSourceDefault = "Local";
+        private const string GrantTypeKey = nameof(AuthenticationResult.GrantType);
+        private const string GrantSourceKey = nameof(AuthenticationResult.GrantSource);
+        private const string GrantTypeDefault = "Password";
+        private const string GrantSourceDefault = "Local";
 
         public AuthenticationHandle(IServiceProvider serviceProvider)
         {
@@ -43,9 +43,9 @@ namespace IdentityAuthentication.Core
                     var credential = (ICredential)Activator.CreateInstance(type);
                     if (credential != null)
                     {
-                        if (dic.ContainsKey(credential.AuthenticationType)) throw new Exception($"{credential.AuthenticationType} already exists.");
+                        if (dic.ContainsKey(credential.GrantType)) throw new Exception($"{credential.GrantType} already exists.");
 
-                        dic.Add(credential.AuthenticationType, type);
+                        dic.Add(credential.GrantType, type);
                     }
                 }
             }
@@ -65,8 +65,8 @@ namespace IdentityAuthentication.Core
         public async Task<bool> IdentityCheckAsync(AuthenticationResult authenticationResult)
         {
             var credentialObject = new JObject {
-                new JProperty(AuthenticationTypeKey,authenticationResult.AuthenticationType),
-                new JProperty(AuthenticationSourceKey,authenticationResult.AuthenticationSource),
+                new JProperty(GrantTypeKey,authenticationResult.GrantType),
+                new JProperty(GrantSourceKey,authenticationResult.GrantSource),
             };
 
             var credential = GetCredential(credentialObject);
@@ -78,16 +78,16 @@ namespace IdentityAuthentication.Core
 
         private ICredential GetCredential(JObject credentialObject)
         {
-            if (credentialObject.ContainsKey(AuthenticationTypeKey) == false)
-                credentialObject[AuthenticationTypeKey] = AuthenticationTypeDefault;
+            if (credentialObject.ContainsKey(GrantTypeKey) == false)
+                credentialObject[GrantTypeKey] = GrantTypeDefault;
 
-            if (credentialObject.ContainsKey(AuthenticationSourceKey) == false)
-                credentialObject[AuthenticationSourceKey] = AuthenticationSourceDefault;
+            if (credentialObject.ContainsKey(GrantSourceKey) == false)
+                credentialObject[GrantSourceKey] = GrantSourceDefault;
 
-            var authenticationType = credentialObject[AuthenticationTypeKey].Value<string>();
-            if (CredentialTypes.ContainsKey(authenticationType) == false) throw new Exception($"Unknown AuthenticationType: {authenticationType}");
+            var grantType = credentialObject[GrantTypeKey].Value<string>();
+            if (CredentialTypes.ContainsKey(grantType) == false) throw new Exception($"Unknown GrantType: {grantType}");
 
-            var type = CredentialTypes[authenticationType];
+            var type = CredentialTypes[grantType];
             var credential = (ICredential)credentialObject.ToObject(type);
 
             return credential;
@@ -98,7 +98,7 @@ namespace IdentityAuthentication.Core
             var authenticationService = GetAuthenticationService(credential);
 
             var result = await authenticationService.AuthenticateAsync(credential);
-            if (result == null) throw new Exception($"[{authenticationService.GetType().FullName}]authenticate failed, credential: {credential.AuthenticationType}, source: {credential.AuthenticationSource}");
+            if (result == null) throw new Exception($"[{authenticationService.GetType().FullName}]authenticate failed, credential: {credential.GrantType}, source: {credential.GrantSource}");
 
             return result;
         }
@@ -112,14 +112,14 @@ namespace IdentityAuthentication.Core
         private IAuthenticationService<T> GetAuthenticationService<T>(T credential) where T : ICredential
         {
             var services = _serviceProvider.GetServices<IAuthenticationService<T>>();
-            if (services.Any() == false) throw new Exception($"Not support authentication type {credential.AuthenticationSource}");
+            if (services.Any() == false) throw new Exception($"Not support authentication type {credential.GrantSource}");
 
-            var authenticationServices = services.Where(item => item.AuthenticationSource.Equals(credential.AuthenticationSource, StringComparison.OrdinalIgnoreCase)).ToArray();
-            if (authenticationServices.IsNullOrEmpty()) throw new Exception($"Not map authentication source [{credential.AuthenticationSource}]");
-            if (authenticationServices.Length >= 2) throw new Exception($"Uncertain authentication source [{credential.AuthenticationSource}]");
+            var authenticationServices = services.Where(item => item.GrantSource.Equals(credential.GrantSource, StringComparison.OrdinalIgnoreCase)).ToArray();
+            if (authenticationServices.IsNullOrEmpty()) throw new Exception($"Not map authentication source [{credential.GrantSource}]");
+            if (authenticationServices.Length >= 2) throw new Exception($"Uncertain authentication source [{credential.GrantSource}]");
 
             var authenticationService = authenticationServices.FirstOrDefault();
-            if (authenticationService == null) throw new Exception($"Authenticate failed, credential: {credential.AuthenticationType},source: {credential.AuthenticationSource}");
+            if (authenticationService == null) throw new Exception($"Authenticate failed, credential: {credential.GrantType},source: {credential.GrantSource}");
 
             return authenticationService;
         }

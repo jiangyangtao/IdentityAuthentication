@@ -51,9 +51,10 @@ namespace IdentityAuthentication.Core
                         var types = assemblie.GetTypes();
                         if (types.IsNullOrEmpty()) continue;
 
+                        var interfaceName = nameof(IAuthenticationInitialization);
                         foreach (var type in types)
                         {
-                            var interfaceType = type.GetInterface(nameof(IAuthenticationInitialization), true);
+                            var interfaceType = type.GetInterface(interfaceName, true);
                             if (interfaceType != null)
                             {
                                 var instance = (IAuthenticationInitialization)Activator.CreateInstance(type);

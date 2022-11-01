@@ -12,7 +12,7 @@ namespace IdentityAuthentication.Core
         public static IServiceCollection AddIdentityAuthentication(this IServiceCollection services, IConfiguration configuration)
         {
             services.AddHttpContextAccessor();
-            services.AddAuthenticationSources(configuration);
+            services.AddGrantSources(configuration);
 
             services.AddSingleton<TokenProvider>();
             services.AddSingleton<AuthenticationHandle>();
@@ -21,7 +21,7 @@ namespace IdentityAuthentication.Core
             return services;
         }
 
-        private static IServiceCollection AddAuthenticationSources(this IServiceCollection services, IConfiguration configuration)
+        private static IServiceCollection AddGrantSources(this IServiceCollection services, IConfiguration configuration)
         {
             var authenticationInitializations = AssemblyProvider.AuthenticationInitializations;
             if (authenticationInitializations.NotNullAndEmpty())
