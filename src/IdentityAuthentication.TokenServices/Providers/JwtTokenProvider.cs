@@ -1,19 +1,13 @@
-﻿using IdentityAuthenticaion.Model;
+﻿using Authentication.Abstractions;
+using IdentityAuthenticaion.Model;
 using IdentityAuthenticaion.Model.Configurations;
-using IdentityAuthentication.TokenServices.Abstractions;
-using Microsoft.AspNetCore.Http.Features.Authentication;
-using Microsoft.AspNetCore.Http;
-using System;
-using System.Collections.Generic;
-using System.IdentityModel.Tokens.Jwt;
-using System.Linq;
-using System.Security.Claims;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.Extensions.Options;
 using IdentityAuthentication.Abstractions;
-using Authentication.Abstractions;
 using IdentityAuthentication.Extensions;
+using IdentityAuthentication.TokenServices.Abstractions;
+using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Options;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
 
 namespace IdentityAuthentication.TokenServices.Providers
 {

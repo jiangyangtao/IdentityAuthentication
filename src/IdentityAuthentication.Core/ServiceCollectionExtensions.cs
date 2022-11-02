@@ -15,7 +15,6 @@ namespace IdentityAuthentication.Core
             services.AddHttpContextAccessor();
             services.AddGrantSources(configuration);
 
-            services.AddSingleton<TokenProvider>();
             services.AddSingleton<AuthenticationHandle>();
             services.AddSingleton<IAuthenticationProvider, AuthenticationProvider>();
 

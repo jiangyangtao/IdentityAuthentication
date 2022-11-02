@@ -1,13 +1,6 @@
-﻿using Authentication.Abstractions;
-using IdentityAuthentication.Abstractions;
-using IdentityAuthentication.Extensions;
+﻿using IdentityAuthentication.Abstractions;
 using IdentityAuthentication.TokenServices.Abstractions;
-using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
 using Newtonsoft.Json.Linq;
-using System.Reflection;
 
 namespace IdentityAuthentication.Core
 {
