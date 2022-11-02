@@ -6,6 +6,8 @@ namespace IdentityAuthentication.TokenServices
     {
         public StorageType StorageType { set; get; }
 
+        public int MemonySizeLimit { set; get; }
+
         public string RedisConnection { set; get; }
     }
 

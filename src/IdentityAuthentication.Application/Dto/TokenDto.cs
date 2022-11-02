@@ -4,9 +4,9 @@ namespace IdentityAuthentication.Application.Dto
 {
     public class TokenDtoBase
     {
-        public TokenDtoBase(IToken token)
+        public TokenDtoBase(string token)
         {
-            access_token = token.AccessToken;
+            access_token = token;
         }
 
         public string access_token { set; get; }
@@ -14,7 +14,7 @@ namespace IdentityAuthentication.Application.Dto
 
     public class TokenDto : TokenDtoBase
     {
-        public TokenDto(IToken token) : base(token)
+        public TokenDto(IToken token) : base(token.AccessToken)
         {
             expires_in = token.ExpiresIn;
             token_type = token.TokenType;

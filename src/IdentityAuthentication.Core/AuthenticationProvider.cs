@@ -1,6 +1,7 @@
 ﻿using Authentication.Abstractions;
 using IdentityAuthentication.Abstractions;
 using IdentityAuthentication.Extensions;
+using IdentityAuthentication.TokenServices.Abstractions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -12,28 +13,32 @@ namespace IdentityAuthentication.Core
 {
     internal class AuthenticationProvider : IAuthenticationProvider
     {
-        private readonly TokenProvider _tokenProvider;
         private readonly AuthenticationHandle _authenticationHandle;
+        private readonly ITokenProvider _tokenProvider;
 
         public AuthenticationProvider(
-            TokenProvider tokenProvider,
-            AuthenticationHandle authenticationHandle)
+            AuthenticationHandle authenticationHandle,
+           ITokenProviderFactory tokenProviderFactory)
         {
-            _tokenProvider = tokenProvider;
+            _tokenProvider = tokenProviderFactory.CreateTokenService();
             _authenticationHandle = authenticationHandle;
         }
 
         public async Task<IToken> AuthenticateAsync(JObject credentialObject)
         {
             var authenticationResult = await _authenticationHandle.AuthenticateAsync(credentialObject);
-            var token = _tokenProvider.GenerateToken(authenticationResult);
+            var token = await _tokenProvider.GenerateAsync(authenticationResult);
 
-            return await Task.FromResult(token);
+            return token;
         }
 
-        public async Task<IToken> RefreshTokenAsync()
+        public async Task<string> RefreshTokenAsync()
         {
-            return await _tokenProvider.RefreshTokenAsync();
+            var authenticationResult = await _tokenProvider.GetAuthenticationResultAsync();
+            var checkResult = await _authenticationHandle.IdentityCheckAsync(authenticationResult);
+
+            var token = checkResult ? await _tokenProvider.RefreshAsync() : await _tokenProvider.DestroyAsync();
+            return token;
         }
     }
 }

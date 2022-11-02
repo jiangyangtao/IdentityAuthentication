@@ -35,17 +35,17 @@ namespace IdentityAuthentication.Application.Controllers
         public IActionResult AuthenticationEndpoints()
         {
             var baseUrl = HttpContext.Request.GetOriginHost();
-            var apiPath = "v1/api";
+            var apiPath = $"{baseUrl}/v1/api";
             var endpoints = new AuthenticationEndpoints
             {
-                AccessTokenConfigurationEndpoint = $"{baseUrl}/{apiPath}/configuration/AccessTokenConfiguration",
-                RefreshTokenConfigurationEndpoint = $"{baseUrl}/{apiPath}/configuration/RefreshTokenConfiguration",
-                SecretKeyConfigurationEndpoint = $"{baseUrl}/{apiPath}/configuration/SecretKeyConfiguration",
-                AutnenticationConfigurationEndpoint = $"{baseUrl}/{apiPath}/configuration/AuthenticaionConfiguartion",
-                GenerateTokenEndpoint = $"{baseUrl}/{apiPath}/token/generate",
-                RefreshToeknEndpoint = $"{baseUrl}/{apiPath}/token/refresh",
-                AuthorizeEndpoint = $"{baseUrl}/{apiPath}/token/authorize",
-                InfoEndpoint = $"{baseUrl}/{apiPath}/token/info",
+                AccessTokenConfigurationEndpoint = $"{apiPath}/configuration/AccessTokenConfiguration",
+                RefreshTokenConfigurationEndpoint = $"{apiPath}/configuration/RefreshTokenConfiguration",
+                SecretKeyConfigurationEndpoint = $"{apiPath}/configuration/SecretKeyConfiguration",
+                AutnenticationConfigurationEndpoint = $"{apiPath}/configuration/AuthenticaionConfiguartion",
+                GenerateTokenEndpoint = $"{apiPath}/token/generate",
+                RefreshToeknEndpoint = $"{apiPath}/token/refresh",
+                AuthorizeEndpoint = $"{apiPath}/token/authorize",
+                InfoEndpoint = $"{apiPath}/token/info",
             };
 
             return Ok(endpoints);

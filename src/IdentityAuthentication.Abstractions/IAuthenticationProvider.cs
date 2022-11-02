@@ -11,6 +11,6 @@ namespace IdentityAuthentication.Abstractions
     {
         Task<IToken> AuthenticateAsync(JObject credentialObject);
 
-        Task<IToken> RefreshTokenAsync();
+        Task<string> RefreshTokenAsync();
     }
 }
