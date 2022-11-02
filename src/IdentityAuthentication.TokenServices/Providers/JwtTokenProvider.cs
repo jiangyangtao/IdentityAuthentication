@@ -40,6 +40,10 @@ namespace IdentityAuthentication.TokenServices.Providers
 
         public TokenType TokenType => TokenType.JWT;
 
+        private DateTime TokenExpirationTime => DateTime.Now.AddSeconds(accessTokenConfig.ExpirationTime);
+
+
+
         public Task<IToken> GenerateAsync(AuthenticationResult result)
         {
             var claims = new List<Claim>
@@ -55,8 +59,7 @@ namespace IdentityAuthentication.TokenServices.Providers
             var token = (IToken)TokenResult.Create(
                 accessToken: accessToken,
                 refreshToken: refreshToken,
-                expiresIn: accessTokenConfig.ExpirationTime
-            );
+                expiresIn: accessTokenConfig.ExpirationTime);
 
             return Task.FromResult(token);
         }
@@ -121,8 +124,6 @@ namespace IdentityAuthentication.TokenServices.Providers
             return Task.FromResult(result);
         }
 
-        private DateTime TokenExpirationTime => DateTime.Now.AddSeconds(accessTokenConfig.ExpirationTime);
-
         private string BuildAccessToken(Claim[] claims, DateTime? notBefore = null, DateTime? expirationTime = null)
         {
             var securityToken = _tokenValidation.GenerateAccessSecurityToken(claims, notBefore ?? DateTime.Now, expirationTime ?? TokenExpirationTime);
@@ -138,7 +139,9 @@ namespace IdentityAuthentication.TokenServices.Providers
 
         private async Task CheckRefreshTokenAsync()
         {
-            CheckTokenImmediatelyExpire();
+            var expirationTime = GetDateTimeClaim(ExpirationKey);
+            var timeSpan = expirationTime - DateTime.Now;
+            if (timeSpan.TotalSeconds > accessTokenConfig.RefreshTime) throw new Exception("Token do not expire immediately");
 
             var token = HttpContent.Request.GetRefreshToken();
             if (token.IsNullOrEmpty()) throw new Exception("refresh-token not detected in header");
@@ -153,14 +156,6 @@ namespace IdentityAuthentication.TokenServices.Providers
                 if (accessClaim == null) throw new Exception("Refresh token validation failed");
                 if (refreshClaim.Value.ToString() != accessClaim.Value) throw new Exception("Refresh token validation failed");
             }
-        }
-
-        private void CheckTokenImmediatelyExpire()
-        {
-            var expirationTime = GetDateTimeClaim(ExpirationKey);
-
-            var timeSpan = expirationTime - DateTime.Now;
-            if (timeSpan.TotalSeconds > accessTokenConfig.RefreshTime) throw new Exception("Token do not expire immediately");
         }
 
         private DateTime GetDateTimeClaim(string type)

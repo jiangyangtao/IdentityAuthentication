@@ -15,9 +15,9 @@ namespace IdentityAuthentication.TokenServices.Providers
     {
         private readonly ICacheProvider _cacheProvider;
 
-        public ReferenceTokenProvider(ICacheProviderFactory cacheProviderFactory, IOptions<CacheStorageConfiguration> options)
+        public ReferenceTokenProvider(ICacheProviderFactory cacheProviderFactory)
         {
-            _cacheProvider = cacheProviderFactory.CreateCacheProvider(options.Value.StorageType);
+            _cacheProvider = cacheProviderFactory.CreateCacheProvider();
         }
 
         public TokenType TokenType => TokenType.Reference;
