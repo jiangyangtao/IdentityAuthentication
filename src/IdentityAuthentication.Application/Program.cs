@@ -2,6 +2,7 @@
 using IdentityAuthenticaion.Model;
 using IdentityAuthenticaion.Model.Configurations;
 using IdentityAuthentication.Application.Filters;
+using IdentityAuthentication.Application.Services;
 using IdentityAuthentication.Core;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
@@ -78,6 +79,7 @@ app.UseIdentityAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
+app.MapGrpcService<TokenService>();
 
 app.MapGet("/", async context =>
 {

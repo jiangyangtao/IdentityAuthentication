@@ -7,6 +7,7 @@ package Token;
 service TokenProto {
 	rpc RefreshToken(RefreshTokenModel) returns (RefreshTokenResponse);
 	rpc Authorize(AccessTokenModel) returns (AuthorizeResponse);
+	rpc Info(AccessTokenModel) returns (InfoResponse);
 }
 
 message AccessTokenModel{
@@ -24,4 +25,9 @@ message RefreshTokenResponse {
 
 message AuthorizeResponse{
 	bool Result = 1;
+}
+
+message InfoResponse{
+	string key=1;
+	string value=2;
 }
