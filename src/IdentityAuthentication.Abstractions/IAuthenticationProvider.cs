@@ -1,9 +1,4 @@
 ﻿using Newtonsoft.Json.Linq;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace IdentityAuthentication.Abstractions
 {
@@ -12,5 +7,9 @@ namespace IdentityAuthentication.Abstractions
         Task<IToken> AuthenticateAsync(JObject credentialObject);
 
         Task<string> RefreshTokenAsync();
+
+        Task<bool> AuthorizeAsync();
+
+        Task<IReadOnlyDictionary<string, string>> TokenInfoAsync();
     }
 }

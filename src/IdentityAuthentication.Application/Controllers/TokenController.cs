@@ -41,14 +41,23 @@ namespace IdentityAuthentication.Application.Controllers
         [HttpPost]
         public async Task<IActionResult> Authorize()
         {
+            var r = await _authenticationProvider.AuthorizeAsync();
+            if (r == false) return Unauthorized();
+
             return Ok();
         }
 
         [HttpGet]
-        public IActionResult Info()
+        public async Task<IActionResult> Info()
         {
-            var claims = HttpContext.User.Claims.ToDictionary(a => a.Type, a => a.Value);
-            return Ok(claims);
+            var claims = await _authenticationProvider.TokenInfoAsync();
+            var obj = new JObject();
+            foreach (var claim in claims)
+            {
+                obj.Add(claim.Key, claim.Value);
+            }
+
+            return Ok(obj);
         }
     }
 }

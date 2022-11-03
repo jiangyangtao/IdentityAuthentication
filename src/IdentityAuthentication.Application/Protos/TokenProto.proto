@@ -5,7 +5,7 @@ option csharp_namespace = "IdentityAuthentication.Application.Protos.Token";
 package Token;
 
 service TokenProto {
-	rpc RefreshToken(RefreshTokenModel) returns (RefreshTokenResponse);
+	rpc Refresh(RefreshTokenModel) returns (RefreshTokenResponse);
 	rpc Authorize(AccessTokenModel) returns (AuthorizeResponse);
 	rpc Info(AccessTokenModel) returns (InfoResponse);
 }

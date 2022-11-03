@@ -1,8 +1,10 @@
 ﻿using Grpc.Core;
 using IdentityAuthentication.Application.Protos.Token;
+using Microsoft.AspNetCore.Authorization;
 
 namespace IdentityAuthentication.Application.Services
 {
+    [Authorize]
     public class TokenService : TokenProto.TokenProtoBase
     {
         public TokenService()
@@ -19,12 +21,12 @@ namespace IdentityAuthentication.Application.Services
             return base.Authorize(request, context);
         }
 
-        public override Task<RefreshTokenResponse> RefreshToken(RefreshTokenModel request, ServerCallContext context)
+        public override Task<RefreshTokenResponse> Refresh(RefreshTokenModel request, ServerCallContext context)
         {
             var httpContext = context.GetHttpContext();
             httpContext.Request.Headers.TryAdd("refresh-token", request.Token);
 
-            return base.RefreshToken(request, context);
+            return base.Refresh(request, context);
         }
     }
 }
