@@ -43,7 +43,6 @@ namespace IdentityAuthentication.TokenServices.Providers
         private DateTime TokenExpirationTime => DateTime.Now.AddSeconds(accessTokenConfig.ExpirationTime);
 
 
-
         public Task<IToken> GenerateAsync(AuthenticationResult result)
         {
             var claims = new List<Claim>
@@ -143,7 +142,7 @@ namespace IdentityAuthentication.TokenServices.Providers
             var timeSpan = expirationTime - DateTime.Now;
             if (timeSpan.TotalSeconds > accessTokenConfig.RefreshTime) throw new Exception("Token do not expire immediately");
 
-            var token = HttpContent.Request.GetRefreshToken();
+            var token = HttpContext.Request.GetRefreshToken();
             if (token.IsNullOrEmpty()) throw new Exception("refresh-token not detected in header");
 
             var validationParameters = _tokenValidation.GenerateRefreshTokenValidation();
@@ -169,11 +168,19 @@ namespace IdentityAuthentication.TokenServices.Providers
             return time;
         }
 
+        public Task<bool> AuthorizeAsync() => Task.FromResult(true);
+
+        public Task<IReadOnlyDictionary<string, string>> InfoAsync()
+        {
+            var claiims = (IReadOnlyDictionary<string, string>)Claims.ToDictionary(a => a.Type, a => a.Value);
+            return Task.FromResult(claiims);
+        }
+
         private IReadOnlyCollection<Claim> Claims
         {
             get
             {
-                var claimsPrincipal = HttpContent.User;
+                var claimsPrincipal = HttpContext.User;
                 if (claimsPrincipal == null) throw new Exception("Authentication failed");
 
                 var claims = claimsPrincipal.Claims.ToArray();
@@ -183,7 +190,7 @@ namespace IdentityAuthentication.TokenServices.Providers
             }
         }
 
-        private HttpContext HttpContent
+        private HttpContext HttpContext
         {
             get
             {

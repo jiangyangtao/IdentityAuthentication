@@ -25,6 +25,8 @@ namespace IdentityAuthentication.Core
             return token;
         }
 
+        public async Task<bool> AuthorizeAsync() => await _tokenProvider.AuthorizeAsync();
+
         public async Task<string> RefreshTokenAsync()
         {
             var authenticationResult = await _tokenProvider.GetAuthenticationResultAsync();
@@ -33,5 +35,7 @@ namespace IdentityAuthentication.Core
             var token = checkResult ? await _tokenProvider.RefreshAsync() : await _tokenProvider.DestroyAsync();
             return token;
         }
+
+        public async Task<IReadOnlyDictionary<string, string>> TokenInfoAsync() => await _tokenProvider.InfoAsync();
     }
 }

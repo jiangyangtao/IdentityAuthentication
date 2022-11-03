@@ -8,6 +8,8 @@ namespace IdentityAuthentication.TokenServices
 
         public int MemonySizeLimit { set; get; }
 
+        public int CacheExpirationTime { set; get; }
+
         public string RedisConnection { set; get; }
     }
 
