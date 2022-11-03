@@ -1,6 +1,6 @@
 
-using IdentityAuthenticaion.Model;
-using IdentityAuthenticaion.Model.Configurations;
+using IdentityAuthentication.Model;
+using IdentityAuthentication.Model.Configurations;
 using IdentityAuthentication.Application.Filters;
 using IdentityAuthentication.Application.Services;
 using IdentityAuthentication.Core;

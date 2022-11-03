@@ -1,5 +1,5 @@
 ﻿using Authentication.Abstractions;
-using IdentityAuthenticaion.Model.Configurations;
+using IdentityAuthentication.Model.Configurations;
 using IdentityAuthentication.Abstractions;
 using IdentityAuthentication.TokenServices.Abstractions;
 using Microsoft.AspNetCore.Http;

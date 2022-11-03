@@ -30,12 +30,25 @@ namespace IdentityAuthentication.Core
         public async Task<string> RefreshTokenAsync()
         {
             var authenticationResult = await _tokenProvider.GetAuthenticationResultAsync();
-            var checkResult = await _authenticationHandle.IdentityCheckAsync(authenticationResult);
+            if (authenticationResult == null) throw new Exception("Authentication failed;");
 
+            var checkResult = await _authenticationHandle.IdentityCheckAsync(authenticationResult);
             var token = checkResult ? await _tokenProvider.RefreshAsync() : await _tokenProvider.DestroyAsync();
             return token;
         }
 
-        public async Task<IReadOnlyDictionary<string, string>> TokenInfoAsync() => await _tokenProvider.InfoAsync();
+        public async Task<JObject> TokenInfoAsync()
+        {
+            var dic = await _tokenProvider.InfoAsync();
+            if (dic == null) return null;
+
+            var obj = new JObject();
+            foreach (var item in dic)
+            {
+                obj.Add(item.Key, item.Value);
+            }
+
+            return obj;
+        }
     }
 }

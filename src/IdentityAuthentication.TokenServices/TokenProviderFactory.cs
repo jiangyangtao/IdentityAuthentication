@@ -1,4 +1,4 @@
-﻿using IdentityAuthenticaion.Model.Configurations;
+﻿using IdentityAuthentication.Model.Configurations;
 using IdentityAuthentication.TokenServices.Abstractions;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;

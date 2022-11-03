@@ -1,5 +1,5 @@
-﻿using IdentityAuthenticaion.Model;
-using IdentityAuthenticaion.Model.Configurations;
+﻿using IdentityAuthentication.Model;
+using IdentityAuthentication.Model.Configurations;
 using IdentityAuthentication.Extensions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;

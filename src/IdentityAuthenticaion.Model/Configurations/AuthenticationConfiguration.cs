@@ -1,6 +1,6 @@
 ﻿using Microsoft.IdentityModel.Tokens;
 
-namespace IdentityAuthenticaion.Model.Configurations
+namespace IdentityAuthentication.Model.Configurations
 {
     public class AuthenticationConfiguration
     {

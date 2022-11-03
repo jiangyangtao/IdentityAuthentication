@@ -10,6 +10,6 @@ namespace IdentityAuthentication.Abstractions
 
         Task<bool> AuthorizeAsync();
 
-        Task<IReadOnlyDictionary<string, string>> TokenInfoAsync();
+        Task<JObject> TokenInfoAsync();
     }
 }

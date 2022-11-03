@@ -28,6 +28,5 @@ message AuthorizeResponse{
 }
 
 message InfoResponse{
-	string key=1;
-	string value=2;
+	string Data = 1;
 }

@@ -50,12 +50,8 @@ namespace IdentityAuthentication.Application.Controllers
         [HttpGet]
         public async Task<IActionResult> Info()
         {
-            var claims = await _authenticationProvider.TokenInfoAsync();
-            var obj = new JObject();
-            foreach (var claim in claims)
-            {
-                obj.Add(claim.Key, claim.Value);
-            }
+            var obj = await _authenticationProvider.TokenInfoAsync();
+            if (obj == null) return Ok(new { });
 
             return Ok(obj);
         }
