@@ -15,6 +15,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Authentications\Authentication.Abstractions\Authentication.Abstractions.csproj" />
     <ProjectReference Include="..\IdentityAuthentication.Abstractions\IdentityAuthentication.Abstractions.csproj" />
+    <ProjectReference Include="..\IdentityAuthentication.Model\IdentityAuthentication.Model.csproj" />
   </ItemGroup>
 
 </Project>
