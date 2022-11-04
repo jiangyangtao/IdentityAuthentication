@@ -1,9 +1,11 @@
 
 using IdentityAuthenticaion.Model;
 using IdentityAuthenticaion.Model.Configurations;
+using IdentityAuthentication.Application.Handlers;
 using IdentityAuthentication.Application.Filters;
 using IdentityAuthentication.Application.Services;
 using IdentityAuthentication.Core;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json;
@@ -39,9 +41,12 @@ services.AddSwaggerGen();
 services.AddIdentityAuthentication(configuration);
 services.AddAuthentication(options =>
 {
-    options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
-    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultScheme = IdentityAuthenticationDefaults.AuthenticationScheme;
+    options.DefaultAuthenticateScheme = IdentityAuthenticationDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = IdentityAuthenticationDefaults.AuthenticationScheme;
+    options.DefaultForbidScheme = IdentityAuthenticationDefaults.AuthenticationScheme;
+    options.DefaultSignInScheme = IdentityAuthenticationDefaults.AuthenticationScheme;
+    options.DefaultSignOutScheme = IdentityAuthenticationDefaults.AuthenticationScheme;
 }).AddJwtBearer(options =>
 {
     options.TokenValidationParameters = TokenValidation.BuildAccessTokenValidationParameters(accessTokenConfig, secretKeyConfig);
@@ -54,7 +59,25 @@ services.AddAuthentication(options =>
         },
         OnAuthenticationFailed = context =>
         {
-            // 如果过期，则把<是否过期>添加到，返回头信息中
+            if (context.Exception.GetType() == typeof(SecurityTokenExpiredException))
+            {
+                context.Response.Headers.Add("Token-Expired", "true");
+            }
+            return Task.CompletedTask;
+        }
+    };
+}).AddScheme<IdentityAuthenticationSchemeOptions, IdentityAuthenticationHandler>(IdentityAuthenticationDefaults.AuthenticationScheme, options =>
+{
+    options.TokenValidationParameters = TokenValidation.BuildAccessTokenValidationParameters(accessTokenConfig, secretKeyConfig);
+    options.Events = new IdentityAuthenticationEvents
+    {
+        OnMessageReceived = context =>
+        {
+            context.Token = context.Request.Query["access_token"];
+            return Task.CompletedTask;
+        },
+        OnAuthenticationFailed = context =>
+        {
             if (context.Exception.GetType() == typeof(SecurityTokenExpiredException))
             {
                 context.Response.Headers.Add("Token-Expired", "true");
@@ -63,6 +86,12 @@ services.AddAuthentication(options =>
         }
     };
 });
+services.AddGrpc();
+
+//services.AddAuthenticationCore(options =>
+//{
+//    options.AddScheme<AuthenticationHandler>(nameof(AuthenticationHandler), "demo handle");
+//});
 
 var app = builder.Build();
 

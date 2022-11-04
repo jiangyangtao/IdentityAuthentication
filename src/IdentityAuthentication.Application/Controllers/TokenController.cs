@@ -34,7 +34,6 @@ namespace IdentityAuthentication.Application.Controllers
         public async Task<IActionResult> Refresh()
         {
             var token = await _authenticationProvider.RefreshTokenAsync();
-
             return Ok(new TokenDtoBase(token));
         }
 
