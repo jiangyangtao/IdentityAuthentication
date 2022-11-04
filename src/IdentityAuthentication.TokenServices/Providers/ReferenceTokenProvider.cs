@@ -1,45 +1,102 @@
 ﻿using Authentication.Abstractions;
-using IdentityAuthenticaion.Model.Configurations;
+using IdentityAuthentication.Model.Configurations;
 using IdentityAuthentication.Abstractions;
 using IdentityAuthentication.TokenServices.Abstractions;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Options;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Microsoft.Extensions.Primitives;
 
 namespace IdentityAuthentication.TokenServices.Providers
 {
     internal class ReferenceTokenProvider : ITokenProvider
     {
-        private readonly ICacheProvider _cacheProvider;
+        private readonly AccessTokenConfiguration accessTokenConfig;
 
-        public ReferenceTokenProvider(ICacheProviderFactory cacheProviderFactory)
+        private readonly ICacheProvider _cacheProvider;
+        private readonly IHttpContextAccessor _httpContextAccessor;
+
+        public ReferenceTokenProvider(
+            ICacheProviderFactory cacheProviderFactory,
+            IHttpContextAccessor httpContextAccessor,
+            IOptions<AccessTokenConfiguration> accessTokenOption)
         {
             _cacheProvider = cacheProviderFactory.CreateCacheProvider();
+            _httpContextAccessor = httpContextAccessor;
+            accessTokenConfig = accessTokenOption.Value;
         }
 
         public TokenType TokenType => TokenType.Reference;
 
-        public Task<string> DestroyAsync()
+        public async Task<bool> AuthorizeAsync()
         {
-            throw new NotImplementedException();
+            var token = await _cacheProvider.GetAsync(Authentication);
+            if (token == null) return false;
+            
+            return DateTime.Now < token.ExpirationTime;
         }
 
-        public Task<IToken> GenerateAsync(AuthenticationResult authenticationResult)
+        public async Task<string> DestroyAsync()
         {
-            throw new NotImplementedException();
+            await _cacheProvider.RemoveAsync(Authentication);
+            return Authentication;
         }
 
-        public Task<AuthenticationResult> GetAuthenticationResultAsync()
+        public async Task<IToken> GenerateAsync(AuthenticationResult authenticationResult)
         {
-            throw new NotImplementedException();
+            var expirationTime = DateTime.Now.AddSeconds(accessTokenConfig.ExpirationTime);
+            var token = new ReferenceToken(authenticationResult, expirationTime);
+
+            var accessToken = Guid.NewGuid().ToString();
+            await _cacheProvider.SetAsync(accessToken, token);
+
+            return TokenResult.Create(accessToken);
         }
 
-        public Task<string> RefreshAsync()
+        public async Task<AuthenticationResult?> GetAuthenticationResultAsync()
         {
-            throw new NotImplementedException();
+            var token = await _cacheProvider.GetAsync(Authentication);
+            if (token == null) return null;
+
+            return token.GetAuthenticationResult();
+        }
+
+        public async Task<IReadOnlyDictionary<string, string>?> InfoAsync()
+        {
+            var token = await _cacheProvider.GetAsync(Authentication);
+            if (token == null) return null;
+
+            return token.ToReadOnlyDictionary();
+        }
+
+        public async Task<string> RefreshAsync()
+        {
+            var token = await _cacheProvider.GetAsync(Authentication);
+            token.ExpirationTime = token.ExpirationTime.AddSeconds(accessTokenConfig.ExpirationTime);
+
+            await _cacheProvider.SetAsync(Authentication, token);
+            return Authentication;
+        }
+
+        private HttpRequest  HttpRequest
+        {
+            get
+            {
+                if (_httpContextAccessor == null) throw new Exception("Authentication failed");
+                if (_httpContextAccessor.HttpContext == null) throw new Exception("Authentication failed");
+
+                return _httpContextAccessor.HttpContext.Request;
+            }
+        }
+
+        private string Authentication
+        {
+            get
+            {
+                var authorization = HttpRequest.Headers.Authorization;
+                if (StringValues.IsNullOrEmpty(authorization)) throw new Exception("Authentication failed");
+
+                return authorization;
+            }
         }
     }
 }

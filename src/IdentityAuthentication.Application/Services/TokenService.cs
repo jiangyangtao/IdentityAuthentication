@@ -1,30 +1,44 @@
 ﻿using Grpc.Core;
+using IdentityAuthentication.Abstractions;
 using IdentityAuthentication.Application.Protos.Token;
+using IdentityAuthentication.Extensions;
+using Microsoft.AspNetCore.Authorization;
 
 namespace IdentityAuthentication.Application.Services
 {
+    [Authorize]
     public class TokenService : TokenProto.TokenProtoBase
     {
-        public TokenService()
+        private readonly IAuthenticationProvider _authenticaionProvider;
+
+        public TokenService(IAuthenticationProvider authenticaionProvider)
         {
+            _authenticaionProvider = authenticaionProvider;
         }
 
-        public override Task<InfoResponse> Info(AccessTokenModel request, ServerCallContext context)
+        public async override Task<InfoResponse> Info(AccessTokenModel request, ServerCallContext context)
         {
-            return base.Info(request, context);
+            var obj = await _authenticaionProvider.TokenInfoAsync();
+
+            var r = string.Empty;
+            if (obj != null) r = obj.ToString();
+
+            return new InfoResponse { Data = r };
         }
 
-        public override Task<AuthorizeResponse> Authorize(AccessTokenModel request, ServerCallContext context)
-        {    
-            return base.Authorize(request, context);
+        public async override Task<AuthorizeResponse> Authorize(AccessTokenModel request, ServerCallContext context)
+        {
+            var r = await _authenticaionProvider.AuthorizeAsync();
+            return new AuthorizeResponse { Result = r };
         }
 
-        public override Task<RefreshTokenResponse> RefreshToken(RefreshTokenModel request, ServerCallContext context)
+        public async override Task<RefreshTokenResponse> Refresh(RefreshTokenModel request, ServerCallContext context)
         {
             var httpContext = context.GetHttpContext();
             httpContext.Request.Headers.TryAdd("refresh-token", request.Token);
 
-            return base.RefreshToken(request, context);
+            var token = await _authenticaionProvider.RefreshTokenAsync();
+            return new RefreshTokenResponse { AccessToken = token, Result = token.IsNullOrEmpty() };
         }
     }
 }

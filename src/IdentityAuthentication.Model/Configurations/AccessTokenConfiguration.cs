@@ -1,5 +1,5 @@
 ﻿
-namespace IdentityAuthenticaion.Model.Configurations
+namespace IdentityAuthentication.Model.Configurations
 {
     public class AccessTokenConfiguration
     {

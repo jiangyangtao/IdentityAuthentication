@@ -1,8 +1,8 @@
 ﻿using Authentication.Abstractions;
-using IdentityAuthenticaion.Model;
-using IdentityAuthenticaion.Model.Configurations;
 using IdentityAuthentication.Abstractions;
 using IdentityAuthentication.Extensions;
+using IdentityAuthentication.Model;
+using IdentityAuthentication.Model.Configurations;
 using IdentityAuthentication.TokenServices.Abstractions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Options;
@@ -43,7 +43,6 @@ namespace IdentityAuthentication.TokenServices.Providers
         private DateTime TokenExpirationTime => DateTime.Now.AddSeconds(accessTokenConfig.ExpirationTime);
 
 
-
         public Task<IToken> GenerateAsync(AuthenticationResult result)
         {
             var claims = new List<Claim>
@@ -81,7 +80,8 @@ namespace IdentityAuthentication.TokenServices.Providers
 
         public async Task<string> RefreshAsync()
         {
-            await CheckRefreshTokenAsync();
+            var r = await CheckRefreshTokenAsync();
+            if (r == false) return string.Empty;
 
             var expirationTime = TokenExpirationTime;
             var issueTime = GetDateTimeClaim(IssueTimeKey);
@@ -137,25 +137,27 @@ namespace IdentityAuthentication.TokenServices.Providers
             return _jwtSecurityTokenHandler.WriteToken(securityToken);
         }
 
-        private async Task CheckRefreshTokenAsync()
+        private async Task<bool> CheckRefreshTokenAsync()
         {
             var expirationTime = GetDateTimeClaim(ExpirationKey);
             var timeSpan = expirationTime - DateTime.Now;
-            if (timeSpan.TotalSeconds > accessTokenConfig.RefreshTime) throw new Exception("Token do not expire immediately");
+            if (timeSpan.TotalSeconds > accessTokenConfig.RefreshTime) return false;
 
-            var token = HttpContent.Request.GetRefreshToken();
-            if (token.IsNullOrEmpty()) throw new Exception("refresh-token not detected in header");
+            var token = HttpContext.Request.GetRefreshToken();
+            if (token.IsNullOrEmpty()) return false;
 
             var validationParameters = _tokenValidation.GenerateRefreshTokenValidation();
             var tokenValidationResult = await _jwtSecurityTokenHandler.ValidateTokenAsync(token, validationParameters);
-            if (tokenValidationResult.IsValid == false) throw new Exception("Refresh token validation failed");
+            if (tokenValidationResult.IsValid == false) return false;
 
             foreach (var refreshClaim in tokenValidationResult.Claims)
             {
                 var accessClaim = Claims.FirstOrDefault(a => a.Type == refreshClaim.Key);
-                if (accessClaim == null) throw new Exception("Refresh token validation failed");
-                if (refreshClaim.Value.ToString() != accessClaim.Value) throw new Exception("Refresh token validation failed");
+                if (accessClaim == null) return false;
+                if (refreshClaim.Value.ToString() != accessClaim.Value) return false;
             }
+
+            return true;
         }
 
         private DateTime GetDateTimeClaim(string type)
@@ -169,11 +171,19 @@ namespace IdentityAuthentication.TokenServices.Providers
             return time;
         }
 
+        public Task<bool> AuthorizeAsync() => Task.FromResult(true);
+
+        public Task<IReadOnlyDictionary<string, string>> InfoAsync()
+        {
+            var claiims = (IReadOnlyDictionary<string, string>)Claims.ToDictionary(a => a.Type, a => a.Value);
+            return Task.FromResult(claiims);
+        }
+
         private IReadOnlyCollection<Claim> Claims
         {
             get
             {
-                var claimsPrincipal = HttpContent.User;
+                var claimsPrincipal = HttpContext.User;
                 if (claimsPrincipal == null) throw new Exception("Authentication failed");
 
                 var claims = claimsPrincipal.Claims.ToArray();
@@ -183,7 +193,7 @@ namespace IdentityAuthentication.TokenServices.Providers
             }
         }
 
-        private HttpContext HttpContent
+        private HttpContext HttpContext
         {
             get
             {

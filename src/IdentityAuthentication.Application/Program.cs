@@ -1,11 +1,10 @@
 
-using IdentityAuthenticaion.Model;
-using IdentityAuthenticaion.Model.Configurations;
-using IdentityAuthentication.Application.Handlers;
 using IdentityAuthentication.Application.Filters;
+using IdentityAuthentication.Application.Handlers;
 using IdentityAuthentication.Application.Services;
 using IdentityAuthentication.Core;
-using Microsoft.AspNetCore.Authentication;
+using IdentityAuthentication.Model;
+using IdentityAuthentication.Model.Configurations;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json;

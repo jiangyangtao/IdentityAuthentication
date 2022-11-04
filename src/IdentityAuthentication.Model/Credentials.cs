@@ -1,4 +1,4 @@
-﻿using IdentityAuthenticaion.Model.Configurations;
+﻿using IdentityAuthentication.Model.Configurations;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using RSAExtensions;
@@ -9,7 +9,7 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace IdentityAuthenticaion.Model
+namespace IdentityAuthentication.Model
 {
     public class Credentials
     {

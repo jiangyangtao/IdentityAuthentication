@@ -1,10 +1,10 @@
-﻿using IdentityAuthenticaion.Model.Configurations;
+﻿using IdentityAuthentication.Model.Configurations;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 
-namespace IdentityAuthenticaion.Model
+namespace IdentityAuthentication.Model
 {
     public class TokenValidation
     {

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace IdentityAuthenticaion.Model.Configurations
+namespace IdentityAuthentication.Model.Configurations
 {
     public class RefreshTokenConfiguration : AccessTokenConfiguration
     {

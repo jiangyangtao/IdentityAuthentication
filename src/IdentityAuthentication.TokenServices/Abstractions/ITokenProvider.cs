@@ -1,12 +1,12 @@
 ﻿using Authentication.Abstractions;
-using IdentityAuthenticaion.Model.Configurations;
+using IdentityAuthentication.Model.Configurations;
 using IdentityAuthentication.Abstractions;
 
 namespace IdentityAuthentication.TokenServices.Abstractions
 {
     public interface ITokenProvider
     {
-         TokenType TokenType { get; }
+        TokenType TokenType { get; }
 
         Task<IToken> GenerateAsync(AuthenticationResult authenticationResult);
 
@@ -14,6 +14,10 @@ namespace IdentityAuthentication.TokenServices.Abstractions
 
         Task<string> DestroyAsync();
 
-        Task<AuthenticationResult> GetAuthenticationResultAsync();
+        Task<AuthenticationResult?> GetAuthenticationResultAsync();
+
+        Task<bool> AuthorizeAsync();
+
+        Task<IReadOnlyDictionary<string, string>?> InfoAsync();
     }
 }
