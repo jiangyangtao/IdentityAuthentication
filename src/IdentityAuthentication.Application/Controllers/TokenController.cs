@@ -38,13 +38,8 @@ namespace IdentityAuthentication.Application.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Authorize()
-        {
-            var r = await _authenticationProvider.AuthorizeAsync();
-            if (r == false) return Unauthorized();
+        public IActionResult Authorize() => Ok();
 
-            return Ok();
-        }
 
         [HttpGet]
         public async Task<IActionResult> Info()

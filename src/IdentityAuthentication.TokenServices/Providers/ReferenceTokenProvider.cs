@@ -1,15 +1,19 @@
 ﻿using Authentication.Abstractions;
-using IdentityAuthentication.Model.Configurations;
 using IdentityAuthentication.Abstractions;
+using IdentityAuthentication.Model;
+using IdentityAuthentication.Model.Configurations;
 using IdentityAuthentication.TokenServices.Abstractions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Options;
 using Microsoft.Extensions.Primitives;
+using Microsoft.IdentityModel.Tokens;
+using System.Security.Claims;
 
 namespace IdentityAuthentication.TokenServices.Providers
 {
     internal class ReferenceTokenProvider : ITokenProvider
     {
+        private readonly TokenValidation _tokenValidation;
         private readonly AccessTokenConfiguration accessTokenConfig;
 
         private readonly ICacheProvider _cacheProvider;
@@ -18,21 +22,35 @@ namespace IdentityAuthentication.TokenServices.Providers
         public ReferenceTokenProvider(
             ICacheProviderFactory cacheProviderFactory,
             IHttpContextAccessor httpContextAccessor,
-            IOptions<AccessTokenConfiguration> accessTokenOption)
+            IOptions<AccessTokenConfiguration> accessTokenOption,
+            IOptions<RefreshTokenConfiguration> refreshTokenOption,
+            IOptions<SecretKeyConfiguration> secretKeyOption,
+            IOptions<AuthenticationConfiguration> authenticationOption)
         {
+
             _cacheProvider = cacheProviderFactory.CreateCacheProvider();
             _httpContextAccessor = httpContextAccessor;
             accessTokenConfig = accessTokenOption.Value;
+
+            _tokenValidation = new TokenValidation(accessTokenConfig, refreshTokenOption.Value, secretKeyOption.Value, authenticationOption.Value);
         }
 
         public TokenType TokenType => TokenType.Reference;
 
-        public async Task<bool> AuthorizeAsync()
+        public async Task<TokenValidationResult> AuthorizeAsync(string token)
         {
-            var token = await _cacheProvider.GetAsync(Authentication);
-            if (token == null) return false;
-            
-            return DateTime.Now < token.ExpirationTime;
+            var data = await _cacheProvider.GetAsync(token);
+            if (data == null) return new TokenValidationResult { IsValid = false };
+            if (DateTime.Now < data.ExpirationTime) return new TokenValidationResult { IsValid = false };
+
+            var claims = data.GetAuthenticationResult().GetClaims();
+            var identity = new ClaimsIdentity(claims, data.GrantType);
+            return new TokenValidationResult
+            {
+                IsValid = true,
+                ClaimsIdentity = identity,
+                SecurityToken = _tokenValidation.GenerateAccessSecurityToken(claims, data.ExpirationTime.AddHours(-1), data.ExpirationTime),
+            };
         }
 
         public async Task<string> DestroyAsync()
@@ -52,7 +70,7 @@ namespace IdentityAuthentication.TokenServices.Providers
             return TokenResult.Create(accessToken);
         }
 
-        public async Task<AuthenticationResult?> GetAuthenticationResultAsync()
+        public async Task<AuthenticationResult> GetAuthenticationResultAsync()
         {
             var token = await _cacheProvider.GetAsync(Authentication);
             if (token == null) return null;
@@ -77,7 +95,7 @@ namespace IdentityAuthentication.TokenServices.Providers
             return Authentication;
         }
 
-        private HttpRequest  HttpRequest
+        private HttpRequest HttpRequest
         {
             get
             {

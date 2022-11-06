@@ -3,9 +3,7 @@ using IdentityAuthentication.Application.Filters;
 using IdentityAuthentication.Application.Handlers;
 using IdentityAuthentication.Application.Services;
 using IdentityAuthentication.Core;
-using IdentityAuthentication.Model;
 using IdentityAuthentication.Model.Configurations;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
@@ -15,14 +13,6 @@ var services = builder.Services;
 var configuration = builder.Configuration;
 
 // Add services to the container.
-
-var accessTokenConfig = configuration.GetSection("AccessToken");
-var secretKeyConfig = configuration.GetSection("SecretKey");
-services.Configure<AccessTokenConfiguration>(accessTokenConfig);
-services.Configure<RefreshTokenConfiguration>(configuration.GetSection("RefreshToken"));
-services.Configure<SecretKeyConfiguration>(secretKeyConfig);
-services.Configure<AuthenticationConfiguration>(configuration.GetSection("Autnentication"));
-
 services.AddControllers(options =>
 {
     options.Filters.Add<ExceptionFilter>();
@@ -38,6 +28,7 @@ services.AddControllers(options =>
 services.AddEndpointsApiExplorer();
 services.AddSwaggerGen();
 services.AddIdentityAuthentication(configuration);
+
 services.AddAuthentication(options =>
 {
     options.DefaultScheme = IdentityAuthenticationDefaults.AuthenticationScheme;
@@ -46,28 +37,8 @@ services.AddAuthentication(options =>
     options.DefaultForbidScheme = IdentityAuthenticationDefaults.AuthenticationScheme;
     options.DefaultSignInScheme = IdentityAuthenticationDefaults.AuthenticationScheme;
     options.DefaultSignOutScheme = IdentityAuthenticationDefaults.AuthenticationScheme;
-}).AddJwtBearer(options =>
-{
-    options.TokenValidationParameters = TokenValidation.BuildAccessTokenValidationParameters(accessTokenConfig, secretKeyConfig);
-    options.Events = new JwtBearerEvents
-    {
-        OnMessageReceived = context =>
-        {
-            context.Token = context.Request.Query["access_token"];
-            return Task.CompletedTask;
-        },
-        OnAuthenticationFailed = context =>
-        {
-            if (context.Exception.GetType() == typeof(SecurityTokenExpiredException))
-            {
-                context.Response.Headers.Add("Token-Expired", "true");
-            }
-            return Task.CompletedTask;
-        }
-    };
 }).AddScheme<IdentityAuthenticationSchemeOptions, IdentityAuthenticationHandler>(IdentityAuthenticationDefaults.AuthenticationScheme, options =>
 {
-    options.TokenValidationParameters = TokenValidation.BuildAccessTokenValidationParameters(accessTokenConfig, secretKeyConfig);
     options.Events = new IdentityAuthenticationEvents
     {
         OnMessageReceived = context =>
@@ -82,7 +53,7 @@ services.AddAuthentication(options =>
                 context.Response.Headers.Add("Token-Expired", "true");
             }
             return Task.CompletedTask;
-        }
+        },
     };
 });
 services.AddGrpc();

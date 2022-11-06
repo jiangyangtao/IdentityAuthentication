@@ -2,12 +2,8 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using RSAExtensions;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace IdentityAuthentication.Model
 {
@@ -52,30 +48,7 @@ namespace IdentityAuthentication.Model
                 return new RsaSecurityKey(rsa);
             }
 
-            return GenerateSymmetricSecurityKey(_secretKeyConfig.HmacSha256Key);
-        }
-
-        public static SecurityKey GetEncryptSecurityKey(IConfiguration configuration)
-        {
-            var encryptionAlgorithm = configuration.GetValue<string>("EncryptionAlgorithm");
-            var rsaPublicKey = configuration.GetValue<string>("RsaPublicKey");
-            var hmacSha256Key = configuration.GetValue<string>("HmacSha256Key");
-
-            if (encryptionAlgorithm.IsNullOrEmpty()) encryptionAlgorithm = SecurityAlgorithms.RsaSha256;
-            if (encryptionAlgorithm == SecurityAlgorithms.RsaSha256)
-            {
-                var rsa = RSA.Create();
-                rsa.ImportPublicKey(RSAKeyType.Pkcs8, rsaPublicKey);
-
-                return new RsaSecurityKey(rsa);
-            }
-
-            return GenerateSymmetricSecurityKey(hmacSha256Key);
-        }
-
-        private static SymmetricSecurityKey GenerateSymmetricSecurityKey(string key)
-        {
-            var keyByteArray = Encoding.ASCII.GetBytes(key);
+            var keyByteArray = Encoding.ASCII.GetBytes(_secretKeyConfig.HmacSha256Key);
             return new SymmetricSecurityKey(keyByteArray);
         }
     }

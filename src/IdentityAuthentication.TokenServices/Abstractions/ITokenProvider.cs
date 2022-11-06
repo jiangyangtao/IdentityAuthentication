@@ -1,6 +1,8 @@
 ﻿using Authentication.Abstractions;
 using IdentityAuthentication.Model.Configurations;
 using IdentityAuthentication.Abstractions;
+using System.Security.Claims;
+using Microsoft.IdentityModel.Tokens;
 
 namespace IdentityAuthentication.TokenServices.Abstractions
 {
@@ -14,9 +16,9 @@ namespace IdentityAuthentication.TokenServices.Abstractions
 
         Task<string> DestroyAsync();
 
-        Task<AuthenticationResult?> GetAuthenticationResultAsync();
+        Task<AuthenticationResult> GetAuthenticationResultAsync();
 
-        Task<bool> AuthorizeAsync();
+        Task<TokenValidationResult> AuthorizeAsync(string token);
 
         Task<IReadOnlyDictionary<string, string>?> InfoAsync();
     }

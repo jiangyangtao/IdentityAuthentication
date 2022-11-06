@@ -1,5 +1,6 @@
 ﻿using IdentityAuthentication.Abstractions;
 using IdentityAuthentication.TokenServices.Abstractions;
+using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json.Linq;
 
 namespace IdentityAuthentication.Core
@@ -25,7 +26,7 @@ namespace IdentityAuthentication.Core
             return token;
         }
 
-        public async Task<bool> AuthorizeAsync() => await _tokenProvider.AuthorizeAsync();
+        public async Task<TokenValidationResult> AuthorizeAsync(string token) => await _tokenProvider.AuthorizeAsync(token);
 
         public async Task<string> RefreshTokenAsync()
         {

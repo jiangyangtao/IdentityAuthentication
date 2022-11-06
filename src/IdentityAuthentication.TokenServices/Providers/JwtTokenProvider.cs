@@ -6,6 +6,7 @@ using IdentityAuthentication.Model.Configurations;
 using IdentityAuthentication.TokenServices.Abstractions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Options;
+using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 
@@ -171,7 +172,12 @@ namespace IdentityAuthentication.TokenServices.Providers
             return time;
         }
 
-        public Task<bool> AuthorizeAsync() => Task.FromResult(true);
+        public async Task<TokenValidationResult> AuthorizeAsync(string token)
+        {
+            var validationParameters = _tokenValidation.GenerateAccessTokenValidation();
+            var tokenValidationResult = await _jwtSecurityTokenHandler.ValidateTokenAsync(token, validationParameters);
+            return tokenValidationResult;
+        }
 
         public Task<IReadOnlyDictionary<string, string>> InfoAsync()
         {

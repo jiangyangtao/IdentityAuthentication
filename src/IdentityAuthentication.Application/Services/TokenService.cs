@@ -28,8 +28,8 @@ namespace IdentityAuthentication.Application.Services
 
         public async override Task<AuthorizeResponse> Authorize(AccessTokenModel request, ServerCallContext context)
         {
-            var r = await _authenticaionProvider.AuthorizeAsync();
-            return new AuthorizeResponse { Result = r };
+            var r = await _authenticaionProvider.AuthorizeAsync(request.Token);
+            return new AuthorizeResponse { Result = r.IsValid };
         }
 
         public async override Task<RefreshTokenResponse> Refresh(RefreshTokenModel request, ServerCallContext context)

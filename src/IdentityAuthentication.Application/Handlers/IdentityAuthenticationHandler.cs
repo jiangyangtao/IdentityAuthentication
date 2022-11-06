@@ -4,6 +4,8 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.Options;
+using Microsoft.IdentityModel.Tokens;
+using System.Security.Claims;
 using System.Text.Encodings.Web;
 
 namespace IdentityAuthentication.Application.Handlers
@@ -14,10 +16,10 @@ namespace IdentityAuthentication.Application.Handlers
         private readonly IAuthenticationProvider _authenticationProvider;
 
         public IdentityAuthenticationHandler(
-            IOptionsMonitor<IdentityAuthenticationSchemeOptions> options, 
-            ILoggerFactory logger, 
-            UrlEncoder encoder, 
-            ISystemClock clock, 
+            IOptionsMonitor<IdentityAuthenticationSchemeOptions> options,
+            ILoggerFactory logger,
+            UrlEncoder encoder,
+            ISystemClock clock,
             IAuthenticationProvider authenticationProvider)
             : base(options, logger, encoder, clock)
         {
@@ -37,15 +39,14 @@ namespace IdentityAuthentication.Application.Handlers
         {
             var messageReceivedContext = new MessageReceivedContext(Context, Scheme, Options);
 
-            // event can set the token
             await Events.MessageReceived(messageReceivedContext);
             if (messageReceivedContext.Result != null)
             {
                 return messageReceivedContext.Result;
             }
 
-            var r = Context.GetEndpoint().Metadata.GetMetadata<IAllowAnonymous>();
-            if (r != null) return EmptyAuthenticateSuccessResult;
+            var allowAnonymous = Context.GetEndpoint().Metadata.GetMetadata<IAllowAnonymous>();
+            if (allowAnonymous != null) return EmptyAuthenticateSuccessResult;
 
             var token = messageReceivedContext.Token;
             if (token.IsNullOrEmpty())
@@ -55,15 +56,27 @@ namespace IdentityAuthentication.Application.Handlers
 
                 if (authorization.StartsWith("Bearer ", StringComparison.OrdinalIgnoreCase))
                 {
-                    token = authorization.Substring("Bearer ".Length).Trim();
+                    token = authorization["Bearer ".Length..].Trim();
                 }
 
                 if (token.IsNullOrEmpty()) return AuthenticateResult.NoResult();
             }
 
-            //var r = await _authenticationProvider.AuthenticateAsync();
+            var tokenValidationResult = await _authenticationProvider.AuthorizeAsync(token);
+            if (tokenValidationResult.IsValid == false) return AuthenticateResult.NoResult();
 
-            return await Context.AuthenticateAsync(JwtBearerDefaults.AuthenticationScheme);
+            var principal = tokenValidationResult.ClaimsIdentity.ToClaimsPrincipal();
+            var tokenValidatedContext = new TokenValidatedContext(Context, Scheme, Options)
+            {
+                Principal = principal,
+                SecurityToken = tokenValidationResult.SecurityToken
+            };
+
+            await Events.OnTokenValidated(tokenValidatedContext);
+            if (tokenValidatedContext.Result != null) return tokenValidatedContext.Result;
+
+            tokenValidatedContext.Success();
+            return tokenValidatedContext.Result!;
         }
 
         protected override Task HandleChallengeAsync(AuthenticationProperties properties)

@@ -1,5 +1,4 @@
 ﻿using IdentityAuthentication.Model.Configurations;
-using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
@@ -22,6 +21,13 @@ namespace IdentityAuthentication.Model
             _credentials = new Credentials(authenticationConfig, secretKeyConfig);
         }
 
+        /// <summary>
+        /// 生成 access_token 的 <see cref="JwtSecurityToken"/>
+        /// </summary>
+        /// <param name="claims"></param>
+        /// <param name="notBefore"></param>
+        /// <param name="expirationTime"></param>
+        /// <returns></returns>
         public JwtSecurityToken GenerateAccessSecurityToken(Claim[] claims, DateTime notBefore, DateTime expirationTime)
         {
             var signingCredentials = _credentials.GenerateSigningCredentials();
@@ -35,6 +41,11 @@ namespace IdentityAuthentication.Model
                      signingCredentials: signingCredentials);
         }
 
+        /// <summary>
+        /// 生成 refresh_token 的 <see cref="JwtSecurityToken"/>
+        /// </summary>
+        /// <param name="claims"></param>
+        /// <returns></returns>
         public JwtSecurityToken GenerateRefreshSecurityToken(Claim[] claims)
         {
             var signingCredentials = _credentials.GenerateSigningCredentials();
@@ -48,7 +59,10 @@ namespace IdentityAuthentication.Model
                     signingCredentials: signingCredentials);
         }
 
-
+        /// <summary>
+        /// 生成 refresh_token 的 <see cref="TokenValidationParameters"/>，用于验签
+        /// </summary>
+        /// <returns></returns>
         public TokenValidationParameters GenerateRefreshTokenValidation()
         {
             var securityKey = _credentials.GenerateEncryptSecurityKey();
@@ -67,20 +81,18 @@ namespace IdentityAuthentication.Model
             };
         }
 
-        public static TokenValidationParameters BuildAccessTokenValidationParameters(IConfiguration accessTokenConfiguration, IConfiguration secretKeyConfiguration)
+        public TokenValidationParameters GenerateAccessTokenValidation()
         {
-            var issuer = accessTokenConfiguration.GetValue<string>("Issuer");
-            var audience = accessTokenConfiguration.GetValue<string>("Audience");
-            var signingKey = Credentials.GetEncryptSecurityKey(secretKeyConfiguration);
+            var signingKey = _credentials.GenerateEncryptSecurityKey();
 
             return new TokenValidationParameters
             {
                 ValidateIssuerSigningKey = true,
                 IssuerSigningKey = signingKey,
                 ValidateIssuer = true,
-                ValidIssuer = issuer,
+                ValidIssuer = _accessTokenConfig.Issuer,
                 ValidateAudience = true,
-                ValidAudience = audience,
+                ValidAudience = _accessTokenConfig.Audience,
                 ValidateLifetime = true,
                 ClockSkew = TimeSpan.Zero,
                 RequireExpirationTime = true,

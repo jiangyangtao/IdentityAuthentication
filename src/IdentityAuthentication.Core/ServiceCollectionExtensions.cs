@@ -1,5 +1,6 @@
 ﻿using IdentityAuthentication.Abstractions;
 using IdentityAuthentication.Extensions;
+using IdentityAuthentication.Model.Configurations;
 using IdentityAuthentication.TokenServices;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
@@ -13,6 +14,11 @@ namespace IdentityAuthentication.Core
         {
             services.AddHttpContextAccessor();
             services.AddGrantSources(configuration);
+
+            services.Configure<AccessTokenConfiguration>(configuration.GetSection("AccessToken"));
+            services.Configure<RefreshTokenConfiguration>(configuration.GetSection("RefreshToken"));
+            services.Configure<SecretKeyConfiguration>(configuration.GetSection("SecretKey"));
+            services.Configure<AuthenticationConfiguration>(configuration.GetSection("Autnentication"));
 
             services.AddSingleton<AuthenticationHandle>();
             services.AddSingleton<IAuthenticationProvider, AuthenticationProvider>();

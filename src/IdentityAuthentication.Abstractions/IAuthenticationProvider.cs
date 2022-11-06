@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json.Linq;
+﻿using Microsoft.IdentityModel.Tokens;
+using Newtonsoft.Json.Linq;
 
 namespace IdentityAuthentication.Abstractions
 {
@@ -8,7 +9,7 @@ namespace IdentityAuthentication.Abstractions
 
         Task<string> RefreshTokenAsync();
 
-        Task<bool> AuthorizeAsync();
+        Task<TokenValidationResult> AuthorizeAsync(string token);
 
         Task<JObject> TokenInfoAsync();
     }
