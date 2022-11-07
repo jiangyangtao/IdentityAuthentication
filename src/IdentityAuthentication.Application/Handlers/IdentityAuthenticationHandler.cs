@@ -1,7 +1,6 @@
 ﻿using IdentityAuthentication.Abstractions;
 using IdentityAuthentication.Extensions;
 using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
@@ -23,7 +22,7 @@ namespace IdentityAuthentication.Application.Handlers
             IAuthenticationProvider authenticationProvider)
             : base(options, logger, encoder, clock)
         {
-            var ticket = new AuthenticationTicket(new System.Security.Claims.ClaimsPrincipal(), IdentityAuthenticationDefaults.AuthenticationScheme);
+            var ticket = new AuthenticationTicket(new ClaimsPrincipal(), IdentityAuthenticationDefaults.AuthenticationScheme);
             EmptyAuthenticateSuccessResult = AuthenticateResult.Success(ticket);
             _authenticationProvider = authenticationProvider;
         }
