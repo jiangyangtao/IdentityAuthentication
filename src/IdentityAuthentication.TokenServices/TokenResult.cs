@@ -14,16 +14,17 @@ namespace IdentityAuthentication.TokenServices
 
         public long ExpiresIn { set; get; }
 
-        public string TokenType { set; get; }
+        public string TokenType { set; get; } = JwtBearerDefaults.AuthenticationScheme;
 
         public string RefreshToken { set; get; }
 
-        public static TokenResult Create(string accessToken, string refreshToken = "", long expiresIn = 0, string tokenType = JwtBearerDefaults.AuthenticationScheme) =>
+        public IReadOnlyDictionary<string, string> UserInfo { set; get; }
+
+        public static TokenResult Create(string accessToken, IReadOnlyDictionary<string, string> userInfo, string refreshToken = "", long expiresIn = 0) =>
             new()
             {
                 AccessToken = accessToken,
                 ExpiresIn = expiresIn,
-                TokenType = tokenType,
                 RefreshToken = refreshToken,
             };
     }

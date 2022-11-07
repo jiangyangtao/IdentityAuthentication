@@ -20,7 +20,8 @@ namespace IdentityAuthentication.Application.GrpcServices
         public async override Task<AuthorizeResponse> Authorize(TokenRequest request, ServerCallContext context)
         {
             var r = await _authenticaionProvider.AuthorizeAsync(request.Token);
-            var claims = JsonConvert.SerializeObject(r.Claims);
+            var dic = r.ClaimsIdentity.Claims.ToDictionary(a => a.Type, a => a.Value);
+            var claims = JsonConvert.SerializeObject(dic);
             return new AuthorizeResponse { Result = r.IsValid, Claims = claims };
         }
 

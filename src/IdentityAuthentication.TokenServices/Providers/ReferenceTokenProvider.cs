@@ -59,15 +59,15 @@ namespace IdentityAuthentication.TokenServices.Providers
             return Authentication;
         }
 
-        public async Task<IToken> GenerateAsync(AuthenticationResult authenticationResult)
+        public async Task<IToken> GenerateAsync(AuthenticationResult result)
         {
             var expirationTime = DateTime.Now.AddSeconds(accessTokenConfig.ExpirationTime);
-            var token = new ReferenceToken(authenticationResult, expirationTime);
+            var token = new ReferenceToken(result, expirationTime);
 
             var accessToken = Guid.NewGuid().ToString();
             await _cacheProvider.SetAsync(accessToken, token);
 
-            return TokenResult.Create(accessToken);
+            return TokenResult.Create(accessToken, result.ToReadOnlyDictionary());
         }
 
         public async Task<AuthenticationResult> GetAuthenticationResultAsync()

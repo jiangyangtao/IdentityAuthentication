@@ -1,7 +1,9 @@
 ﻿using IdentityAuthentication.Abstractions;
 using IdentityAuthentication.Application.Dto;
+using IdentityAuthentication.Model.Configurations;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
 using Newtonsoft.Json.Linq;
 
 namespace IdentityAuthentication.Application.Controllers
@@ -9,45 +11,45 @@ namespace IdentityAuthentication.Application.Controllers
     public class TokenController : BaseController
     {
         private readonly IAuthenticationProvider _authenticationProvider;
+        private readonly AuthenticationConfiguration _authenticationConfiguration;
 
-        public TokenController(IAuthenticationProvider authenticationProvider)
+        public TokenController(IAuthenticationProvider authenticationProvider, IOptions<AuthenticationConfiguration> authenticationOption)
         {
             _authenticationProvider = authenticationProvider;
+            _authenticationConfiguration = authenticationOption.Value;
         }
 
         [HttpPost]
         [AllowAnonymous]
-        [ProducesResponseType(typeof(TokenDto), 200)]
+        [ProducesResponseType(typeof(TokenResult), 200)]
         public async Task<IActionResult> Generate()
         {
             var streamReader = new StreamReader(Request.Body);
             var data = await streamReader.ReadToEndAsync();
             var credentialData = JObject.Parse(data);
+
             var token = await _authenticationProvider.AuthenticateAsync(credentialData);
             if (token == null) return new NotFoundResult();
 
-            return Ok(new TokenDto(token));
+            var factory = new TokenResultFactory(token, _authenticationConfiguration.TokenType);
+            var result = factory.CreateTokenResult();
+
+            return Ok(result);
         }
 
         [HttpPost]
-        [ProducesResponseType(typeof(TokenDtoBase), 200)]
+        [ProducesResponseType(typeof(AccessTokenResult), 200)]
         public async Task<IActionResult> Refresh()
         {
             var token = await _authenticationProvider.RefreshTokenAsync();
-            return Ok(new TokenDtoBase(token));
+            return Ok(new AccessTokenResult(token));
         }
 
         [HttpPost]
-        public IActionResult Authorize() => Ok();
-
-
-        [HttpGet]
-        public async Task<IActionResult> Info()
+        public async Task<IActionResult> Authorize()
         {
-            var obj = await _authenticationProvider.TokenInfoAsync();
-            if (obj == null) return Ok(new { });
-
-            return Ok(obj);
+            var result = await _authenticationProvider.TokenInfoAsync();
+            return Ok(result);
         }
     }
 }

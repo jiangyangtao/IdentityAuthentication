@@ -59,6 +59,26 @@ namespace Authentication.Abstractions
             return claims.ToArray();
         }
 
+        public IReadOnlyDictionary<string, string> ToReadOnlyDictionary()
+        {
+            var dic = new Dictionary<string, string>
+            {
+                {UserIdPropertyName, UserId},
+                {UsernamePropertyName,Username},
+                {GrantSourcePropertyName,GrantType},
+                {GrantTypePropertyName,GrantSource},
+                {ClientPropertyName,Client},
+            };
+            if (Metadata.IsNullOrEmpty()) return dic;
+
+            foreach (var item in Metadata)
+            {
+                dic.Add(item.Key, item.Value);
+            }
+
+            return dic;
+        }
+
         public static AuthenticationResult CreateAuthenticationResult(string userId, string username, string grantSource, string grantType, string client, IReadOnlyDictionary<string, string> metadata)
         {
             return new(userId, username, grantSource, grantType, client, metadata);

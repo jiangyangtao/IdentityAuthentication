@@ -58,6 +58,7 @@ namespace IdentityAuthentication.TokenServices.Providers
 
             var token = (IToken)TokenResult.Create(
                 accessToken: accessToken,
+                userInfo: result.ToReadOnlyDictionary(),
                 refreshToken: refreshToken,
                 expiresIn: accessTokenConfig.ExpirationTime);
 

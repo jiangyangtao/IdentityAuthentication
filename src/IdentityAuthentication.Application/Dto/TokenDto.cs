@@ -1,10 +1,34 @@
 ﻿using IdentityAuthentication.Abstractions;
+using IdentityAuthentication.Model.Configurations;
 
 namespace IdentityAuthentication.Application.Dto
 {
-    public class TokenDtoBase
+    public class TokenResultFactory
     {
-        public TokenDtoBase(string token)
+        public IToken Token { get; }
+
+        public TokenType TokenType { get; }
+
+        public TokenResultFactory(IToken token, TokenType tokenType)
+        {
+            Token = token;
+            TokenType = tokenType;
+        }
+
+        public object CreateTokenResult()
+        {
+            if (TokenType == TokenType.JWT)
+            {
+                return new TokenResult(Token);
+            }
+
+            return new RefreshTokenResult(Token);
+        }
+    }
+
+    public class AccessTokenResult
+    {
+        public AccessTokenResult(string token)
         {
             access_token = token;
         }
@@ -12,18 +36,28 @@ namespace IdentityAuthentication.Application.Dto
         public string access_token { set; get; }
     }
 
-    public class TokenDto : TokenDtoBase
+    public class TokenResult : AccessTokenResult
     {
-        public TokenDto(IToken token) : base(token.AccessToken)
+        public TokenResult(IToken token) : base(token.AccessToken)
         {
             expires_in = token.ExpiresIn;
             token_type = token.TokenType;
-            refresh_token = token.RefreshToken;
+            user_info = token.UserInfo;
         }
 
         public long expires_in { set; get; }
 
         public string token_type { set; get; }
+
+        public object user_info { set; get; }
+    }
+
+    public class RefreshTokenResult : TokenResult
+    {
+        public RefreshTokenResult(IToken token) : base(token)
+        {
+            refresh_token = token.RefreshToken;
+        }
 
         public string refresh_token { set; get; }
     }

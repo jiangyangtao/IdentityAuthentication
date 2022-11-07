@@ -10,5 +10,7 @@ namespace IdentityAuthentication.Abstractions
         public long ExpiresIn { get; }
 
         public string TokenType { get; }
+
+        public IReadOnlyDictionary<string, string> UserInfo { get; }
     }
 }

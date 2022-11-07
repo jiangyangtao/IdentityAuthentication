@@ -38,18 +38,12 @@ namespace IdentityAuthentication.Core
             return token;
         }
 
-        public async Task<JObject> TokenInfoAsync()
+        public async Task<IReadOnlyDictionary<string, string>> TokenInfoAsync()
         {
             var dic = await _tokenProvider.InfoAsync();
             if (dic == null) return null;
 
-            var obj = new JObject();
-            foreach (var item in dic)
-            {
-                obj.Add(item.Key, item.Value);
-            }
-
-            return obj;
+            return dic;
         }
     }
 }
