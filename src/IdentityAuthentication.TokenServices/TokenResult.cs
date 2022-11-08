@@ -26,6 +26,7 @@ namespace IdentityAuthentication.TokenServices
                 AccessToken = accessToken,
                 ExpiresIn = expiresIn,
                 RefreshToken = refreshToken,
+                UserInfo = userInfo,
             };
     }
 }

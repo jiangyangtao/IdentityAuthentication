@@ -5,6 +5,7 @@ using IdentityAuthentication.Model;
 using IdentityAuthentication.Model.Configurations;
 using IdentityAuthentication.TokenServices.Abstractions;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.DependencyModel;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;

@@ -45,8 +45,8 @@ namespace Authentication.Abstractions
             {
                 new Claim(UserIdPropertyName, UserId),
                 new Claim(UsernamePropertyName,Username),
-                new Claim(GrantSourcePropertyName,GrantType),
-                new Claim(GrantTypePropertyName,GrantSource),
+                new Claim(GrantSourcePropertyName,GrantSource),
+                new Claim(GrantTypePropertyName,GrantType),
                 new Claim(ClientPropertyName,Client)
             };
             if (Metadata.IsNullOrEmpty()) return claims.ToArray();

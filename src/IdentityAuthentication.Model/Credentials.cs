@@ -42,7 +42,7 @@ namespace IdentityAuthentication.Model
             if (_authenticationConfig.EncryptionAlgorithm == SecurityAlgorithms.RsaSha256)
             {
                 var rsa = RSA.Create();
-                if (isPublic) rsa.ImportPublicKey(RSAKeyType.Pkcs8, _secretKeyConfig.RsaPrivateKey);
+                if (isPublic) rsa.ImportPublicKey(RSAKeyType.Pkcs8, _secretKeyConfig.RsaPublicKey);
                 if (isPublic == false) rsa.ImportPrivateKey(RSAKeyType.Pkcs8, _secretKeyConfig.RsaPrivateKey);
 
                 return new RsaSecurityKey(rsa);

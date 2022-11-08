@@ -15,8 +15,11 @@ namespace IdentityAuthentication.TokenServices.Providers
         {
             _cacheStorageConfiguration = options.Value;
 
-            var configurationOptions = ConfigurationOptions.Parse(_cacheStorageConfiguration.RedisConnection, true);
-            _database = ConnectionMultiplexer.Connect(configurationOptions).GetDatabase();
+            if (_cacheStorageConfiguration.StorageType == StorageType.Redis)
+            {
+                var configurationOptions = ConfigurationOptions.Parse(_cacheStorageConfiguration.RedisConnection, true);
+                _database = ConnectionMultiplexer.Connect(configurationOptions).GetDatabase();
+            }
         }
 
 

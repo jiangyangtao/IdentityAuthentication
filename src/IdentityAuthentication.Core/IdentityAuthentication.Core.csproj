@@ -11,6 +11,8 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Authentications\Authentication.LDAP\Authentication.LDAP.csproj" />
+    <ProjectReference Include="..\Authentications\Authentication.Local\Authentication.Local.csproj" />
     <ProjectReference Include="..\IdentityAuthentication.TokenServices\IdentityAuthentication.TokenServices.csproj" />
   </ItemGroup>
 

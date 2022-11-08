@@ -41,7 +41,7 @@ namespace IdentityAuthentication.TokenServices.Providers
         {
             var data = await _cacheProvider.GetAsync(token);
             if (data == null) return new TokenValidationResult { IsValid = false };
-            if (DateTime.Now < data.ExpirationTime) return new TokenValidationResult { IsValid = false };
+            if (DateTime.Now > data.ExpirationTime) return new TokenValidationResult { IsValid = false };
 
             var claims = data.GetAuthenticationResult().GetClaims();
             var identity = new ClaimsIdentity(claims, data.GrantType);
@@ -67,7 +67,10 @@ namespace IdentityAuthentication.TokenServices.Providers
             var accessToken = Guid.NewGuid().ToString();
             await _cacheProvider.SetAsync(accessToken, token);
 
-            return TokenResult.Create(accessToken, result.ToReadOnlyDictionary());
+            return TokenResult.Create(
+               accessToken: accessToken,
+               userInfo: result.ToReadOnlyDictionary(),
+               expiresIn: accessTokenConfig.ExpirationTime);
         }
 
         public async Task<AuthenticationResult> GetAuthenticationResultAsync()
@@ -110,7 +113,12 @@ namespace IdentityAuthentication.TokenServices.Providers
         {
             get
             {
-                var authorization = HttpRequest.Headers.Authorization;
+                var authorization = HttpRequest.Headers.Authorization.ToString();
+                if (authorization.StartsWith("Bearer ", StringComparison.OrdinalIgnoreCase))
+                {
+                    authorization = authorization["Bearer ".Length..].Trim();
+                }
+
                 if (StringValues.IsNullOrEmpty(authorization)) throw new Exception("Authentication failed");
 
                 return authorization;

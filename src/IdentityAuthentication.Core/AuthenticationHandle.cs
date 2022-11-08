@@ -15,6 +15,7 @@ namespace IdentityAuthentication.Core
 
         private const string GrantTypeDefault = "Password";
         private const string GrantSourceDefault = "Local";
+        private const string ClientDefault = "Browser";
 
         public AuthenticationHandle(IServiceProvider serviceProvider)
         {
@@ -62,10 +63,7 @@ namespace IdentityAuthentication.Core
 
         public async Task<bool> IdentityCheckAsync(AuthenticationResult authenticationResult)
         {
-            var credentialObject = new JObject {
-                new JProperty(AuthenticationResult.GrantTypePropertyName,authenticationResult.GrantType),
-                new JProperty(AuthenticationResult.GrantSourcePropertyName,authenticationResult.GrantSource),
-            };
+            var credentialObject = JObject.FromObject(authenticationResult);
 
             var credential = GetCredential(credentialObject);
             var method = ExecuteIdentityCheckMethod.MakeGenericMethod(credential.GetType());
@@ -82,7 +80,10 @@ namespace IdentityAuthentication.Core
             if (credentialObject.ContainsKey(AuthenticationResult.GrantSourcePropertyName) == false)
                 credentialObject[AuthenticationResult.GrantSourcePropertyName] = GrantSourceDefault;
 
-            var grantType = credentialObject[AuthenticationResult.GrantSourcePropertyName].Value<string>();
+            if (credentialObject.ContainsKey(AuthenticationResult.ClientPropertyName) == false)
+                credentialObject[AuthenticationResult.ClientPropertyName] = ClientDefault;
+
+            var grantType = credentialObject[AuthenticationResult.GrantTypePropertyName].Value<string>();
             if (CredentialTypes.ContainsKey(grantType) == false) throw new Exception($"Unknown GrantType: {grantType}");
 
             var type = CredentialTypes[grantType];

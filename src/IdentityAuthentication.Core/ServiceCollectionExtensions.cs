@@ -5,6 +5,9 @@ using IdentityAuthentication.TokenServices;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyModel;
+using Microsoft.Extensions.Logging;
+using System.Reflection;
 
 namespace IdentityAuthentication.Core
 {

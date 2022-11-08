@@ -17,7 +17,7 @@ namespace IdentityAuthentication.Application.Dto
 
         public object CreateTokenResult()
         {
-            if (TokenType == TokenType.JWT)
+            if (TokenType == TokenType.Reference)
             {
                 return new TokenResult(Token);
             }
