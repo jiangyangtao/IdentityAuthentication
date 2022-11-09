@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyModel;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
+using Newtonsoft.Json.Linq;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 
@@ -21,6 +22,7 @@ namespace IdentityAuthentication.TokenServices.Providers
 
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly JwtSecurityTokenHandler _jwtSecurityTokenHandler;
+        private readonly RsaAlgorithmProvider _rsaAlgorithmProvider;
 
         private readonly string IssueTimeKey = "IssueTime";
         private readonly string ExpirationKey = ClaimTypes.Expiration;
@@ -30,7 +32,8 @@ namespace IdentityAuthentication.TokenServices.Providers
             IOptions<RefreshTokenConfiguration> refreshTokenOption,
             IOptions<SecretKeyConfiguration> secretKeyOption,
             IOptions<AuthenticationConfiguration> authenticationOption,
-            IHttpContextAccessor httpContextAccessor)
+            IHttpContextAccessor httpContextAccessor,
+            RsaAlgorithmProvider rsaAlgorithmProvider)
         {
             accessTokenConfig = accessTokenOption.Value;
             authenticationConfig = authenticationOption.Value;
@@ -38,6 +41,7 @@ namespace IdentityAuthentication.TokenServices.Providers
             _jwtSecurityTokenHandler = new JwtSecurityTokenHandler();
 
             _httpContextAccessor = httpContextAccessor;
+            _rsaAlgorithmProvider = rsaAlgorithmProvider;
         }
 
         public TokenType TokenType => TokenType.JWT;
@@ -130,14 +134,44 @@ namespace IdentityAuthentication.TokenServices.Providers
         private string BuildAccessToken(Claim[] claims, DateTime? notBefore = null, DateTime? expirationTime = null)
         {
             var securityToken = _tokenValidation.GenerateAccessSecurityToken(claims, notBefore ?? DateTime.Now, expirationTime ?? TokenExpirationTime);
-            return _jwtSecurityTokenHandler.WriteToken(securityToken);
+            var token = _jwtSecurityTokenHandler.WriteToken(securityToken);
+
+            token = HandleTokenEncrypt(token);
+            return token;
         }
 
         private string BuildRefreshToken(AuthenticationResult result)
         {
             var claims = result.GetClaims();
             var securityToken = _tokenValidation.GenerateRefreshSecurityToken(claims);
-            return _jwtSecurityTokenHandler.WriteToken(securityToken);
+            var token = _jwtSecurityTokenHandler.WriteToken(securityToken);
+
+            token = HandleTokenEncrypt(token);
+            return token;
+        }
+
+        /// <summary>
+        /// 处理 token 的加密
+        /// </summary>
+        /// <param name="token"></param>
+        /// <returns></returns>
+        private string HandleTokenEncrypt(string token)
+        {
+            if (authenticationConfig.EnableJwtEncrypt == false) return token;
+
+            return _rsaAlgorithmProvider.Encrypt(token);
+        }
+
+        /// <summary>
+        /// 处理 token 的解密
+        /// </summary>
+        /// <param name="token"></param>
+        /// <returns></returns>
+        private string HandleTokenDecrypt(string token)
+        {
+            if (authenticationConfig.EnableJwtEncrypt == false) return token;
+
+            return _rsaAlgorithmProvider.Decrypt(token);
         }
 
         private async Task<bool> CheckRefreshTokenAsync()
@@ -149,6 +183,7 @@ namespace IdentityAuthentication.TokenServices.Providers
             var token = HttpContext.Request.GetRefreshToken();
             if (token.IsNullOrEmpty()) return false;
 
+            token = HandleTokenDecrypt(token);
             var validationParameters = _tokenValidation.GenerateRefreshTokenValidation();
             var tokenValidationResult = await _jwtSecurityTokenHandler.ValidateTokenAsync(token, validationParameters);
             if (tokenValidationResult.IsValid == false) return false;
@@ -176,6 +211,7 @@ namespace IdentityAuthentication.TokenServices.Providers
 
         public async Task<TokenValidationResult> AuthorizeAsync(string token)
         {
+            token = HandleTokenDecrypt(token);
             var validationParameters = _tokenValidation.GenerateAccessTokenValidation();
             var tokenValidationResult = await _jwtSecurityTokenHandler.ValidateTokenAsync(token, validationParameters);
             return tokenValidationResult;
