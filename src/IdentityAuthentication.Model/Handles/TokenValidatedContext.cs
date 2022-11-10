@@ -1,7 +1,8 @@
 ﻿using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Http;
 using Microsoft.IdentityModel.Tokens;
 
-namespace IdentityAuthentication.Application.Handlers
+namespace IdentityAuthentication.Model.Handlers
 {
     public class TokenValidatedContext : ResultContext<IdentityAuthenticationSchemeOptions>
     {

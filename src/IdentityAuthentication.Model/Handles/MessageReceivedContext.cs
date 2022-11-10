@@ -1,7 +1,7 @@
-﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Authentication;
+﻿using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Http;
 
-namespace IdentityAuthentication.Application.Handlers
+namespace IdentityAuthentication.Model.Handlers
 {
     public class MessageReceivedContext : ResultContext<IdentityAuthenticationSchemeOptions>
     {

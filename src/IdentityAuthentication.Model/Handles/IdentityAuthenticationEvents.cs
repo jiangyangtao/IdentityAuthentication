@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
 
-namespace IdentityAuthentication.Application.Handlers
+namespace IdentityAuthentication.Model.Handlers
 {
     public class IdentityAuthenticationEvents
     {

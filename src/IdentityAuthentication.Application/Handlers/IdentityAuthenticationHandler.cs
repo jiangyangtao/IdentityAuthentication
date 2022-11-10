@@ -1,5 +1,7 @@
 ﻿using IdentityAuthentication.Abstractions;
 using IdentityAuthentication.Extensions;
+using IdentityAuthentication.Model.Handlers;
+using IdentityAuthentication.Model.Handles;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.Options;

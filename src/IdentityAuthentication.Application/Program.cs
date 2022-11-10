@@ -3,6 +3,8 @@ using IdentityAuthentication.Application.Filters;
 using IdentityAuthentication.Application.GrpcServices;
 using IdentityAuthentication.Application.Handlers;
 using IdentityAuthentication.Core;
+using IdentityAuthentication.Model.Handlers;
+using IdentityAuthentication.Model.Handles;
 using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;

@@ -1,8 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 
-namespace IdentityAuthentication.Application.Handlers
+namespace IdentityAuthentication.Model.Handlers
 {
     public class IdentityAuthenticationSchemeOptions : AuthenticationSchemeOptions
     {
