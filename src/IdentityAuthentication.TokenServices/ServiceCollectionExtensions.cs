@@ -26,8 +26,6 @@ namespace IdentityAuthentication.TokenServices
             services.AddSingleton<ICacheProvider, RedisCacheProvider>();
             services.AddSingleton<ICacheProviderFactory, CacheProviderFactory>();
 
-            services.AddSingleton<RsaAlgorithmProvider>();
-
             return services;
         }
     }

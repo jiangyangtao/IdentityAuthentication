@@ -5,6 +5,8 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+    <Title>IdentityAuthentication.Model</Title>
+    <Authors>Yangtao</Authors>
   </PropertyGroup>
 
 	<ItemGroup>

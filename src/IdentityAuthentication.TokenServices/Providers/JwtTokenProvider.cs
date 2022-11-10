@@ -22,7 +22,7 @@ namespace IdentityAuthentication.TokenServices.Providers
 
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly JwtSecurityTokenHandler _jwtSecurityTokenHandler;
-        private readonly RsaAlgorithmProvider _rsaAlgorithmProvider;
+        private readonly RsaAlgorithm _rsaAlgorithm;
 
         private readonly string IssueTimeKey = "IssueTime";
         private readonly string ExpirationKey = ClaimTypes.Expiration;
@@ -33,7 +33,7 @@ namespace IdentityAuthentication.TokenServices.Providers
             IOptions<SecretKeyConfiguration> secretKeyOption,
             IOptions<AuthenticationConfiguration> authenticationOption,
             IHttpContextAccessor httpContextAccessor,
-            RsaAlgorithmProvider rsaAlgorithmProvider)
+            RsaAlgorithm rsaAlgorithm)
         {
             accessTokenConfig = accessTokenOption.Value;
             authenticationConfig = authenticationOption.Value;
@@ -41,7 +41,7 @@ namespace IdentityAuthentication.TokenServices.Providers
             _jwtSecurityTokenHandler = new JwtSecurityTokenHandler();
 
             _httpContextAccessor = httpContextAccessor;
-            _rsaAlgorithmProvider = rsaAlgorithmProvider;
+            _rsaAlgorithm = rsaAlgorithm;
         }
 
         public TokenType TokenType => TokenType.JWT;
@@ -159,7 +159,7 @@ namespace IdentityAuthentication.TokenServices.Providers
         {
             if (authenticationConfig.EnableJwtEncrypt == false) return token;
 
-            return _rsaAlgorithmProvider.Encrypt(token);
+            return _rsaAlgorithm.Encrypt(token);
         }
 
         /// <summary>
@@ -171,7 +171,7 @@ namespace IdentityAuthentication.TokenServices.Providers
         {
             if (authenticationConfig.EnableJwtEncrypt == false) return token;
 
-            return _rsaAlgorithmProvider.Decrypt(token);
+            return _rsaAlgorithm.Decrypt(token);
         }
 
         private async Task<bool> CheckRefreshTokenAsync()

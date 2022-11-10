@@ -1,18 +1,17 @@
 ﻿using IdentityAuthentication.Model.Configurations;
-using Microsoft.Extensions.Options;
 using RSAExtensions;
 using System.Security.Cryptography;
 using System.Text;
 
-namespace IdentityAuthentication.TokenServices.Providers
+namespace IdentityAuthentication.Model
 {
-    internal class RsaAlgorithmProvider
+    public class RsaAlgorithm
     {
         private readonly SecretKeyConfiguration _secretKeyConfig;
 
-        public RsaAlgorithmProvider(IOptions<SecretKeyConfiguration> secretKeyOption)
+        public RsaAlgorithm(SecretKeyConfiguration secretKeyConfig)
         {
-            _secretKeyConfig = secretKeyOption.Value;
+            _secretKeyConfig = secretKeyConfig;
         }
 
         private RSA _PublicProvider { set; get; }
@@ -21,9 +20,9 @@ namespace IdentityAuthentication.TokenServices.Providers
         {
             get
             {
-
                 if (_PublicProvider == null)
                 {
+                    if (string.IsNullOrEmpty(_secretKeyConfig.RsaPublicKey)) throw new NullReferenceException("RsaPublicKey is null or empty");
 
                     _PublicProvider = RSA.Create();
                     _PublicProvider.ImportPrivateKey(RSAKeyType.Pkcs8, _secretKeyConfig.RsaPublicKey);
@@ -41,6 +40,7 @@ namespace IdentityAuthentication.TokenServices.Providers
             {
                 if (_PrivateProvider == null)
                 {
+                    if (string.IsNullOrEmpty(_secretKeyConfig.RsaPrivateKey)) throw new NullReferenceException("RsaPublicKey is null or empty");
 
                     _PrivateProvider = RSA.Create();
                     _PrivateProvider.ImportPrivateKey(RSAKeyType.Pkcs8, _secretKeyConfig.RsaPrivateKey);
