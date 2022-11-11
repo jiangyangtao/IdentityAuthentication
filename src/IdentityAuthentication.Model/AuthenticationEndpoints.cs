@@ -25,10 +25,7 @@ namespace IdentityAuthentication.Model
 
         public string InfoEndpoint { set; get; }
 
-        public static string GetDefaultConfigurationEndpoint(Uri originHost)
-        {
-            var url = new Uri(originHost, "/api/configuration");
-            return url.AbsoluteUri;
-        }
+        public static string DefaultConfigurationEndpoint => "/api/configuration";
+
     }
 }
