@@ -65,7 +65,7 @@ namespace IdentityAuthentication.Model
         /// <returns></returns>
         public TokenValidationParameters GenerateRefreshTokenValidation()
         {
-            var securityKey = _credentials.GenerateEncryptSecurityKey();
+            var securityKey = _credentials.GenerateValidateSecurityKey();
 
             return new TokenValidationParameters
             {
@@ -83,7 +83,7 @@ namespace IdentityAuthentication.Model
 
         public TokenValidationParameters GenerateAccessTokenValidation()
         {
-            var signingKey = _credentials.GenerateEncryptSecurityKey();
+            var signingKey = _credentials.GenerateValidateSecurityKey();
 
             return new TokenValidationParameters
             {

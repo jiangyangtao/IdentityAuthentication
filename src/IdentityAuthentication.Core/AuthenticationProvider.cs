@@ -26,7 +26,7 @@ namespace IdentityAuthentication.Core
             return token;
         }
 
-        public async Task<TokenValidationResult> AuthorizeAsync(string token) => await _tokenProvider.AuthorizeAsync(token);
+        public async Task<TokenValidationResult> ValidateTokenAsync(string token) => await _tokenProvider.AuthorizeAsync(token);
 
         public async Task<string> RefreshTokenAsync()
         {

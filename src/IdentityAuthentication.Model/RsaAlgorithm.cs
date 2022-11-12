@@ -1,7 +1,6 @@
 ﻿using IdentityAuthentication.Model.Configurations;
 using RSAExtensions;
 using System.Security.Cryptography;
-using System.Text;
 
 namespace IdentityAuthentication.Model
 {
@@ -14,39 +13,39 @@ namespace IdentityAuthentication.Model
             _secretKeyConfig = secretKeyConfig;
         }
 
-        private RSA _PublicProvider { set; get; }
+        private RSA _PublicRSA { set; get; }
 
-        public RSA PublicProvider
+        public RSA PublicRSA
         {
             get
             {
-                if (_PublicProvider == null)
+                if (_PublicRSA == null)
                 {
-                    if (string.IsNullOrEmpty(_secretKeyConfig.RsaPublicKey)) throw new NullReferenceException("RsaPublicKey is null or empty");
+                    if (string.IsNullOrEmpty(_secretKeyConfig.RsaEncryptPublicKey)) throw new NullReferenceException("RsaEncryptPublicKey is null or empty");
 
-                    _PublicProvider = RSA.Create();
-                    _PublicProvider.ImportPrivateKey(RSAKeyType.Pkcs8, _secretKeyConfig.RsaPublicKey);
+                    _PublicRSA = RSA.Create();
+                    _PublicRSA.ImportPublicKey(RSAKeyType.Pkcs8, _secretKeyConfig.RsaEncryptPublicKey);
                 }
 
-                return _PublicProvider;
+                return _PublicRSA;
             }
         }
 
-        private RSA _PrivateProvider { set; get; }
+        private RSA _PrivateRSA { set; get; }
 
-        public RSA PrivateProvider
+        public RSA PrivateRSA
         {
             get
             {
-                if (_PrivateProvider == null)
+                if (_PrivateRSA == null)
                 {
-                    if (string.IsNullOrEmpty(_secretKeyConfig.RsaPrivateKey)) throw new NullReferenceException("RsaPublicKey is null or empty");
+                    if (string.IsNullOrEmpty(_secretKeyConfig.RsaDecryptPrivateKey)) throw new NullReferenceException("RsaDecryptPrivateKey is null or empty");
 
-                    _PrivateProvider = RSA.Create();
-                    _PrivateProvider.ImportPrivateKey(RSAKeyType.Pkcs8, _secretKeyConfig.RsaPrivateKey);
+                    _PrivateRSA = RSA.Create();
+                    _PrivateRSA.ImportPrivateKey(RSAKeyType.Pkcs8, _secretKeyConfig.RsaDecryptPrivateKey);
                 }
 
-                return _PrivateProvider;
+                return _PrivateRSA;
             }
         }
 
@@ -57,10 +56,9 @@ namespace IdentityAuthentication.Model
         /// <returns></returns>
         public string Encrypt(string plaintext)
         {
-            var data = Encoding.UTF8.GetBytes(plaintext);
-            var r = _PublicProvider.Encrypt(data, RSAEncryptionPadding.Pkcs1);
+            var result = PublicRSA.EncryptBigData(plaintext, RSAEncryptionPadding.Pkcs1);
 
-            return Convert.ToBase64String(r);
+            return result;
         }
 
         /// <summary>
@@ -70,10 +68,11 @@ namespace IdentityAuthentication.Model
         /// <returns></returns>
         public string Decrypt(string ciphertext)
         {
-            var data = Convert.FromBase64String(ciphertext);
-            var r = _PrivateProvider.Decrypt(data, RSAEncryptionPadding.Pkcs1);
+            _PrivateRSA = RSA.Create();
+            _PrivateRSA.ImportPrivateKey(RSAKeyType.Pkcs8, _secretKeyConfig.RsaDecryptPrivateKey);
+            var result = _PrivateRSA.DecryptBigData(ciphertext, RSAEncryptionPadding.Pkcs1);
 
-            return Encoding.UTF8.GetString(r);
+            return result;
         }
     }
 }

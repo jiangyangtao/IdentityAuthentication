@@ -20,30 +20,30 @@ namespace IdentityAuthentication.Model
 
         public SigningCredentials GenerateSigningCredentials()
         {
-            var signingKey = GenerateDecryptionSecurityKey();
+            var signingKey = GenerateSignatureSecurityKey();
 
             return new SigningCredentials(signingKey, _authenticationConfig.EncryptionAlgorithm);
         }
 
         /// <summary>
-        /// 生成加密的 <see cref="SecurityKey"/>
+        /// 生成签名的 <see cref="SecurityKey"/>
         /// </summary>
         /// <returns></returns>
-        public SecurityKey GenerateDecryptionSecurityKey() => GenerateSecurityKey(false);
+        public SecurityKey GenerateSignatureSecurityKey() => GenerateSecurityKey(false);
 
         /// <summary>
-        /// 生成解密的 <see cref="SecurityKey"/>
+        /// 生成验签的 <see cref="SecurityKey"/>
         /// </summary>
         /// <returns></returns>
-        public SecurityKey GenerateEncryptSecurityKey() => GenerateSecurityKey();
+        public SecurityKey GenerateValidateSecurityKey() => GenerateSecurityKey();
 
         private SecurityKey GenerateSecurityKey(bool isPublic = true)
         {
             if (_authenticationConfig.EncryptionAlgorithm == SecurityAlgorithms.RsaSha256)
             {
                 var rsa = RSA.Create();
-                if (isPublic) rsa.ImportPublicKey(RSAKeyType.Pkcs8, _secretKeyConfig.RsaPublicKey);
-                if (isPublic == false) rsa.ImportPrivateKey(RSAKeyType.Pkcs8, _secretKeyConfig.RsaPrivateKey);
+                if (isPublic) rsa.ImportPublicKey(RSAKeyType.Pkcs8, _secretKeyConfig.RsaSignaturePublicKey);
+                if (isPublic == false) rsa.ImportPrivateKey(RSAKeyType.Pkcs8, _secretKeyConfig.RsaSignaturePrivateKey);
 
                 return new RsaSecurityKey(rsa);
             }

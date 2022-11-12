@@ -8,10 +8,7 @@ namespace IdentityAuthentication.Model.Configurations
 
         public TokenType TokenType { set; get; } = TokenType.JWT;
 
-        /// <summary>
-        /// Enable grpc connection
-        /// </summary>
-        public bool EnableGrpcConnection { get; set; } = true;
+        public bool EnableGrpcConnection { get; set; }
 
         public bool EnableJwtEncrypt { get; set; } = false;
     }

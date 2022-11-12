@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿
 
 namespace IdentityAuthentication.Model.Configurations
 {
@@ -10,23 +6,39 @@ namespace IdentityAuthentication.Model.Configurations
     {
         public SecretKeyConfigurationBase() { }
 
-        public SecretKeyConfigurationBase(string hmacSha256Key, string rsaPublicKey)
+        public SecretKeyConfigurationBase(string hmacSha256Key, string rsaPublicKey, string rsaDecryptPrivateKey)
         {
             HmacSha256Key = hmacSha256Key;
-            RsaPublicKey = rsaPublicKey;
+            RsaSignaturePublicKey = rsaPublicKey;
+            RsaDecryptPrivateKey = rsaDecryptPrivateKey;
         }
-
 
         /// <summary>
         /// HmacSha256
         /// </summary>
         public string HmacSha256Key { set; get; }
 
-        public string RsaPublicKey { set; get; }
+        /// <summary>
+        /// RSA 验签公钥
+        /// </summary>
+        public string RsaSignaturePublicKey { set; get; }
+
+        /// <summary>
+        /// RSA 解密私钥
+        /// </summary>
+        public string RsaDecryptPrivateKey { set; get; }
     }
 
     public class SecretKeyConfiguration : SecretKeyConfigurationBase
     {
-        public string RsaPrivateKey { set; get; }
+        /// <summary>
+        /// RSA 签名私钥
+        /// </summary>
+        public string RsaSignaturePrivateKey { set; get; }
+
+        /// <summary>
+        /// RSA 加密公钥
+        /// </summary>
+        public string RsaEncryptPublicKey { set; get; }
     }
 }

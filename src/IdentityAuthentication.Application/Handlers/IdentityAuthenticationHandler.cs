@@ -63,7 +63,7 @@ namespace IdentityAuthentication.Application.Handlers
                 if (token.IsNullOrEmpty()) return AuthenticateResult.NoResult();
             }
 
-            var tokenValidationResult = await _authenticationProvider.AuthorizeAsync(token);
+            var tokenValidationResult = await _authenticationProvider.ValidateTokenAsync(token);
             if (tokenValidationResult.IsValid == false) return AuthenticateResult.NoResult();
 
             var principal = tokenValidationResult.ClaimsIdentity.ToClaimsPrincipal();

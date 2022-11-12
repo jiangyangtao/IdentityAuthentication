@@ -1,4 +1,5 @@
-﻿using IdentityAuthentication.TokenServices.Abstractions;
+﻿using IdentityAuthentication.Model.Configurations;
+using IdentityAuthentication.TokenServices.Abstractions;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -13,11 +14,12 @@ namespace IdentityAuthentication.TokenServices.Providers
         private readonly IDatabase _database;
         private readonly CacheStorageConfiguration _cacheStorageConfiguration;
 
-        public RedisCacheProvider(IOptions<CacheStorageConfiguration> options)
+        public RedisCacheProvider(IOptions<AuthenticationConfiguration> authenticationConfig,
+            IOptions<CacheStorageConfiguration> cacheStorageConfig)
         {
-            _cacheStorageConfiguration = options.Value;
+            _cacheStorageConfiguration = cacheStorageConfig.Value;
 
-            if (_cacheStorageConfiguration.StorageType == StorageType.Redis)
+            if (authenticationConfig.Value.TokenType == TokenType.Reference && _cacheStorageConfiguration.StorageType == StorageType.Redis)
             {
                 var configurationOptions = ConfigurationOptions.Parse(_cacheStorageConfiguration.RedisConnection, true);
                 _database = ConnectionMultiplexer.Connect(configurationOptions).GetDatabase();

@@ -32,8 +32,7 @@ namespace IdentityAuthentication.TokenServices.Providers
             IOptions<RefreshTokenConfiguration> refreshTokenOption,
             IOptions<SecretKeyConfiguration> secretKeyOption,
             IOptions<AuthenticationConfiguration> authenticationOption,
-            IHttpContextAccessor httpContextAccessor,
-            RsaAlgorithm rsaAlgorithm)
+            IHttpContextAccessor httpContextAccessor)
         {
             accessTokenConfig = accessTokenOption.Value;
             authenticationConfig = authenticationOption.Value;
@@ -41,7 +40,7 @@ namespace IdentityAuthentication.TokenServices.Providers
             _jwtSecurityTokenHandler = new JwtSecurityTokenHandler();
 
             _httpContextAccessor = httpContextAccessor;
-            _rsaAlgorithm = rsaAlgorithm;
+            _rsaAlgorithm = new RsaAlgorithm(secretKeyOption.Value);
         }
 
         public TokenType TokenType => TokenType.JWT;

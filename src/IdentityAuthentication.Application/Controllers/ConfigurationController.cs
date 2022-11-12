@@ -12,7 +12,7 @@ namespace IdentityAuthentication.Application.Controllers
     {
         private readonly AccessTokenConfiguration _accessTokenConfiguration;
         private readonly RefreshTokenConfiguration _refreshTokenConfiguration;
-        private readonly SecretKeyConfigurationBase _secretKeyConfiguration;
+        private readonly SecretKeyConfiguration _secretKeyConfiguration;
         private readonly AuthenticationConfiguration _authenticationConfiguration;
 
         public ConfigurationController(
@@ -24,10 +24,7 @@ namespace IdentityAuthentication.Application.Controllers
             _accessTokenConfiguration = accessTokenOption.Value;
             _refreshTokenConfiguration = refreshTokenOption.Value;
             _authenticationConfiguration = authenticationOption.Value;
-
-
-            var secretKeyConfig = secretKeyOption.Value;
-            _secretKeyConfiguration = new SecretKeyConfigurationBase(secretKeyConfig.HmacSha256Key, secretKeyConfig.RsaPublicKey);
+            _secretKeyConfiguration = secretKeyOption.Value;
         }
 
         [HttpGet("~/api/[controller]")]
@@ -69,7 +66,11 @@ namespace IdentityAuthentication.Application.Controllers
         [ProducesResponseType(typeof(SecretKeyConfigurationBase), 200)]
         public IActionResult SecretKeyConfiguration()
         {
-            return Ok(_secretKeyConfiguration);
+            var rsaDecryptPrivateKey = _secretKeyConfiguration.RsaDecryptPrivateKey;
+            if (_authenticationConfiguration.EnableJwtEncrypt == false) rsaDecryptPrivateKey = string.Empty;
+
+            var secretKey = new SecretKeyConfigurationBase(_secretKeyConfiguration.HmacSha256Key, _secretKeyConfiguration.RsaSignaturePublicKey, rsaDecryptPrivateKey);
+            return Ok(secretKey);
         }
 
         [HttpGet]

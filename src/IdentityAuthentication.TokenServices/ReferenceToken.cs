@@ -1,5 +1,6 @@
 ﻿using Authentication.Abstractions;
 using IdentityAuthentication.Extensions;
+using System.Security.Claims;
 
 namespace IdentityAuthentication.TokenServices
 {
@@ -29,7 +30,7 @@ namespace IdentityAuthentication.TokenServices
 
         public DateTime ExpirationTime { set; get; }
 
-        public static string ExpirationTimePropertyName = nameof(ExpirationTime);
+        public static string ExpirationTimePropertyName = ClaimTypes.Expiration;
 
         public IReadOnlyDictionary<string, string> Metadata { set; get; }
 
