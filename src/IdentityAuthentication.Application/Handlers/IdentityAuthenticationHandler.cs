@@ -52,12 +52,12 @@ namespace IdentityAuthentication.Application.Handlers
             var token = messageReceivedContext.Token;
             if (token.IsNullOrEmpty())
             {
-                var authorization = Request.Headers.Authorization.ToString();
-                if (authorization.IsNullOrEmpty()) return AuthenticateResult.NoResult();
+                token = Request.Headers.Authorization.ToString();
+                if (token.IsNullOrEmpty()) return AuthenticateResult.NoResult();
 
-                if (authorization.StartsWith("Bearer ", StringComparison.OrdinalIgnoreCase))
+                if (token.StartsWith("Bearer ", StringComparison.OrdinalIgnoreCase))
                 {
-                    token = authorization["Bearer ".Length..].Trim();
+                    token = token["Bearer ".Length..].Trim();
                 }
 
                 if (token.IsNullOrEmpty()) return AuthenticateResult.NoResult();

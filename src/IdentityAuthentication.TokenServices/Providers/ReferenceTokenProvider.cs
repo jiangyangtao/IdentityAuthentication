@@ -38,19 +38,27 @@ namespace IdentityAuthentication.TokenServices.Providers
 
         public async Task<TokenValidationResult> AuthorizeAsync(string token)
         {
-            var data = await _cacheProvider.GetAsync(token);
-            if (data == null) return new TokenValidationResult { IsValid = false };
-            if (DateTime.Now > data.ExpirationTime) return new TokenValidationResult { IsValid = false };
-
-            var claims = data.GetAuthenticationResult().GetClaims();
-            var identity = new ClaimsIdentity(claims, data.GrantType);
-            return new TokenValidationResult
+            try
             {
-                IsValid = true,
-                ClaimsIdentity = identity,
-                SecurityToken = _tokenValidation.GenerateAccessSecurityToken(claims, data.ExpirationTime.AddHours(-1), data.ExpirationTime),
-            };
+                var data = await _cacheProvider.GetAsync(token);
+                if (data == null) return new TokenValidationResult { IsValid = false };
+                if (DateTime.Now > data.ExpirationTime) return new TokenValidationResult { IsValid = false };
+
+                var claims = data.GetAuthenticationResult().GetClaims();
+                var identity = new ClaimsIdentity(claims, data.GrantType);
+                return new TokenValidationResult
+                {
+                    IsValid = true,
+                    ClaimsIdentity = identity,
+                    SecurityToken = _tokenValidation.GenerateAccessSecurityToken(claims, data.ExpirationTime.AddHours(-1), data.ExpirationTime),
+                };
+            }
+            catch
+            {
+                return new TokenValidationResult { IsValid = false };
+            }
         }
+
 
         public async Task<string> DestroyAsync()
         {
