@@ -4,7 +4,7 @@ using Microsoft.IdentityModel.Tokens;
 
 namespace IdentityAuthentication.Model.Handlers
 {
-    public class TokenValidatedContext : ResultContext<IdentityAuthenticationSchemeOptions>
+    public class TokenValidatedContext : ResultContext<AuthenticationSchemeOptions>
     {
         /// <summary>
         /// Initializes a new instance of <see cref="TokenValidatedContext"/>.
@@ -13,7 +13,7 @@ namespace IdentityAuthentication.Model.Handlers
         public TokenValidatedContext(
             HttpContext context,
             AuthenticationScheme scheme,
-            IdentityAuthenticationSchemeOptions options)
+            AuthenticationSchemeOptions options)
             : base(context, scheme, options) { }
 
         /// <summary>
