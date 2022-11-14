@@ -1,5 +1,4 @@
 ﻿using IdentityAuthentication.Model.Configurations;
-using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using RSAExtensions;
 using System.Security.Cryptography;
@@ -18,10 +17,24 @@ namespace IdentityAuthentication.Model
             _secretKeyConfig = secretKeyConfig;
         }
 
+        /// <summary>
+        /// 签名的凭据
+        /// </summary>
+        /// <returns></returns>
         public SigningCredentials GenerateSigningCredentials()
         {
             var signingKey = GenerateSignatureSecurityKey();
 
+            return new SigningCredentials(signingKey, _authenticationConfig.EncryptionAlgorithm);
+        }
+
+        /// <summary>
+        /// 验签的凭据
+        /// </summary>
+        /// <returns></returns>
+        public SigningCredentials GenerateValidateSignatureCredentials()
+        {
+            var signingKey = GenerateValidateSecurityKey();
             return new SigningCredentials(signingKey, _authenticationConfig.EncryptionAlgorithm);
         }
 
