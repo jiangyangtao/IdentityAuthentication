@@ -35,49 +35,30 @@ namespace IdentityAuthentication.Application.Controllers
             var apiPath = $"{baseUrl}/v1/api";
             var endpoints = new AuthenticationEndpoints
             {
-                AccessTokenConfigurationEndpoint = $"{apiPath}/configuration/AccessTokenConfiguration",
-                RefreshTokenConfigurationEndpoint = $"{apiPath}/configuration/RefreshTokenConfiguration",
-                SecretKeyConfigurationEndpoint = $"{apiPath}/configuration/SecretKeyConfiguration",
-                AutnenticationConfigurationEndpoint = $"{apiPath}/configuration/AuthenticaionConfiguartion",
+                AccessTokenConfigurationEndpoint = $"{apiPath}/configuration/getconfiguration",
                 GenerateTokenEndpoint = $"{apiPath}/token/generate",
                 RefreshToeknEndpoint = $"{apiPath}/token/refresh",
                 AuthorizeEndpoint = $"{apiPath}/token/authorize",
-                InfoEndpoint = $"{apiPath}/token/info",
             };
 
             return Ok(endpoints);
         }
 
         [HttpGet]
-        [ProducesResponseType(typeof(AccessTokenConfiguration), 200)]
-        public IActionResult AccessTokenConfiguration()
-        {
-            return Ok(_accessTokenConfiguration);
-        }
-
-        [HttpGet]
-        [ProducesResponseType(typeof(RefreshTokenConfiguration), 200)]
-        public IActionResult RefreshTokenConfiguration()
-        {
-            return Ok(_refreshTokenConfiguration);
-        }
-
-        [HttpGet]
-        [ProducesResponseType(typeof(SecretKeyConfigurationBase), 200)]
-        public IActionResult SecretKeyConfiguration()
+        [ProducesResponseType(typeof(IdentityAuthenticationConfiguration), 200)]
+        public IActionResult GetConfiguration()
         {
             var rsaDecryptPrivateKey = _secretKeyConfiguration.RsaDecryptPrivateKey;
             if (_authenticationConfiguration.EnableJwtEncrypt == false) rsaDecryptPrivateKey = string.Empty;
 
-            var secretKey = new SecretKeyConfigurationBase(_secretKeyConfiguration.HmacSha256Key, _secretKeyConfiguration.RsaSignaturePublicKey, rsaDecryptPrivateKey);
-            return Ok(secretKey);
-        }
-
-        [HttpGet]
-        [ProducesResponseType(typeof(AuthenticationConfiguration), 200)]
-        public IActionResult AuthenticaionConfiguartion()
-        {
-            return Ok(_authenticationConfiguration);
+            var config = new IdentityAuthenticationConfiguration
+            {
+                AccessTokenConfiguration = _accessTokenConfiguration,
+                AuthenticationConfiguration = _authenticationConfiguration,
+                RefreshTokenConfiguration = _refreshTokenConfiguration,
+                SecretKeyConfiguration = new SecretKeyConfigurationBase(_secretKeyConfiguration.HmacSha256Key, _secretKeyConfiguration.RsaSignaturePublicKey, rsaDecryptPrivateKey),
+            };
+            return Ok(config);
         }
     }
 }
