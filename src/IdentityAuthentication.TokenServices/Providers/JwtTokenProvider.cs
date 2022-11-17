@@ -1,14 +1,12 @@
 ﻿using Authentication.Abstractions;
 using IdentityAuthentication.Abstractions;
-using IdentityAuthentication.Extensions;
 using IdentityAuthentication.Model;
 using IdentityAuthentication.Model.Configurations;
+using IdentityAuthentication.Model.Extensions;
 using IdentityAuthentication.TokenServices.Abstractions;
 using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.DependencyModel;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
-using Newtonsoft.Json.Linq;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 
@@ -179,7 +177,7 @@ namespace IdentityAuthentication.TokenServices.Providers
             var timeSpan = expirationTime - DateTime.Now;
             if (timeSpan.TotalSeconds > accessTokenConfig.RefreshTime) return false;
 
-            var token = HttpContext.Request.GetRefreshToken();
+            var token = HttpContext.Request.Headers.GetRefreshToken();
             if (token.IsNullOrEmpty()) return false;
 
             token = HandleTokenDecrypt(token);
