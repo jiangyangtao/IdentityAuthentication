@@ -1,5 +1,5 @@
 ﻿using IdentityAuthentication.Abstractions;
-using IdentityAuthentication.Extensions;
+using IdentityAuthentication.Model.Extensions;
 using IdentityAuthentication.Model.Handlers;
 using IdentityAuthentication.Model.Handles;
 using Microsoft.AspNetCore.Authentication;
@@ -52,14 +52,7 @@ namespace IdentityAuthentication.Application.Handlers
             var token = messageReceivedContext.Token;
             if (token.IsNullOrEmpty())
             {
-                token = Request.Headers.Authorization.ToString();
-                if (token.IsNullOrEmpty()) return AuthenticateResult.NoResult();
-
-                if (token.StartsWith("Bearer ", StringComparison.OrdinalIgnoreCase))
-                {
-                    token = token["Bearer ".Length..].Trim();
-                }
-
+                token = Request.Headers.GetAuthorization();
                 if (token.IsNullOrEmpty()) return AuthenticateResult.NoResult();
             }
 
