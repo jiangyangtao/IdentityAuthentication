@@ -3,6 +3,7 @@ using IdentityAuthentication.Application.Filters;
 using IdentityAuthentication.Application.GrpcServices;
 using IdentityAuthentication.Application.Handlers;
 using IdentityAuthentication.Core;
+using IdentityAuthentication.Model;
 using IdentityAuthentication.Model.Handlers;
 using IdentityAuthentication.Model.Handles;
 using Microsoft.IdentityModel.Tokens;
@@ -44,14 +45,14 @@ services.AddAuthentication(options =>
     {
         OnMessageReceived = context =>
         {
-            context.Token = context.Request.Query["access_token"];
+            context.Token = context.Request.Query[HttpHeaderKeyDefaults.AccessToken];
             return Task.CompletedTask;
         },
         OnAuthenticationFailed = context =>
         {
             if (context.Exception.GetType() == typeof(SecurityTokenExpiredException))
             {
-                context.Response.Headers.Add("Token-Expired", "true");
+                context.Response.Headers.Add("token-expired", "true");
             }
             return Task.CompletedTask;
         },
