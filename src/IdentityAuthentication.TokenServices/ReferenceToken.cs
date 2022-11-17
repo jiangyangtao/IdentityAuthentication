@@ -1,5 +1,6 @@
 ﻿using Authentication.Abstractions;
 using IdentityAuthentication.Extensions;
+using IdentityAuthentication.Model;
 using System.Security.Claims;
 
 namespace IdentityAuthentication.TokenServices
@@ -8,7 +9,7 @@ namespace IdentityAuthentication.TokenServices
     {
         public ReferenceToken() { }
 
-        public ReferenceToken(AuthenticationResult result,DateTime expirationTime)
+        public ReferenceToken(AuthenticationResult result, DateTime expirationTime)
         {
             UserId = result.UserId;
             Username = result.Username;
@@ -30,8 +31,6 @@ namespace IdentityAuthentication.TokenServices
 
         public DateTime ExpirationTime { set; get; }
 
-        public static string ExpirationTimePropertyName = ClaimTypes.Expiration;
-
         public IReadOnlyDictionary<string, string> Metadata { set; get; }
 
         public IReadOnlyDictionary<string, string> ToReadOnlyDictionary()
@@ -43,7 +42,7 @@ namespace IdentityAuthentication.TokenServices
                 {AuthenticationResult.GrantSourcePropertyName,GrantType},
                 {AuthenticationResult.GrantTypePropertyName,GrantSource},
                 {AuthenticationResult.ClientPropertyName,Client},
-                {ExpirationTimePropertyName,ExpirationTime.ToString()},
+                {ClaimKeyDefaults.Expiration,ExpirationTime.ToString()},
             };
             if (Metadata.IsNullOrEmpty()) return dic;
 

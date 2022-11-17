@@ -22,9 +22,6 @@ namespace IdentityAuthentication.TokenServices.Providers
         private readonly JwtSecurityTokenHandler _jwtSecurityTokenHandler;
         private readonly RsaAlgorithm _rsaAlgorithm;
 
-        private readonly string IssueTimeKey = "IssueTime";
-        private readonly string ExpirationKey = ClaimTypes.Expiration;
-
         public JwtTokenProvider(
             IOptions<AccessTokenConfiguration> accessTokenOption,
             IOptions<RefreshTokenConfiguration> refreshTokenOption,
@@ -50,8 +47,8 @@ namespace IdentityAuthentication.TokenServices.Providers
         {
             var claims = new List<Claim>
             {
-                new Claim(IssueTimeKey,DateTime.Now.ToString()),
-                new Claim(ExpirationKey,TokenExpirationTime.ToString()),
+                new Claim(ClaimKeyDefaults.IssueTime,DateTime.Now.ToString()),
+                new Claim(ClaimKeyDefaults.Expiration,TokenExpirationTime.ToString()),
             };
 
             claims.AddRange(result.GetClaims());
@@ -69,7 +66,7 @@ namespace IdentityAuthentication.TokenServices.Providers
 
         public Task<string> DestroyAsync()
         {
-            var issueTime = GetDateTimeClaim(IssueTimeKey);
+            var issueTime = GetDateTimeClaim(ClaimKeyDefaults.IssueTime);
             var expirationTime = issueTime.AddSeconds(1);
 
             var claims = new List<Claim>();
@@ -88,7 +85,7 @@ namespace IdentityAuthentication.TokenServices.Providers
             if (r == false) return string.Empty;
 
             var expirationTime = TokenExpirationTime;
-            var issueTime = GetDateTimeClaim(IssueTimeKey);
+            var issueTime = GetDateTimeClaim(ClaimKeyDefaults.IssueTime);
 
             var claims = new List<Claim>();
             foreach (var item in Claims)
@@ -173,7 +170,7 @@ namespace IdentityAuthentication.TokenServices.Providers
 
         private async Task<bool> CheckRefreshTokenAsync()
         {
-            var expirationTime = GetDateTimeClaim(ExpirationKey);
+            var expirationTime = GetDateTimeClaim(ClaimKeyDefaults.Expiration);
             var timeSpan = expirationTime - DateTime.Now;
             if (timeSpan.TotalSeconds > accessTokenConfig.RefreshTime) return false;
 
