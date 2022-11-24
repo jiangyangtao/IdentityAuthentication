@@ -15,6 +15,7 @@ namespace IdentityAuthentication.Core
             services.AddHttpContextAccessor();
             services.AddGrantSources(configuration);
 
+            services.Configure<GrantDefaults>(configuration.GetSection("GrantDefaults"));
             services.Configure<AccessTokenConfiguration>(configuration.GetSection("AccessToken"));
             services.Configure<RefreshTokenConfiguration>(configuration.GetSection("RefreshToken"));
             services.Configure<SecretKeyConfiguration>(configuration.GetSection("SecretKey"));

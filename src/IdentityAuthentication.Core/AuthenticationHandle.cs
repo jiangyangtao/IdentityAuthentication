@@ -1,6 +1,7 @@
 ﻿using Authentication.Abstractions;
 using IdentityAuthentication.Extensions;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
 using Newtonsoft.Json.Linq;
 using System.Reflection;
 
@@ -8,18 +9,17 @@ namespace IdentityAuthentication.Core
 {
     internal class AuthenticationHandle
     {
+        private readonly GrantDefaults _grantDefaults;
         private readonly IServiceProvider _serviceProvider;
-        private readonly MethodInfo ExecuteAuthenticateMethod;
-        private readonly MethodInfo ExecuteIdentityCheckMethod;
         private readonly IDictionary<string, Type> CredentialTypes;
 
-        private const string GrantTypeDefault = "Password";
-        private const string GrantSourceDefault = "Local";
-        private const string ClientDefault = "Browser";
+        private readonly MethodInfo ExecuteAuthenticateMethod;
+        private readonly MethodInfo ExecuteIdentityCheckMethod;
 
-        public AuthenticationHandle(IServiceProvider serviceProvider)
+        public AuthenticationHandle(IServiceProvider serviceProvider, IOptions<GrantDefaults> grantDefaultsOptions)
         {
             _serviceProvider = serviceProvider;
+            _grantDefaults = grantDefaultsOptions.Value;
 
             var authenticationHandleType = typeof(AuthenticationHandle);
             ExecuteAuthenticateMethod = authenticationHandleType.GetMethod(nameof(ExecuteAuthenticateAsync), BindingFlags.NonPublic | BindingFlags.Instance);
@@ -75,13 +75,13 @@ namespace IdentityAuthentication.Core
         private ICredential GetCredential(JObject credentialObject)
         {
             if (credentialObject.ContainsKey(AuthenticationResult.GrantTypePropertyName) == false)
-                credentialObject[AuthenticationResult.GrantTypePropertyName] = GrantTypeDefault;
+                credentialObject[AuthenticationResult.GrantTypePropertyName] = _grantDefaults.GrantTypeDefault;
 
             if (credentialObject.ContainsKey(AuthenticationResult.GrantSourcePropertyName) == false)
-                credentialObject[AuthenticationResult.GrantSourcePropertyName] = GrantSourceDefault;
+                credentialObject[AuthenticationResult.GrantSourcePropertyName] = _grantDefaults.GrantSourceDefault;
 
             if (credentialObject.ContainsKey(AuthenticationResult.ClientPropertyName) == false)
-                credentialObject[AuthenticationResult.ClientPropertyName] = ClientDefault;
+                credentialObject[AuthenticationResult.ClientPropertyName] = _grantDefaults.ClientDefault;
 
             var grantType = credentialObject[AuthenticationResult.GrantTypePropertyName].Value<string>();
             if (CredentialTypes.ContainsKey(grantType) == false) throw new Exception($"Unknown GrantType: {grantType}");
