@@ -3,7 +3,7 @@ namespace IdentityAuthentication.Model
 {
     public class AuthenticationEndpoints
     {
-        public string AutnenticationConfigurationEndpoint { set; get; }
+        public string AuthenticationConfigurationEndpoint { set; get; }
 
         public string GenerateTokenEndpoint { set; get; }
 

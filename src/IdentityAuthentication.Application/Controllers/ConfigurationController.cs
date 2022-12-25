@@ -35,7 +35,7 @@ namespace IdentityAuthentication.Application.Controllers
             var apiPath = $"{baseUrl}/v1/api";
             var endpoints = new AuthenticationEndpoints
             {
-                AutnenticationConfigurationEndpoint = $"{apiPath}/configuration/getconfiguration",
+                AuthenticationConfigurationEndpoint = $"{apiPath}/configuration/getconfiguration",
                 GenerateTokenEndpoint = $"{apiPath}/token/generate",
                 RefreshToeknEndpoint = $"{apiPath}/token/refresh",
                 AuthorizeEndpoint = $"{apiPath}/token/authorize",
