@@ -7,6 +7,7 @@
 	</PropertyGroup>
 
 	<ItemGroup>
+		<PackageReference Include="Yangtao.Hosting.Core" Version="1.0.0-alpha1.6" />
 		<PackageReference Include="Grpc.AspNetCore" Version="2.34.0" />
 		<PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="6.0.10" />
 		<PackageReference Include="Swashbuckle.AspNetCore" Version="6.2.3" />
@@ -19,6 +20,12 @@
 	
 	<ItemGroup>
 		<ProjectReference Include="..\IdentityAuthentication.Core\IdentityAuthentication.Core.csproj" />
+	</ItemGroup>
+	
+	<ItemGroup>
+	  <None Update="Certificates\employee.pfx">
+	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+	  </None>
 	</ItemGroup>
 
 </Project>

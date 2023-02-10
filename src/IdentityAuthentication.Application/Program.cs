@@ -9,12 +9,14 @@ using IdentityAuthentication.Model.Handles;
 using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
+using Yangtao.Hosting.Core;
 
 var builder = WebApplication.CreateBuilder(args);
 var services = builder.Services;
 var configuration = builder.Configuration;
 
 // Add services to the container.
+builder.WebHost.ConfigureKestrel(serverOptions => WebHostKestrel.CustomConfigureKestrel(serverOptions, configuration.GetSection("KestrelConfigure")));
 services.AddControllers(options =>
 {
     options.Filters.Add<ExceptionFilter>();
