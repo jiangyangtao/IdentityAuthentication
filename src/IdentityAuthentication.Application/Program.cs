@@ -16,7 +16,6 @@ var services = builder.Services;
 var configuration = builder.Configuration;
 
 // Add services to the container.
-builder.WebHost.ConfigureKestrel(serverOptions => WebHostKestrel.CustomConfigureKestrel(serverOptions, configuration.GetSection("KestrelConfigure")));
 services.AddControllers(options =>
 {
     options.Filters.Add<ExceptionFilter>();
