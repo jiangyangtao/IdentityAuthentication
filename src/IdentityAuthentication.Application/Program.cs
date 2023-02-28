@@ -9,7 +9,6 @@ using IdentityAuthentication.Model.Handles;
 using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
-using Yangtao.Hosting.Core;
 
 var builder = WebApplication.CreateBuilder(args);
 var services = builder.Services;
@@ -31,6 +30,13 @@ services.AddControllers(options =>
 services.AddEndpointsApiExplorer();
 services.AddSwaggerGen();
 services.AddIdentityAuthentication(configuration);
+services.AddCors(options =>
+{
+    options.AddDefaultPolicy(policy =>
+    {
+        policy.SetIsOriginAllowed(_ => true).AllowAnyHeader().AllowAnyMethod().AllowCredentials();
+    });
+});
 
 services.AddAuthentication(options =>
 {
@@ -59,12 +65,11 @@ services.AddAuthentication(options =>
         },
     };
 });
-services.AddGrpc();
+services.AddGrpc(options =>
+{
+    options.EnableDetailedErrors = true;
+});
 
-//services.AddAuthenticationCore(options =>
-//{
-//    options.AddScheme<AuthenticationHandler>(nameof(AuthenticationHandler), "demo handle");
-//});
 
 var app = builder.Build();
 
@@ -76,9 +81,12 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+app.UseCors();
+
 app.UseAuthentication();
 app.UseIdentityAuthentication();
 app.UseAuthorization();
+
 
 app.MapControllers();
 app.MapGrpcService<TokenService>();

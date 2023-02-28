@@ -23,6 +23,18 @@
 	</ItemGroup>
 	
 	<ItemGroup>
+	  <None Update="Certificates\authentication.cer">
+	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+	  </None>
+	  <None Update="Certificates\authentication.csr">
+	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+	  </None>
+	  <None Update="Certificates\authentication.key">
+	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+	  </None>
+	  <None Update="Certificates\authentication.pfx">
+	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+	  </None>
 	  <None Update="Certificates\employee.pfx">
 	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
 	  </None>
