@@ -14,7 +14,7 @@ namespace IdentityAuthentication.Model.Extensions
             if (headers == null) return string.Empty;
             if (key.IsNullOrEmpty()) return string.Empty;
 
-            var r = headers.TryGetValue(HttpHeaderKeyDefaults.Authorization, out StringValues _value);
+            var r = headers.TryGetValue(key, out StringValues _value);
             if (r == false) return string.Empty;
 
             var value = _value.ToString();
