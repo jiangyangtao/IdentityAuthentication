@@ -39,5 +39,10 @@ namespace IdentityAuthentication.Application.GrpcServices
             var token = await _authenticaionProvider.RefreshTokenAsync();
             return new RefreshTokenResponse { AccessToken = token, Result = token.NotNullAndEmpty() };
         }
+
+        public override Task<GenerateTokenResponse> Generate(GenerateTokenRequest request, ServerCallContext context)
+        {
+            return base.Generate(request, context);
+        }
     }
 }
