@@ -12,16 +12,33 @@ namespace IdentityAuthentication.Token
 
         public TokenSignatureProvider(IAuthenticationConfigurationProvider configurationProvider)
         {
+            if (configurationProvider.AccessToken == null) throw new ArgumentException(nameof(configurationProvider.AccessToken));
             _configurationProvider = configurationProvider;
         }
 
+        private TokenValidation AccessTokenSignature { set; get; }
+
+        public JwtSecurityToken AccessTokenSecurity
+        {
+            get
+            {
+
+            }
+        }
+
+
         private TokenValidation AccessTokenValidation { set; get; }
 
-        public JwtSecurityToken AccessTokenSecurity => throw new NotImplementedException();
-
-        public JwtSecurityToken? RefreshTTokenSecurity => throw new NotImplementedException();
-
         public TokenValidationParameters AccessTokenValidationParameters => throw new NotImplementedException();
+
+
+
+
+        private TokenValidation RefreshTokenSignature { set; get; }
+
+        public JwtSecurityToken? RefreshTokenSecurity => throw new NotImplementedException();
+
+        private TokenValidation RefreshTokenValidation { set; get; }
 
         public TokenValidationParameters? RefreshTokenValidationParameters => throw new NotImplementedException();
     }

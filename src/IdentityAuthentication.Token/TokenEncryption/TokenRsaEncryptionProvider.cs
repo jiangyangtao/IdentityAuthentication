@@ -14,7 +14,7 @@ namespace IdentityAuthentication.Token.TokenEncryption
 
         public TokenRsaEncryptionProvider(IAuthenticationConfigurationProvider authenticationConfigurationProvider)
         {
-            if (authenticationConfigurationProvider.RsaEncryption == null) throw new NullReferenceException(nameof(authenticationConfigurationProvider.RsaEncryption));
+            if (authenticationConfigurationProvider.RsaEncryption == null) throw new ArgumentException(nameof(authenticationConfigurationProvider.RsaEncryption));
 
             RsaEncryptionConfiguration = authenticationConfigurationProvider.RsaEncryption;
             Rsa = RSA.Create();

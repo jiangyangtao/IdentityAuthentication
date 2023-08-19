@@ -7,7 +7,7 @@ namespace IdentityAuthentication.Token.Abstractions
     {
         JwtSecurityToken AccessTokenSecurity { get; }
 
-        JwtSecurityToken? RefreshTTokenSecurity { get; }
+        JwtSecurityToken? RefreshTokenSecurity { get; }
 
         TokenValidationParameters AccessTokenValidationParameters { get; }
 

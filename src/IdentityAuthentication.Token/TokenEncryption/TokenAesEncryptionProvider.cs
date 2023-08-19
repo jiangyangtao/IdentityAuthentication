@@ -11,7 +11,7 @@ namespace IdentityAuthentication.Token.TokenEncryption
 
         public TokenAesEncryptionProvider(IAuthenticationConfigurationProvider authenticationConfigurationProvider)
         {
-            if (authenticationConfigurationProvider.AesEncryption == null) throw new NullReferenceException(nameof(authenticationConfigurationProvider.AesEncryption));
+            if (authenticationConfigurationProvider.AesEncryption == null) throw new ArgumentException(nameof(authenticationConfigurationProvider.AesEncryption));
 
             Aes = Aes.Create();
             Aes.Key = authenticationConfigurationProvider.AesEncryption.AesKey;
