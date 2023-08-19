@@ -6,20 +6,7 @@ namespace IdentityAuthentication.Configuration.Enums
     /// </summary>
     public enum TokenSignatureAlgorithmType
     {
-        /// <summary>
-        /// HS256
-        /// </summary>
-        HmacSha256 = 10,
-
-        /// <summary>
-        /// HS384
-        /// </summary>
-        HmacSha384 = 11,
-
-        /// <summary>
-        /// HS512
-        /// </summary>
-        HmacSha512 = 12,
+  
 
         /// <summary>
         /// RS256
