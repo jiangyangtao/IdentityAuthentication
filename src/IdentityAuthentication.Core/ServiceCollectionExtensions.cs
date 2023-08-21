@@ -1,4 +1,5 @@
 ﻿using IdentityAuthentication.Configuration;
+using IdentityAuthentication.Configuration.Enums;
 using IdentityAuthentication.Model.Configurations;
 using IdentityAuthentication.Model.Enums;
 using Microsoft.Extensions.Configuration;
@@ -32,7 +33,18 @@ namespace IdentityAuthentication.Core
             var tokenType = authenticationConfig.GetValue<TokenType>(nameof(TokenType));
             if (tokenType == TokenType.JWT || tokenType == TokenType.Reference)
             {
-                services.Configure<TokenSignatureConfiguration>(configuration.GetSection(TokenSignatureConfiguration.ConfigurationKey));
+                var signatureConfig = configuration.GetSection(TokenSignatureConfiguration.ConfigurationKey);
+                var algorithmType = signatureConfig.GetValue<TokenSignatureAlgorithmType>(nameof(TokenSignatureConfiguration.AlgorithmType));           
+                services.Configure<TokenSignatureConfiguration>(a =>
+                {
+                    a.AlgorithmType = algorithmType;
+
+                    var rsaSignatureConfig = signatureConfig.GetSection(RsaSignatureConfiguration.ConfigurationKey);
+                    a.RsaSignature = new RsaSignatureConfiguration
+                    {
+                        AlgorithmType = algorithmType;
+                    };
+                });
             }
 
             if (tokenType == TokenType.Encrypt)

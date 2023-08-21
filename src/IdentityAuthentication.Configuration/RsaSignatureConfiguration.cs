@@ -27,5 +27,7 @@ namespace IdentityAuthentication.Configuration
                 SignatureKey = PrivateKey,
             };
         }
+
+        public const string ConfigurationKey = "RsaSignature";
     }
 }
