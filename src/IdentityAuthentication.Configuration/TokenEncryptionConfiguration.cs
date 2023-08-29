@@ -9,5 +9,7 @@ namespace IdentityAuthentication.Configuration
         public RsaEncryptionConfiguration RsaEncryption { set; get; }
 
         public AesEncryptionConfiguration AesEncryption { set; get; }
+
+        public const string ConfigurationKey = "TokenEncrypt";
     }
 }

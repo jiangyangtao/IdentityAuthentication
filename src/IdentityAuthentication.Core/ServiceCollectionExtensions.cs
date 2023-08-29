@@ -1,8 +1,6 @@
 ﻿using IdentityAuthentication.Configuration;
-using IdentityAuthentication.Extensions;
 using IdentityAuthentication.Model.Configurations;
-using IdentityAuthentication.TokenServices;
-using Microsoft.AspNetCore.Builder;
+using IdentityAuthentication.Model.Enums;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -13,16 +11,35 @@ namespace IdentityAuthentication.Core
         public static IServiceCollection AddIdentityAuthentication(this IServiceCollection services)
         {
             services.AddHttpContextAccessor();
+            services.AddAuthenticationConfiguration(); ;
 
+            services.AddSingleton<IAuthenticationHandler, AuthenticationHandldr>();
+            return services;
+        }
+
+        private static IServiceCollection AddAuthenticationConfiguration(this IServiceCollection services)
+        {
             var serviceProvider = services.BuildServiceProvider();
             var configuration = serviceProvider.GetRequiredService<IConfiguration>();
 
-            services.Configure<GrantDefaultConfiguration>(configuration.GetSection("GrantDefaults"));
-            services.Configure<AccessTokenConfiguration>(configuration.GetSection("AccessToken"));
-            services.Configure<RefreshTokenConfiguration>(configuration.GetSection("RefreshToken"));
-            services.Configure<AuthenticationConfiguration>(configuration.GetSection("Authentication"));
+            services.Configure<GrantDefaultConfiguration>(configuration.GetSection(GrantDefaultConfiguration.ConfigurationKey));
+            services.Configure<AccessTokenConfiguration>(configuration.GetSection(AccessTokenConfiguration.ConfigurationKey));
+            services.Configure<RefreshTokenConfiguration>(configuration.GetSection(RefreshTokenConfiguration.ConfigurationKey));
 
-            services.AddSingleton<IAuthenticationHandler, AuthenticationHandldr>();
+            var authenticationConfig = configuration.GetSection(AuthenticationConfiguration.ConfigurationKey);
+            services.Configure<AuthenticationConfiguration>(authenticationConfig);
+
+            var tokenType = authenticationConfig.GetValue<TokenType>(nameof(TokenType));
+            if (tokenType == TokenType.JWT || tokenType == TokenType.Reference)
+            {
+                services.Configure<TokenSignatureConfiguration>(configuration.GetSection(TokenSignatureConfiguration.ConfigurationKey));
+            }
+
+            if (tokenType == TokenType.Encrypt)
+            {
+                services.Configure<TokenSignatureConfiguration>(configuration.GetSection(TokenSignatureConfiguration.ConfigurationKey));
+            }
+
             return services;
         }
     }

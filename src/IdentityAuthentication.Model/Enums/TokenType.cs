@@ -16,6 +16,6 @@ namespace IdentityAuthentication.Model.Enums
         /// <summary>
         /// Encrypt Token
         /// </summary>
-        Encrypt
+        Encrypt = 3
     }
 }

@@ -19,5 +19,7 @@ namespace IdentityAuthentication.Configuration
                 return false;
             }
         }
+
+        public const string ConfigurationKey = "TokenSignature";
     }
 }

@@ -8,5 +8,7 @@ namespace IdentityAuthentication.Configuration
         /// 启用 token 刷新
         /// </summary>
         public bool EnableTokenRefresh { set; get; }
+
+        public const string ConfigurationKey = "RefreshToken";
     }
 }
