@@ -452,3 +452,6 @@ $RECYCLE.BIN/
 !.vscode/tasks.json
 !.vscode/launch.json
 !.vscode/extensions.json
+/src/IdentityAuthentication.Application/Certificates/authentication.cer
+/src/IdentityAuthentication.Application/Certificates/authentication.csr
+/src/IdentityAuthentication.Application/Certificates/authentication.key

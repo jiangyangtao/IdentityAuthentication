@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.31911.196
+# Visual Studio Version 17
+VisualStudioVersion = 17.4.33103.184
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{817F15A1-CB29-4E0B-A2B5-C0E70CE6512C}"
 EndProject
@@ -26,6 +26,8 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IdentityAuthentication.TokenServices", "src\IdentityAuthentication.TokenServices\IdentityAuthentication.TokenServices.csproj", "{4A1B8946-F82D-45AC-8221-A3C91FAC458D}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IdentityAuthentication.Model", "src\IdentityAuthentication.Model\IdentityAuthentication.Model.csproj", "{27D7C9F2-2367-43BB-89CA-837B236647CD}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Authentication.Employee", "src\Authentications\Authentication.Employee\Authentication.Employee.csproj", "{05D27335-B00A-4351-B86A-024DD6263432}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -69,6 +71,10 @@ Global
 		{27D7C9F2-2367-43BB-89CA-837B236647CD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{27D7C9F2-2367-43BB-89CA-837B236647CD}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{27D7C9F2-2367-43BB-89CA-837B236647CD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{05D27335-B00A-4351-B86A-024DD6263432}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{05D27335-B00A-4351-B86A-024DD6263432}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{05D27335-B00A-4351-B86A-024DD6263432}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{05D27335-B00A-4351-B86A-024DD6263432}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -84,6 +90,7 @@ Global
 		{7CABD315-25D5-4B2D-8AD1-865D4423BD95} = {255F7F1B-EBE9-4967-BCBA-C457C436A636}
 		{4A1B8946-F82D-45AC-8221-A3C91FAC458D} = {817F15A1-CB29-4E0B-A2B5-C0E70CE6512C}
 		{27D7C9F2-2367-43BB-89CA-837B236647CD} = {817F15A1-CB29-4E0B-A2B5-C0E70CE6512C}
+		{05D27335-B00A-4351-B86A-024DD6263432} = {255F7F1B-EBE9-4967-BCBA-C457C436A636}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {5CB576AE-56FE-4102-9DB7-99BCA140BC7B}

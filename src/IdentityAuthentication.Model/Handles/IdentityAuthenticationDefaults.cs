@@ -1,4 +1,6 @@
-﻿namespace IdentityAuthentication.Model.Handles
+﻿using Microsoft.AspNetCore.Mvc;
+
+namespace IdentityAuthentication.Model.Handles
 {
     public static class IdentityAuthenticationDefaults
     {
