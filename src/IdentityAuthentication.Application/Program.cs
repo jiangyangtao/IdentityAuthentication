@@ -22,7 +22,7 @@ services.AddControllers(options =>
 }).AddNewtonsoftJson(options =>
 {
     options.SerializerSettings.Formatting = Formatting.Indented;
-    options.SerializerSettings.DateFormatString = "yyyy-MM-dd HH:mm:ss";
+    options.SerializerSettings.DateFormatString = AuthenticationConfigurationDefault.DateFormatString;
     options.SerializerSettings.ContractResolver = new DefaultContractResolver();
     options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
 });
@@ -38,11 +38,13 @@ services.AddApiVersioning(options =>
 });
 services.AddVersionedApiExplorer(options =>
 {
-    options.GroupNameFormat = "'v'V";
+    options.GroupNameFormat = AuthenticationConfigurationDefault.GroupNameFormat;
     options.SubstituteApiVersionInUrl = true;
 });
 services.AddSwaggerGen();
 services.AddIdentityAuthentication();
+
+
 services.AddCors(options =>
 {
     options.AddDefaultPolicy(policy =>
