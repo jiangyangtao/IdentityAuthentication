@@ -28,6 +28,7 @@ namespace IdentityAuthentication.Application.Controllers
             _secretKeyConfiguration = secretKeyOption.Value;
         }
 
+        [HttpGet]
         [ProducesResponseType(typeof(AuthenticationEndpoints), 200)]
         public IActionResult AuthenticationEndpoints()
         {

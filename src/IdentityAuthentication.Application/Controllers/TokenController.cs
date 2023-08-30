@@ -22,12 +22,8 @@ namespace IdentityAuthentication.Application.Controllers
         [HttpPost]
         [AllowAnonymous]
         [ProducesResponseType(typeof(TokenResult), 200)]
-        public async Task<IActionResult> Generate()
+        public async Task<IActionResult> Generate([FromBody] JObject credentialData)
         {
-            var streamReader = new StreamReader(Request.Body);
-            var data = await streamReader.ReadToEndAsync();
-            var credentialData = JObject.Parse(data);
-
             var token = await _authenticationProvider.AuthenticateAsync(credentialData);
             if (token == null) return new NotFoundResult();
 

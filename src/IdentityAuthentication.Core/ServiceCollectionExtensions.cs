@@ -10,11 +10,14 @@ namespace IdentityAuthentication.Core
 {
     public static class ServiceCollectionExtensions
     {
-        public static IServiceCollection AddIdentityAuthentication(this IServiceCollection services, IConfiguration configuration)
+        public static IServiceCollection AddIdentityAuthentication(this IServiceCollection services)
         {
             services.AddHttpContextAccessor();
-            services.AddGrantSources(configuration);
 
+            var serviceProvider = services.BuildServiceProvider();
+            var configuration = serviceProvider.GetRequiredService<IConfiguration>();
+
+            services.AddGrantSources(configuration);
             services.Configure<GrantDefaults>(configuration.GetSection("GrantDefaults"));
             services.Configure<AccessTokenConfiguration>(configuration.GetSection("AccessToken"));
             services.Configure<RefreshTokenConfiguration>(configuration.GetSection("RefreshToken"));
@@ -36,7 +39,7 @@ namespace IdentityAuthentication.Core
             {
                 foreach (var authenticationInitialization in authenticationInitializations)
                 {
-                    if (authenticationInitialization != null) authenticationInitialization.InitializationService(services, configuration);
+                    authenticationInitialization?.InitializationService(services, configuration);
                 }
             }
 
@@ -50,7 +53,7 @@ namespace IdentityAuthentication.Core
             {
                 foreach (var authenticationInitialization in authenticationInitializations)
                 {
-                    if (authenticationInitialization != null) authenticationInitialization.InitializationApplication(builder);
+                    authenticationInitialization?.InitializationApplication(builder);
                 }
             }
 

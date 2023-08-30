@@ -42,7 +42,7 @@ services.AddVersionedApiExplorer(options =>
     options.SubstituteApiVersionInUrl = true;
 });
 services.AddSwaggerGen();
-services.AddIdentityAuthentication(configuration);
+services.AddIdentityAuthentication();
 services.AddCors(options =>
 {
     options.AddDefaultPolicy(policy =>
