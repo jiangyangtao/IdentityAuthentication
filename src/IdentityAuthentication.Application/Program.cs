@@ -1,4 +1,5 @@
 
+using IdentityAuthentication.Application;
 using IdentityAuthentication.Application.Filters;
 using IdentityAuthentication.Application.GrpcServices;
 using IdentityAuthentication.Application.Handlers;
@@ -28,6 +29,18 @@ services.AddControllers(options =>
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 services.AddEndpointsApiExplorer();
+services.AddApiVersioning(options =>
+{
+    options.ReportApiVersions = true;
+    options.UseApiBehavior = true;
+    options.AssumeDefaultVersionWhenUnspecified = true;
+    options.DefaultApiVersion = AuthenticationConfigurationDefault.ApiV1;
+});
+services.AddVersionedApiExplorer(options =>
+{
+    options.GroupNameFormat = "'v'V";
+    options.SubstituteApiVersionInUrl = true;
+});
 services.AddSwaggerGen();
 services.AddIdentityAuthentication(configuration);
 services.AddCors(options =>
@@ -87,13 +100,8 @@ app.UseAuthentication();
 app.UseIdentityAuthentication();
 app.UseAuthorization();
 
-
 app.MapControllers();
 app.MapGrpcService<TokenService>();
 
-app.MapGet("/", async context =>
-{
-    await context.Response.WriteAsync("Hello, IdentityAuthentication");
-});
-
+app.Map("/", () => "Hello, IdentityAuthentication");
 app.Run();

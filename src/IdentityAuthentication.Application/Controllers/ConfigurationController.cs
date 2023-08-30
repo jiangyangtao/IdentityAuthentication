@@ -10,6 +10,7 @@ namespace IdentityAuthentication.Application.Controllers
     [AllowAnonymous]
     public class ConfigurationController : BaseController
     {
+
         private readonly AccessTokenConfiguration _accessTokenConfiguration;
         private readonly RefreshTokenConfiguration _refreshTokenConfiguration;
         private readonly SecretKeyConfiguration _secretKeyConfiguration;
@@ -27,18 +28,19 @@ namespace IdentityAuthentication.Application.Controllers
             _secretKeyConfiguration = secretKeyOption.Value;
         }
 
-        [HttpGet("~/api/[controller]")]
+        [HttpGet]
         [ProducesResponseType(typeof(AuthenticationEndpoints), 200)]
         public IActionResult AuthenticationEndpoints()
         {
             var baseUrl = HttpContext.Request.GetOriginHost();
-            var apiPath = $"{baseUrl}/v1/api";
+            var apiV1Path = $"{baseUrl}/api/v{AuthenticationConfigurationDefault.ApiV1.MajorVersion}";
+
             var endpoints = new AuthenticationEndpoints
             {
-                AuthenticationConfigurationEndpoint = $"{apiPath}/configuration/getconfiguration",
-                GenerateTokenEndpoint = $"{apiPath}/token/generate",
-                RefreshToeknEndpoint = $"{apiPath}/token/refresh",
-                AuthorizeEndpoint = $"{apiPath}/token/authorize",
+                AuthenticationConfigurationEndpoint = $"{apiV1Path}/configuration/getconfiguration",
+                GenerateTokenEndpoint = $"{apiV1Path}/token/generate",
+                RefreshToeknEndpoint = $"{apiV1Path}/token/refresh",
+                AuthorizeEndpoint = $"{apiV1Path}/token/authorize",
             };
 
             return Ok(endpoints);
