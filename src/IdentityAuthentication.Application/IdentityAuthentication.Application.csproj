@@ -10,15 +10,35 @@
 		<PackageReference Include="Grpc.AspNetCore" Version="2.34.0" />
 		<PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="6.0.10" />
 		<PackageReference Include="Swashbuckle.AspNetCore" Version="6.2.3" />
+		<PackageReference Include="Microsoft.AspNetCore.Mvc.Versioning" Version="5.1.0" />
+		<PackageReference Include="Microsoft.AspNetCore.Mvc.Versioning.ApiExplorer" Version="5.1.0" />
 	</ItemGroup>
 
 
 	<ItemGroup>
-		<Protobuf Include="Protos\TokenProto.proto" GrpcServices="Server" />
+		<Protobuf Include="Protos\Token.proto" GrpcServices="Server" />
 	</ItemGroup>
 	
 	<ItemGroup>
 		<ProjectReference Include="..\IdentityAuthentication.Core\IdentityAuthentication.Core.csproj" />
+	</ItemGroup>
+	
+	<ItemGroup>
+	  <None Update="Certificates\authentication.cer">
+	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+	  </None>
+	  <None Update="Certificates\authentication.csr">
+	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+	  </None>
+	  <None Update="Certificates\authentication.key">
+	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+	  </None>
+	  <None Update="Certificates\authentication.pfx">
+	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+	  </None>
+	  <None Update="Certificates\employee.pfx">
+	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+	  </None>
 	</ItemGroup>
 
 </Project>

@@ -90,6 +90,8 @@ namespace IdentityAuthentication.TokenServices.Providers
             var claims = new List<Claim>();
             foreach (var item in Claims)
             {
+                if (item.Type.Equals(JwtRegisteredClaimNames.Aud, StringComparison.OrdinalIgnoreCase)) continue;
+
                 claims.Add(item.Clone());
             }
 
@@ -184,6 +186,10 @@ namespace IdentityAuthentication.TokenServices.Providers
 
             foreach (var refreshClaim in tokenValidationResult.Claims)
             {
+                if (refreshClaim.Key.Equals(JwtRegisteredClaimNames.Exp, StringComparison.OrdinalIgnoreCase)) continue;
+                if (refreshClaim.Key.Equals(JwtRegisteredClaimNames.Iss, StringComparison.OrdinalIgnoreCase)) continue;
+                if (refreshClaim.Key.Equals(JwtRegisteredClaimNames.Aud, StringComparison.OrdinalIgnoreCase)) continue;
+
                 var accessClaim = Claims.FirstOrDefault(a => a.Type == refreshClaim.Key);
                 if (accessClaim == null) return false;
                 if (refreshClaim.Value.ToString() != accessClaim.Value) return false;

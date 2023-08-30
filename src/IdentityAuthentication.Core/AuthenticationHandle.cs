@@ -118,9 +118,7 @@ namespace IdentityAuthentication.Core
             if (authenticationServices.Length >= 2) throw new Exception($"Uncertain authentication source [{credential.GrantSource}]");
 
             var authenticationService = authenticationServices.FirstOrDefault();
-            if (authenticationService == null) throw new Exception($"Authenticate failed, credential: {credential.GrantType},source: {credential.GrantSource}");
-
-            return authenticationService;
+            return authenticationService ?? throw new Exception($"Authenticate failed, credential: {credential.GrantType},source: {credential.GrantSource}");
         }
     }
 }

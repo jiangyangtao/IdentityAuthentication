@@ -3,7 +3,7 @@ namespace IdentityAuthentication.Model
 {
     public class AuthenticationEndpoints
     {
-        public string AutnenticationConfigurationEndpoint { set; get; }
+        public string AuthenticationConfigurationEndpoint { set; get; }
 
         public string GenerateTokenEndpoint { set; get; }
 
@@ -11,7 +11,7 @@ namespace IdentityAuthentication.Model
 
         public string AuthorizeEndpoint { set; get; }
 
-        public static string DefaultConfigurationEndpoint => "/api/configuration";
+        public static string DefaultConfigurationEndpoint => "/api/v1/configuration/authenticationendpoints";
 
     }
 }

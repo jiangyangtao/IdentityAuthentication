@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace IdentityAuthentication.Application.Controllers
 {
     [Authorize]
-    [Route("v1/api/[controller]/[action]")]
+    [Route("api/v{v:ApiVersion}/[controller]/[action]")]
     [ApiController]
     public abstract class BaseController : Controller
     {
