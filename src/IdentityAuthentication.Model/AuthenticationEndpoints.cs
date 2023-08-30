@@ -11,7 +11,7 @@ namespace IdentityAuthentication.Model
 
         public string AuthorizeEndpoint { set; get; }
 
-        public static string DefaultConfigurationEndpoint => "/api/v1/configuration";
+        public static string DefaultConfigurationEndpoint => "/api/v1/configuration/authenticationendpoints";
 
     }
 }
