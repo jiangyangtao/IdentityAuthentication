@@ -27,7 +27,7 @@ namespace IdentityAuthentication.Application.Controllers
             var token = await _authenticationProvider.AuthenticateAsync(credentialData);
             if (token == null) return new NotFoundResult();
 
-            var factory = new TokenResultFactory(token, _authenticationConfiguration.TokenType);
+            using var factory = new TokenResultFactory(token, _authenticationConfiguration.TokenType);
             var result = factory.CreateTokenResult();
 
             return Ok(result);

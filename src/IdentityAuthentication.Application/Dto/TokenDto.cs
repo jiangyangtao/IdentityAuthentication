@@ -3,7 +3,7 @@ using IdentityAuthentication.Model.Configurations;
 
 namespace IdentityAuthentication.Application.Dto
 {
-    public class TokenResultFactory
+    public class TokenResultFactory : IDisposable
     {
         public IToken Token { get; }
 
@@ -23,6 +23,11 @@ namespace IdentityAuthentication.Application.Dto
             }
 
             return new RefreshTokenResult(Token);
+        }
+
+        public void Dispose()
+        {
+            GC.SuppressFinalize(this);
         }
     }
 

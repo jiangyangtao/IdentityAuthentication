@@ -97,9 +97,7 @@ namespace IdentityAuthentication.Core
             var authenticationService = GetAuthenticationService(credential);
 
             var result = await authenticationService.AuthenticateAsync(credential);
-            if (result == null) throw new Exception($"[{authenticationService.GetType().FullName}]authenticate failed, credential: {credential.GrantType}, source: {credential.GrantSource}");
-
-            return result;
+            return result ?? throw new KeyNotFoundException($"[{authenticationService.GetType().FullName}]authenticate failed, credential: {credential.GrantType}, source: {credential.GrantSource}");
         }
 
         private async Task<bool> ExecuteIdentityCheckAsync<T>(T credential, string id, string username) where T : ICredential
