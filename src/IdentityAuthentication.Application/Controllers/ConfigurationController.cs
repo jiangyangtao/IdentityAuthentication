@@ -58,7 +58,7 @@ namespace IdentityAuthentication.Application.Controllers
                 AccessTokenConfiguration = _accessTokenConfiguration,
                 AuthenticationConfiguration = _authenticationConfiguration,
                 RefreshTokenConfiguration = _refreshTokenConfiguration,
-                SecretKeyConfiguration = new SecretKeyConfigurationBase(_secretKeyConfiguration.HmacSha256Key, _secretKeyConfiguration.RsaSignaturePublicKey, rsaDecryptPrivateKey),
+                SecretKeyConfiguration = new SecretKeyConfigurationBase(_secretKeyConfiguration.HmacSha256Key, _secretKeyConfiguration.RsaSignaturePublicKey),
             };
             return Ok(config);
         }

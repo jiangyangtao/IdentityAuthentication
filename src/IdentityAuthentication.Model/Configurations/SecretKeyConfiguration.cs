@@ -6,11 +6,10 @@ namespace IdentityAuthentication.Model.Configurations
     {
         public SecretKeyConfigurationBase() { }
 
-        public SecretKeyConfigurationBase(string hmacSha256Key, string rsaPublicKey, string rsaDecryptPrivateKey)
+        public SecretKeyConfigurationBase(string hmacSha256Key, string rsaPublicKey)
         {
             HmacSha256Key = hmacSha256Key;
             RsaSignaturePublicKey = rsaPublicKey;
-            RsaDecryptPrivateKey = rsaDecryptPrivateKey;
         }
 
         /// <summary>
@@ -22,11 +21,6 @@ namespace IdentityAuthentication.Model.Configurations
         /// RSA 验签公钥
         /// </summary>
         public string RsaSignaturePublicKey { set; get; }
-
-        /// <summary>
-        /// RSA 解密私钥
-        /// </summary>
-        public string RsaDecryptPrivateKey { set; get; }
     }
 
     public class SecretKeyConfiguration : SecretKeyConfigurationBase
@@ -35,6 +29,11 @@ namespace IdentityAuthentication.Model.Configurations
         /// RSA 签名私钥
         /// </summary>
         public string RsaSignaturePrivateKey { set; get; }
+
+        /// <summary>
+        /// RSA 解密私钥
+        /// </summary>
+        public string RsaDecryptPrivateKey { set; get; }
 
         /// <summary>
         /// RSA 加密公钥
