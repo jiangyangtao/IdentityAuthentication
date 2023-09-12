@@ -44,7 +44,7 @@ namespace IdentityAuthentication.Application.Controllers
         [HttpPost]
         public async Task<IActionResult> Authorize()
         {
-            var result = await _authenticationProvider.TokenInfoAsync();
+            var result = await _authenticationProvider.GetTokenInfoAsync();
             return Ok(result);
         }
     }

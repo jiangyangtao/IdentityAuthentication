@@ -217,7 +217,7 @@ namespace IdentityAuthentication.TokenServices.Providers
             return tokenValidationResult;
         }
 
-        public Task<IReadOnlyDictionary<string, string>> InfoAsync()
+        public Task<IReadOnlyDictionary<string, string>> GetTokenInfoAsync()
         {
             var claiims = (IReadOnlyDictionary<string, string>)Claims.ToDictionary(a => a.Type, a => a.Value);
             return Task.FromResult(claiims);

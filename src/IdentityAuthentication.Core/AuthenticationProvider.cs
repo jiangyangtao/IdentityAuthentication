@@ -38,9 +38,9 @@ namespace IdentityAuthentication.Core
             return token;
         }
 
-        public async Task<IReadOnlyDictionary<string, string>> TokenInfoAsync()
+        public async Task<IReadOnlyDictionary<string, string>> GetTokenInfoAsync()
         {
-            var dic = await _tokenProvider.InfoAsync();
+            var dic = await _tokenProvider.GetTokenInfoAsync();
             if (dic == null) return null;
 
             return dic;

@@ -88,7 +88,7 @@ namespace IdentityAuthentication.TokenServices.Providers
             return token.GetAuthenticationResult();
         }
 
-        public async Task<IReadOnlyDictionary<string, string>?> InfoAsync()
+        public async Task<IReadOnlyDictionary<string, string>?> GetTokenInfoAsync()
         {
             var token = await _cacheProvider.GetAsync(Authentication);
             if (token == null) return null;

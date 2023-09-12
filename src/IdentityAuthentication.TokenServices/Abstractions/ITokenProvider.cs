@@ -20,6 +20,6 @@ namespace IdentityAuthentication.TokenServices.Abstractions
 
         Task<TokenValidationResult> AuthorizeAsync(string token);
 
-        Task<IReadOnlyDictionary<string, string>?> InfoAsync();
+        Task<IReadOnlyDictionary<string, string>?> GetTokenInfoAsync();
     }
 }

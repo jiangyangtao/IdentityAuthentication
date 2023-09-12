@@ -11,6 +11,6 @@ namespace IdentityAuthentication.Abstractions
 
         Task<TokenValidationResult> ValidateTokenAsync(string token);
 
-        Task<IReadOnlyDictionary<string, string>> TokenInfoAsync();
+        Task<IReadOnlyDictionary<string, string>> GetTokenInfoAsync();
     }
 }
