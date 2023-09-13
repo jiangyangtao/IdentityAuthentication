@@ -45,7 +45,7 @@ namespace IdentityAuthentication.Model.Extensions
                 return;
             }
 
-            headers.Add(key, value);
+            headers.TryAdd(key, value);
         }
     }
 }
