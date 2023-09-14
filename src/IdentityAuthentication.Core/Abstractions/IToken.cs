@@ -1,5 +1,5 @@
 ﻿
-namespace IdentityAuthentication.Abstractions
+namespace IdentityAuthentication.Core
 {
     public interface IToken
     {

@@ -8,6 +8,9 @@
 
   <ItemGroup>
 	<PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.25.0.0" />
+	  <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
+	  <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="6.0.0" />
+	  <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="6.0.0" />
   </ItemGroup>
 
   <ItemGroup>
@@ -15,6 +18,11 @@
     <ProjectReference Include="..\Authentications\Authentication.LDAP\Authentication.LDAP.csproj" />
     <ProjectReference Include="..\Authentications\Authentication.Local\Authentication.Local.csproj" />
     <ProjectReference Include="..\IdentityAuthentication.TokenServices\IdentityAuthentication.TokenServices.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="TokenProviders\" />
+    <Folder Include="CcheProviders\" />
   </ItemGroup>
 
 </Project>
