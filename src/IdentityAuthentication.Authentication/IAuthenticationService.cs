@@ -1,6 +1,6 @@
 ﻿namespace IdentityAuthentication.Authentication
 {
-    public class Class1
+    public interface IAuthenticationService
     {
 
     }
