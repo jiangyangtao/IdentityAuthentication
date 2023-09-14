@@ -5,7 +5,7 @@ namespace IdentityAuthentication.Core
 {
     public interface IAuthenticationProvider
     {
-        Task<IToken> AuthenticateAsync(JObject credentialObject);
+        Task<ITokenResult> AuthenticateAsync(JObject credentialObject);
 
         Task<string> RefreshTokenAsync();
 

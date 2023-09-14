@@ -18,7 +18,7 @@ namespace IdentityAuthentication.Core
             _authenticationHandle = authenticationHandle;
         }
 
-        public async Task<IToken> AuthenticateAsync(JObject credentialObject)
+        public async Task<ITokenResult> AuthenticateAsync(JObject credentialObject)
         {
             var authenticationResult = await _authenticationHandle.AuthenticateAsync(credentialObject);
             var token = await _tokenProvider.GenerateAsync(authenticationResult);
