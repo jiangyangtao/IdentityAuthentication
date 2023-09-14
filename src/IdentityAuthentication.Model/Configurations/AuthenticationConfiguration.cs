@@ -23,6 +23,11 @@ namespace IdentityAuthentication.Model.Configurations
         /// <summary>
         /// Reference Token
         /// </summary>
-        Reference = 2
+        Reference = 2,
+
+        /// <summary>
+        /// Encrypt Token
+        /// </summary>
+        Encrypt
     }
 }
