@@ -27,6 +27,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IdentityAuthentication.Mode
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Authentication.Employee", "src\Authentications\Authentication.Employee\Authentication.Employee.csproj", "{05D27335-B00A-4351-B86A-024DD6263432}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IdentityAuthentication.Cache", "src\IdentityAuthentication.Cache\IdentityAuthentication.Cache.csproj", "{741C8AC4-D323-49F9-A73F-3F194AA7840F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IdentityAuthentication.Token", "src\IdentityAuthentication.Token\IdentityAuthentication.Token.csproj", "{E75D15D6-1B56-4E2A-86CE-35B3CCA712FE}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -69,6 +73,14 @@ Global
 		{05D27335-B00A-4351-B86A-024DD6263432}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{05D27335-B00A-4351-B86A-024DD6263432}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{05D27335-B00A-4351-B86A-024DD6263432}.Release|Any CPU.Build.0 = Release|Any CPU
+		{741C8AC4-D323-49F9-A73F-3F194AA7840F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{741C8AC4-D323-49F9-A73F-3F194AA7840F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{741C8AC4-D323-49F9-A73F-3F194AA7840F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{741C8AC4-D323-49F9-A73F-3F194AA7840F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E75D15D6-1B56-4E2A-86CE-35B3CCA712FE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E75D15D6-1B56-4E2A-86CE-35B3CCA712FE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E75D15D6-1B56-4E2A-86CE-35B3CCA712FE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E75D15D6-1B56-4E2A-86CE-35B3CCA712FE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -84,6 +96,8 @@ Global
 		{4A1B8946-F82D-45AC-8221-A3C91FAC458D} = {817F15A1-CB29-4E0B-A2B5-C0E70CE6512C}
 		{27D7C9F2-2367-43BB-89CA-837B236647CD} = {817F15A1-CB29-4E0B-A2B5-C0E70CE6512C}
 		{05D27335-B00A-4351-B86A-024DD6263432} = {255F7F1B-EBE9-4967-BCBA-C457C436A636}
+		{741C8AC4-D323-49F9-A73F-3F194AA7840F} = {817F15A1-CB29-4E0B-A2B5-C0E70CE6512C}
+		{E75D15D6-1B56-4E2A-86CE-35B3CCA712FE} = {817F15A1-CB29-4E0B-A2B5-C0E70CE6512C}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {5CB576AE-56FE-4102-9DB7-99BCA140BC7B}
