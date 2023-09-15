@@ -22,7 +22,6 @@
 
   <ItemGroup>
     <Folder Include="TokenProviders\" />
-    <Folder Include="CcheProviders\" />
   </ItemGroup>
 
 </Project>
