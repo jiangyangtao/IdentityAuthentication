@@ -30,11 +30,10 @@ namespace IdentityAuthentication.Core
 
         public async Task<string> RefreshTokenAsync()
         {
-            var authenticationResult = await _tokenProvider.GetAuthenticationResultAsync();
-            if (authenticationResult == null) throw new Exception("Authentication failed;");
-
+            var authenticationResult = await _tokenProvider.GetAuthenticationResultAsync() ?? throw new Exception("Authentication failed;");
             var checkResult = await _authenticationHandle.IdentityCheckAsync(authenticationResult);
             var token = checkResult ? await _tokenProvider.RefreshAsync() : await _tokenProvider.DestroyAsync();
+
             return token;
         }
 

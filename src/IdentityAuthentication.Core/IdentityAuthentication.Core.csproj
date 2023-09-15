@@ -20,8 +20,4 @@
     <ProjectReference Include="..\IdentityAuthentication.TokenServices\IdentityAuthentication.TokenServices.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="TokenProviders\" />
-  </ItemGroup>
-
 </Project>
