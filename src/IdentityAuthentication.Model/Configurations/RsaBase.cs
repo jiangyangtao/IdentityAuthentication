@@ -4,7 +4,7 @@ using RSAExtensions;
 
 namespace IdentityAuthentication.Model.Configurations
 {
-    public abstract class RsaSignatureBase
+    public abstract class RsaBase
     {
         public RsaSignatureAlgorithm RsaSignatureAlgorithm { set; get; }
 

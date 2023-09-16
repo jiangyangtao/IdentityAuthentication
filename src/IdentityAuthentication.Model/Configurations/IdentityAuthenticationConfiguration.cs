@@ -13,6 +13,6 @@ namespace IdentityAuthentication.Model.Configurations
 
         public TokenConfigurationBase RefreshTokenConfiguration { set; get; }
 
-        public RsaVerifySignature? RsaVerifySignatureConfiguration { set; get; }
+        public RsaVerifySignatureConfiguration? RsaVerifySignatureConfiguration { set; get; }
     }
 }

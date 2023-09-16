@@ -1,4 +1,5 @@
-﻿using Microsoft.IdentityModel.Tokens;
+﻿using IdentityAuthentication.Model.Configurations;
+using Microsoft.IdentityModel.Tokens;
 using RSAExtensions;
 using System.Security.Cryptography;
 using System.Text;
@@ -20,9 +21,9 @@ namespace IdentityAuthentication.Model
             Algorithm = algorithm;
         }
 
-        public Credentials(string signingKey, string algorithm, RSAKeyType keyType) : this(signingKey, algorithm)
+        public Credentials(RsaSignature rsaSignature) : this(rsaSignature.SignatureKey, rsaSignature.RsaAlgorithm)
         {
-            RSAKeyType = keyType;
+            RSAKeyType = rsaSignature.RSAKeyType;
         }
 
         /// <summary>
