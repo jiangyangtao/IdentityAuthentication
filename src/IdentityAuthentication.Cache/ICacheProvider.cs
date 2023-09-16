@@ -1,8 +1,11 @@
-﻿namespace IdentityAuthentication.Cache
+﻿using IdentityAuthentication.Configuration.Enums;
+
+
+namespace IdentityAuthentication.Cache
 {
     public interface ICacheProvider<TToken>
     {
-        StorageType StorageType { get; }
+        CacheStorageType StorageType { get; }
 
         Task<TToken> GetAsync(string key);
 
