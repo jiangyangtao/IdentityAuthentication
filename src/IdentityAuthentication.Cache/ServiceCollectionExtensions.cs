@@ -13,6 +13,13 @@ namespace IdentityAuthentication.Cache
 
             services.Configure<CacheStorageConfiguration>(configuration.GetSection("CacheStorage"));
 
+            var cacheStorage = configuration.GetSection("CacheStorage");
+            services.AddMemoryCache(options =>
+            {
+                var sizeLimit = cacheStorage.GetValue<int>("MemonySizeLimit");
+                if (sizeLimit > 0) options.SizeLimit = sizeLimit;
+            });
+
             services.AddSingleton<ICacheProvider, MemoryCacheProvider>();
             services.AddSingleton<ICacheProvider, RedisCacheProvider>();
             services.AddSingleton<ICacheProviderFactory, CacheProviderFactory>();
