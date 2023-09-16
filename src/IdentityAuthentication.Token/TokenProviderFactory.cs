@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace IdentityAuthentication.Token
 {
-    internal class TokenProviderFactory
+    internal class TokenProviderFactory : ITokenProviderFactory
     {
     }
 }

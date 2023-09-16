@@ -19,7 +19,7 @@ namespace IdentityAuthentication.Core
             var configuration = serviceProvider.GetRequiredService<IConfiguration>();
 
             services.AddGrantSources(configuration);
-            services.Configure<GrantDefaults>(configuration.GetSection("GrantDefaults"));
+            services.Configure<GrantDefaultConfiguration>(configuration.GetSection("GrantDefaults"));
             services.Configure<AccessTokenConfiguration>(configuration.GetSection("AccessToken"));
             services.Configure<TokenConfigurationBase>(configuration.GetSection("RefreshToken"));
             services.Configure<SecretKeyConfiguration>(configuration.GetSection("SecretKey"));
