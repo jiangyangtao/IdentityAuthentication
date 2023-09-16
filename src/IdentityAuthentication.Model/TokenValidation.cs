@@ -7,18 +7,13 @@ namespace IdentityAuthentication.Model
 {
     public class TokenValidation
     {
-        private readonly AccessTokenConfiguration _accessTokenConfig;
-        private readonly RefreshTokenConfiguration _refreshTokenConfig;
-
+        private readonly TokenBase Token;
         private readonly Credentials _credentials;
 
-
-        public TokenValidation(AccessTokenConfiguration accessTokenConfig, RefreshTokenConfiguration refreshTokenConfig, SecretKeyConfiguration secretKeyConfig, AuthenticationConfiguration authenticationConfig)
+        public TokenValidation(TokenBase token, Credentials credentials)
         {
-            _accessTokenConfig = accessTokenConfig;
-            _refreshTokenConfig = refreshTokenConfig;
-
-            _credentials = new Credentials(authenticationConfig, secretKeyConfig);
+            Token = token;
+            _credentials = credentials;
         }
 
         /// <summary>
@@ -28,13 +23,13 @@ namespace IdentityAuthentication.Model
         /// <param name="notBefore"></param>
         /// <param name="expirationTime"></param>
         /// <returns></returns>
-        public JwtSecurityToken GenerateAccessSecurityToken(Claim[] claims, DateTime notBefore, DateTime expirationTime)
+        public JwtSecurityToken GenerateSecurityToken(Claim[] claims, DateTime notBefore, DateTime expirationTime)
         {
             var signingCredentials = _credentials.GenerateSigningCredentials();
 
             return new JwtSecurityToken(
-                     issuer: _accessTokenConfig.Issuer,
-                     audience: _accessTokenConfig.Audience,
+                     issuer: Token.Issuer,
+                     audience: Token.Audience,
                      claims: claims,
                      notBefore: notBefore,
                      expires: expirationTime,
@@ -51,8 +46,8 @@ namespace IdentityAuthentication.Model
             var signingCredentials = _credentials.GenerateSigningCredentials();
 
             return new JwtSecurityToken(
-                    issuer: _refreshTokenConfig.Issuer,
-                    audience: _refreshTokenConfig.Audience,
+                    issuer: Token.Issuer,
+                    audience: Token.Audience,
                     claims: claims,
                     notBefore: DateTime.Now,
                     expires: DateTime.Now.AddDays(_refreshTokenConfig.ExpirationTime),

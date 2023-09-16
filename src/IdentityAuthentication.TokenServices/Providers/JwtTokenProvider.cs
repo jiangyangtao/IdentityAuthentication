@@ -24,7 +24,7 @@ namespace IdentityAuthentication.TokenServices.Providers
 
         public JwtTokenProvider(
             IOptions<AccessTokenConfiguration> accessTokenOption,
-            IOptions<RefreshTokenConfiguration> refreshTokenOption,
+            IOptions<TokenBase> refreshTokenOption,
             IOptions<SecretKeyConfiguration> secretKeyOption,
             IOptions<AuthenticationConfiguration> authenticationOption,
             IHttpContextAccessor httpContextAccessor)
@@ -129,7 +129,7 @@ namespace IdentityAuthentication.TokenServices.Providers
 
         private string BuildAccessToken(Claim[] claims, DateTime? notBefore = null, DateTime? expirationTime = null)
         {
-            var securityToken = _tokenValidation.GenerateAccessSecurityToken(claims, notBefore ?? DateTime.Now, expirationTime ?? TokenExpirationTime);
+            var securityToken = _tokenValidation.GenerateSecurityToken(claims, notBefore ?? DateTime.Now, expirationTime ?? TokenExpirationTime);
             var token = _jwtSecurityTokenHandler.WriteToken(securityToken);
 
             token = HandleTokenEncrypt(token);

@@ -40,20 +40,5 @@ namespace IdentityAuthentication.Configuration.Enums
         /// RS512
         /// </summary>
         RsaSha512,
-
-        /// <summary>
-        /// A128CBC-HS256
-        /// </summary>
-        Aes128CbcHmacSha256,
-
-        /// <summary>
-        /// A192CBC-HS384
-        /// </summary>
-        Aes192CbcHmacSha384,
-
-        /// <summary>
-        /// A256CBC-HS512
-        /// </summary>
-        Aes256CbcHmacSha512,
     }
 }

@@ -23,7 +23,7 @@ namespace IdentityAuthentication.TokenServices.Providers
             ICacheProviderFactory cacheProviderFactory,
             IHttpContextAccessor httpContextAccessor,
             IOptions<AccessTokenConfiguration> accessTokenOption,
-            IOptions<RefreshTokenConfiguration> refreshTokenOption,
+            IOptions<TokenBase> refreshTokenOption,
             IOptions<SecretKeyConfiguration> secretKeyOption,
             IOptions<AuthenticationConfiguration> authenticationOption)
         {
@@ -50,7 +50,7 @@ namespace IdentityAuthentication.TokenServices.Providers
                 {
                     IsValid = true,
                     ClaimsIdentity = identity,
-                    SecurityToken = _tokenValidation.GenerateAccessSecurityToken(claims, data.ExpirationTime.AddHours(-1), data.ExpirationTime),
+                    SecurityToken = _tokenValidation.GenerateSecurityToken(claims, data.ExpirationTime.AddHours(-1), data.ExpirationTime),
                 };
             }
             catch

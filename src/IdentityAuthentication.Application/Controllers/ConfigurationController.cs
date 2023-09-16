@@ -12,13 +12,13 @@ namespace IdentityAuthentication.Application.Controllers
     {
 
         private readonly AccessTokenConfiguration _accessTokenConfiguration;
-        private readonly RefreshTokenConfiguration _refreshTokenConfiguration;
+        private readonly TokenBase _refreshTokenConfiguration;
         private readonly SecretKeyConfiguration _secretKeyConfiguration;
         private readonly AuthenticationConfiguration _authenticationConfiguration;
 
         public ConfigurationController(
             IOptions<AccessTokenConfiguration> accessTokenOption,
-            IOptions<RefreshTokenConfiguration> refreshTokenOption,
+            IOptions<TokenBase> refreshTokenOption,
             IOptions<SecretKeyConfiguration> secretKeyOption,
             IOptions<AuthenticationConfiguration> authenticationOption)
         {
