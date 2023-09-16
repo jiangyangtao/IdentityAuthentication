@@ -8,9 +8,9 @@ namespace IdentityAuthentication.TokenServices
     internal class TokenProviderFactory : ITokenProviderFactory
     {
         private readonly IServiceProvider _serviceProvider;
-        private readonly AuthenticationConfiguration authenticationConfiguration;
+        private readonly AuthenticationConfigurationBase authenticationConfiguration;
 
-        public TokenProviderFactory(IServiceProvider serviceProvider, IOptions<AuthenticationConfiguration> options)
+        public TokenProviderFactory(IServiceProvider serviceProvider, IOptions<AuthenticationConfigurationBase> options)
         {
             _serviceProvider = serviceProvider;
             authenticationConfiguration = options.Value;

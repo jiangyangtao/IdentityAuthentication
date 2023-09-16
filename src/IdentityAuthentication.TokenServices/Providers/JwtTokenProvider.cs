@@ -16,7 +16,7 @@ namespace IdentityAuthentication.TokenServices.Providers
     internal class JwtTokenProvider : ITokenProvider
     {
         private readonly AccessTokenConfiguration accessTokenConfig;
-        private readonly AuthenticationConfiguration authenticationConfig;
+        private readonly AuthenticationConfigurationBase authenticationConfig;
         private readonly TokenValidation _tokenValidation;
 
         private readonly IHttpContextAccessor _httpContextAccessor;
@@ -27,7 +27,7 @@ namespace IdentityAuthentication.TokenServices.Providers
             IOptions<AccessTokenConfiguration> accessTokenOption,
             IOptions<TokenConfigurationBase> refreshTokenOption,
             IOptions<SecretKeyConfiguration> secretKeyOption,
-            IOptions<AuthenticationConfiguration> authenticationOption,
+            IOptions<AuthenticationConfigurationBase> authenticationOption,
             IHttpContextAccessor httpContextAccessor)
         {
             accessTokenConfig = accessTokenOption.Value;

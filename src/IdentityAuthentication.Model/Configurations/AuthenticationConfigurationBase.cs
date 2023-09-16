@@ -2,7 +2,7 @@
 
 namespace IdentityAuthentication.Model.Configurations
 {
-    public class AuthenticationConfiguration
+    public abstract class AuthenticationConfigurationBase
     {
         public TokenType TokenType { set; get; } = TokenType.JWT;
 

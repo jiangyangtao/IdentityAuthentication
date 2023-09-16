@@ -13,9 +13,9 @@ namespace IdentityAuthentication.Application.GrpcServices
     public class TokenService : TokenGrpcProvider.TokenGrpcProviderBase
     {
         private readonly IAuthenticationProvider _authenticaionProvider;
-        private readonly AuthenticationConfiguration _authenticationConfig;
+        private readonly AuthenticationConfigurationBase _authenticationConfig;
 
-        public TokenService(IAuthenticationProvider authenticaionProvider, IOptions<AuthenticationConfiguration> authenticationOptions)
+        public TokenService(IAuthenticationProvider authenticaionProvider, IOptions<AuthenticationConfigurationBase> authenticationOptions)
         {
             _authenticaionProvider = authenticaionProvider;
             _authenticationConfig = authenticationOptions.Value;

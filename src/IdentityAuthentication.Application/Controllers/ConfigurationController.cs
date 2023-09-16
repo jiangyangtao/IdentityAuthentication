@@ -15,13 +15,13 @@ namespace IdentityAuthentication.Application.Controllers
         private readonly AccessTokenConfiguration _accessTokenConfiguration;
         private readonly TokenConfigurationBase _refreshTokenConfiguration;
         private readonly SecretKeyConfiguration _secretKeyConfiguration;
-        private readonly AuthenticationConfiguration _authenticationConfiguration;
+        private readonly AuthenticationConfigurationBase _authenticationConfiguration;
 
         public ConfigurationController(
             IOptions<AccessTokenConfiguration> accessTokenOption,
             IOptions<TokenConfigurationBase> refreshTokenOption,
             IOptions<SecretKeyConfiguration> secretKeyOption,
-            IOptions<AuthenticationConfiguration> authenticationOption)
+            IOptions<AuthenticationConfigurationBase> authenticationOption)
         {
             _accessTokenConfiguration = accessTokenOption.Value;
             _refreshTokenConfiguration = refreshTokenOption.Value;

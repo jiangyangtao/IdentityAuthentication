@@ -14,7 +14,7 @@ namespace IdentityAuthentication.TokenServices.Providers
         private readonly IDatabase _database;
         private readonly CacheStorageConfiguration _cacheStorageConfiguration;
 
-        public RedisCacheProvider(IOptions<AuthenticationConfiguration> authenticationConfig,
+        public RedisCacheProvider(IOptions<AuthenticationConfigurationBase> authenticationConfig,
             IOptions<CacheStorageConfiguration> cacheStorageConfig)
         {
             _cacheStorageConfiguration = cacheStorageConfig.Value;

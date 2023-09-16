@@ -10,10 +10,10 @@
 		<PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="6.0.0" />
 		<PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="6.0.0" />
 		<PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="6.0.0" />
-		<PackageReference Include="Newtonsoft.Json" Version="12.0.1" />
 	</ItemGroup>
 
 	<ItemGroup>
+	  <ProjectReference Include="..\..\IdentityAuthentication.Configuration\IdentityAuthentication.Configuration.csproj" />
 	  <ProjectReference Include="..\..\IdentityAuthentication.Extensions\IdentityAuthentication.Extensions.csproj" />
 	</ItemGroup>
 

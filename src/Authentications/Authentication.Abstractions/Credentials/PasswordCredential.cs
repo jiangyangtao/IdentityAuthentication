@@ -1,4 +1,5 @@
 ﻿
+using IdentityAuthentication.Configuration.Model;
 using IdentityAuthentication.Extensions;
 using System.Net;
 

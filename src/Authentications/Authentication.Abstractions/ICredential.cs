@@ -1,4 +1,5 @@
-﻿
+﻿using IdentityAuthentication.Configuration.Model;
+
 namespace Authentication.Abstractions
 {
     public interface ICredential

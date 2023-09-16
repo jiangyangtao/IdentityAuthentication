@@ -11,9 +11,9 @@ namespace IdentityAuthentication.Application.Controllers
     public class TokenController : BaseController
     {
         private readonly IAuthenticationProvider _authenticationProvider;
-        private readonly AuthenticationConfiguration _authenticationConfiguration;
+        private readonly AuthenticationConfigurationBase _authenticationConfiguration;
 
-        public TokenController(IAuthenticationProvider authenticationProvider, IOptions<AuthenticationConfiguration> authenticationOption)
+        public TokenController(IAuthenticationProvider authenticationProvider, IOptions<AuthenticationConfigurationBase> authenticationOption)
         {
             _authenticationProvider = authenticationProvider;
             _authenticationConfiguration = authenticationOption.Value;

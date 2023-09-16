@@ -1,5 +1,4 @@
-﻿
-using IdentityAuthentication.Model.Models;
+﻿using IdentityAuthentication.Model.Models;
 
 namespace IdentityAuthentication.Model.Configurations
 {
@@ -9,7 +8,7 @@ namespace IdentityAuthentication.Model.Configurations
         {
         }
 
-        public AuthenticationConfiguration AuthenticationConfiguration { set; get; }
+        public AuthenticationConfigurationBase AuthenticationConfiguration { set; get; }
 
         public AccessTokenConfiguration AccessTokenConfiguration { set; get; }
 

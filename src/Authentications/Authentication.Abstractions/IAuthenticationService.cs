@@ -1,5 +1,7 @@
 ﻿
 
+using IdentityAuthentication.Configuration.Model;
+
 namespace Authentication.Abstractions
 {
     public interface IAuthenticationService<in TCredential> where TCredential : ICredential

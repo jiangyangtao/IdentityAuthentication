@@ -2,7 +2,7 @@
 
 namespace IdentityAuthentication.Configuration
 {
-    public class IdentityAuthenticationConfiguration : AuthenticationConfiguration
+    public class AuthenticationConfiguration : AuthenticationConfigurationBase
     {
         /// <summary>
         /// 启用 token 刷新

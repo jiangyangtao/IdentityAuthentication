@@ -26,7 +26,7 @@ namespace IdentityAuthentication.TokenServices.Providers
             IOptions<AccessTokenConfiguration> accessTokenOption,
             IOptions<TokenConfigurationBase> refreshTokenOption,
             IOptions<SecretKeyConfiguration> secretKeyOption,
-            IOptions<AuthenticationConfiguration> authenticationOption)
+            IOptions<AuthenticationConfigurationBase> authenticationOption)
         {
             _cacheProvider = cacheProviderFactory.CreateCacheProvider();
             _httpContextAccessor = httpContextAccessor;
