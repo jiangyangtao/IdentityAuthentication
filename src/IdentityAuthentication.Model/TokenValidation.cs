@@ -1,5 +1,6 @@
-﻿using IdentityAuthentication.Model.Configurations;
+﻿using IdentityAuthentication.Model.Models;
 using Microsoft.IdentityModel.Tokens;
+using System.Diagnostics.CodeAnalysis;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 
@@ -10,10 +11,29 @@ namespace IdentityAuthentication.Model
         private readonly TokenConfigurationBase Token;
         private readonly Credentials Credentials;
 
-        public TokenValidation(TokenConfigurationBase token, Credentials credentials)
+        private TokenValidation([NotNull] TokenConfigurationBase token)
         {
             Token = token;
+        }
+
+        public TokenValidation([NotNull] TokenConfigurationBase token, [NotNull] Credentials credentials) : this(token)
+        {
             Credentials = credentials;
+        }
+
+        public TokenValidation([NotNull] TokenConfigurationBase token, [NotNull] RsaSignature rsaSignature) : this(token)
+        {
+            Credentials = new Credentials(rsaSignature);
+        }
+
+        public TokenValidation([NotNull] TokenConfigurationBase token, [NotNull] SymmetricSignature signature) : this(token)
+        {
+            Credentials = new Credentials(signature);
+        }
+
+        public TokenValidation([NotNull] TokenConfigurationBase token, [NotNull] string signingKey, [NotNull] string algorithm) : this(token)
+        {
+            Credentials = new Credentials(signingKey, algorithm);
         }
 
         public static readonly TokenValidationResult FailedTokenValidationResult = new() { IsValid = false };

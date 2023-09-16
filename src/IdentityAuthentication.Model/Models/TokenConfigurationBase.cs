@@ -1,5 +1,4 @@
-﻿
-namespace IdentityAuthentication.Model.Configurations
+﻿namespace IdentityAuthentication.Model.Models
 {
     public abstract class TokenConfigurationBase
     {

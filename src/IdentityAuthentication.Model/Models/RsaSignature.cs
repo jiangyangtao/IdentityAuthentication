@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace IdentityAuthentication.Model.Configurations
+namespace IdentityAuthentication.Model.Models
 {
     public class RsaSignature : RsaBase
     {

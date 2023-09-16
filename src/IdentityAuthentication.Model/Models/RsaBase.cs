@@ -2,7 +2,7 @@
 using Microsoft.IdentityModel.Tokens;
 using RSAExtensions;
 
-namespace IdentityAuthentication.Model.Configurations
+namespace IdentityAuthentication.Model.Models
 {
     public abstract class RsaBase
     {

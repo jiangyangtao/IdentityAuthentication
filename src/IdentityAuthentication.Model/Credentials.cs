@@ -1,6 +1,7 @@
-﻿using IdentityAuthentication.Model.Configurations;
+﻿using IdentityAuthentication.Model.Models;
 using Microsoft.IdentityModel.Tokens;
 using RSAExtensions;
+using System.Diagnostics.CodeAnalysis;
 using System.Security.Cryptography;
 using System.Text;
 
@@ -21,7 +22,11 @@ namespace IdentityAuthentication.Model
             Algorithm = algorithm;
         }
 
-        public Credentials(RsaSignature rsaSignature) : this(rsaSignature.SignatureKey, rsaSignature.RsaAlgorithm)
+        public Credentials([NotNull] SymmetricSignature symmetricSignature) : this(symmetricSignature.SignatureKey, symmetricSignature.Algorithm)
+        {
+        }
+
+        public Credentials([NotNull] RsaSignature rsaSignature) : this(rsaSignature.SignatureKey, rsaSignature.RsaAlgorithm)
         {
             RSAKeyType = rsaSignature.RSAKeyType;
         }

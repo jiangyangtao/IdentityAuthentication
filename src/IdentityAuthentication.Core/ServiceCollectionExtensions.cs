@@ -1,6 +1,7 @@
 ﻿using IdentityAuthentication.Abstractions;
 using IdentityAuthentication.Extensions;
 using IdentityAuthentication.Model.Configurations;
+using IdentityAuthentication.Model.Models;
 using IdentityAuthentication.TokenServices;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;

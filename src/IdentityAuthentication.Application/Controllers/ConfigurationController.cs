@@ -4,6 +4,7 @@ using IdentityAuthentication.Extensions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
+using IdentityAuthentication.Model.Models;
 
 namespace IdentityAuthentication.Application.Controllers
 {

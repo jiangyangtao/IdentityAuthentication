@@ -2,6 +2,7 @@
 using IdentityAuthentication.Abstractions;
 using IdentityAuthentication.Model;
 using IdentityAuthentication.Model.Configurations;
+using IdentityAuthentication.Model.Models;
 using IdentityAuthentication.TokenServices.Abstractions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Options;

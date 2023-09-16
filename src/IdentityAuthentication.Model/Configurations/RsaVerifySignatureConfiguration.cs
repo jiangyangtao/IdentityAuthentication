@@ -1,4 +1,6 @@
 ﻿
+using IdentityAuthentication.Model.Models;
+
 namespace IdentityAuthentication.Model.Configurations
 {
     /// <summary>
