@@ -7,6 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\IdentityAuthentication.Extensions\IdentityAuthentication.Extensions.csproj" />
     <ProjectReference Include="..\IdentityAuthentication.Model\IdentityAuthentication.Model.csproj" />
   </ItemGroup>
 

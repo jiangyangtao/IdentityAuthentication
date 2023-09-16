@@ -1,4 +1,5 @@
-﻿using System;
+﻿using IdentityAuthentication.Model.Handles;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -43,7 +44,7 @@ namespace IdentityAuthentication.Configuration
                 {AuthenticationResult.GrantSourcePropertyName,GrantType},
                 {AuthenticationResult.GrantTypePropertyName,GrantSource},
                 {AuthenticationResult.ClientPropertyName,Client},
-                {ClaimKeyDefaults.Expiration,ExpirationTime.ToString()},
+                {IdentityAuthenticationDefaultKeys.Expiration,ExpirationTime.ToString()},
             };
             if (Metadata.IsNullOrEmpty()) return dic;
 
