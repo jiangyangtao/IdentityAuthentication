@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace IdentityAuthentication.Token.Abstrats
+namespace IdentityAuthentication.Token.Abstractions
 {
-    internal class ITokenProviderFactory
+    internal class ITokenProvider
     {
     }
 }
