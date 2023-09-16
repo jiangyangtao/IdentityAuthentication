@@ -1,5 +1,6 @@
 ﻿using Authentication.Abstractions;
 using Authentication.Abstractions.Credentials;
+using IdentityAuthentication.Configuration.Model;
 using Microsoft.Extensions.Options;
 using Novell.Directory.Ldap;
 using System;
