@@ -23,7 +23,7 @@ namespace IdentityAuthentication.TokenServices.Providers
             ICacheProviderFactory cacheProviderFactory,
             IHttpContextAccessor httpContextAccessor,
             IOptions<AccessTokenConfiguration> accessTokenOption,
-            IOptions<TokenBase> refreshTokenOption,
+            IOptions<TokenConfigurationBase> refreshTokenOption,
             IOptions<SecretKeyConfiguration> secretKeyOption,
             IOptions<AuthenticationConfiguration> authenticationOption)
         {

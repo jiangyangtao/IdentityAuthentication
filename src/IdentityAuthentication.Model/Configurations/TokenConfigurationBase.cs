@@ -1,7 +1,7 @@
 ﻿
 namespace IdentityAuthentication.Model.Configurations
 {
-    public abstract class TokenBase
+    public abstract class TokenConfigurationBase
     {
         public long ExpirationTime { set; get; }
 

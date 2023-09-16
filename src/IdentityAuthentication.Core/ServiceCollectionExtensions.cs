@@ -20,7 +20,7 @@ namespace IdentityAuthentication.Core
             services.AddGrantSources(configuration);
             services.Configure<GrantDefaults>(configuration.GetSection("GrantDefaults"));
             services.Configure<AccessTokenConfiguration>(configuration.GetSection("AccessToken"));
-            services.Configure<TokenBase>(configuration.GetSection("RefreshToken"));
+            services.Configure<TokenConfigurationBase>(configuration.GetSection("RefreshToken"));
             services.Configure<SecretKeyConfiguration>(configuration.GetSection("SecretKey"));
             services.Configure<AuthenticationConfiguration>(configuration.GetSection("Authentication"));
 

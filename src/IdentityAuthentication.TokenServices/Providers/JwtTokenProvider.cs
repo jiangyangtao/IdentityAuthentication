@@ -24,7 +24,7 @@ namespace IdentityAuthentication.TokenServices.Providers
 
         public JwtTokenProvider(
             IOptions<AccessTokenConfiguration> accessTokenOption,
-            IOptions<TokenBase> refreshTokenOption,
+            IOptions<TokenConfigurationBase> refreshTokenOption,
             IOptions<SecretKeyConfiguration> secretKeyOption,
             IOptions<AuthenticationConfiguration> authenticationOption,
             IHttpContextAccessor httpContextAccessor)
