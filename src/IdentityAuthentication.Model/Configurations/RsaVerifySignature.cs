@@ -6,12 +6,8 @@ using System.Threading.Tasks;
 
 namespace IdentityAuthentication.Model.Configurations
 {
-    public class RefreshTokenConfiguration 
+    public class RsaVerifySignature : RsaSignatureBase
     {
-        public long ExpirationTime { set; get; }
-
-        public string Issuer { set; get; }
-
-        public string Audience { set; get; }
+        public string PublicKey { set; get; }
     }
 }
