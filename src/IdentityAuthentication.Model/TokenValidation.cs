@@ -5,30 +5,31 @@ using System.Security.Claims;
 
 namespace IdentityAuthentication.Model
 {
-    public class TokenValidation
+    public class TokenValidation : IDisposable
     {
         private readonly TokenConfigurationBase Token;
-        private readonly Credentials _credentials;
+        private readonly Credentials Credentials;
 
         public TokenValidation(TokenConfigurationBase token, Credentials credentials)
         {
             Token = token;
-            _credentials = credentials;
+            Credentials = credentials;
         }
 
         public static readonly TokenValidationResult FailedTokenValidationResult = new() { IsValid = false };
 
         /// <summary>
-        /// 生成 access_token 的 <see cref="JwtSecurityToken"/>
+        /// 生成签名的 <see cref="JwtSecurityToken"/>
         /// </summary>
         /// <param name="claims"></param>
-        /// <param name="notBefore"></param>
-        /// <param name="expirationTime"></param>
+        /// <param name="notBefore">签发时间</param>
+        /// <param name="expirationTime">过期时间</param>
         /// <returns></returns>
         public JwtSecurityToken GenerateSecurityToken(Claim[] claims, DateTime notBefore, DateTime expirationTime)
         {
-            var signingCredentials = _credentials.GenerateSigningCredentials();
+            if (claims.IsNullOrEmpty()) throw new ArgumentNullException(nameof(claims));
 
+            var signingCredentials = Credentials.GenerateSigningCredentials();
             return new JwtSecurityToken(
                      issuer: Token.Issuer,
                      audience: Token.Audience,
@@ -38,10 +39,13 @@ namespace IdentityAuthentication.Model
                      signingCredentials: signingCredentials);
         }
 
+        /// <summary>
+        /// 生成验签的 <see cref="TokenValidationParameters"/>
+        /// </summary>
+        /// <returns></returns>
         public TokenValidationParameters GenerateTokenValidation()
         {
-            var signingKey = _credentials.GenerateSignatureSecurityKey();
-
+            var signingKey = Credentials.GenerateSignatureSecurityKey();
             return new TokenValidationParameters
             {
                 ValidateIssuerSigningKey = true,
@@ -54,6 +58,11 @@ namespace IdentityAuthentication.Model
                 ClockSkew = TimeSpan.Zero,
                 RequireExpirationTime = true,
             };
+        }
+
+        public void Dispose()
+        {
+            GC.SuppressFinalize(this);
         }
     }
 }
