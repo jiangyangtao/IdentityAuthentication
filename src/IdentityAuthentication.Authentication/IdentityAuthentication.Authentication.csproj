@@ -10,6 +10,7 @@
     <ProjectReference Include="..\Authentications\Authentication.Employee\Authentication.Employee.csproj" />
     <ProjectReference Include="..\Authentications\Authentication.LDAP\Authentication.LDAP.csproj" />
     <ProjectReference Include="..\Authentications\Authentication.Local\Authentication.Local.csproj" />
+    <ProjectReference Include="..\IdentityAuthentication.Configuration\IdentityAuthentication.Configuration.csproj" />
   </ItemGroup>
 
 </Project>

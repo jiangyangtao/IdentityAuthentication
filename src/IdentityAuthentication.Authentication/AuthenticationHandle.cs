@@ -1,4 +1,5 @@
 ﻿using Authentication.Abstractions;
+using IdentityAuthentication.Configuration;
 using IdentityAuthentication.Extensions;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
