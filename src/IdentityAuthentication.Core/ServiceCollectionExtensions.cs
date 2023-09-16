@@ -24,7 +24,7 @@ namespace IdentityAuthentication.Core
             services.Configure<AuthenticationConfiguration>(configuration.GetSection("Authentication"));
 
             services.AddSingleton<AuthenticationHandle>();
-            services.AddSingleton<IAuthenticationProvider, AuthenticationProvider>();
+            services.AddSingleton<IAuthenticationHandler, AuthenticationHandldr>();
 
             services.AddTokenSerivces(configuration);
 
