@@ -1,9 +1,5 @@
-﻿using IdentityAuthentication.Model.Handles;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using IdentityAuthentication.Extensions;
+using IdentityAuthentication.Model.Handles;
 
 namespace IdentityAuthentication.Configuration
 {
