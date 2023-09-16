@@ -6,7 +6,8 @@ using System.Threading.Tasks;
 
 namespace IdentityAuthentication.Token.Abstractions
 {
-    internal class ITokenProviderFactory
+    internal interface ITokenProviderFactory
     {
+        public ITokenProvider CreateTokenService();
     }
 }
