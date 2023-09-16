@@ -2,7 +2,7 @@
 
 namespace IdentityAuthentication.Configuration
 {
-    public class RsaSignature : RsaVerifySignature
+    public class RsaSignatureConfiguration : RsaVerifySignature
     {
         public string PrivateKey { set; get; }
     }
