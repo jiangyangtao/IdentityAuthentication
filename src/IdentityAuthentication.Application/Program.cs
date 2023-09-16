@@ -55,13 +55,13 @@ services.AddCors(options =>
 
 services.AddAuthentication(options =>
 {
-    options.DefaultScheme = IdentityAuthenticationDefaults.AuthenticationScheme;
-    options.DefaultAuthenticateScheme = IdentityAuthenticationDefaults.AuthenticationScheme;
-    options.DefaultChallengeScheme = IdentityAuthenticationDefaults.AuthenticationScheme;
-    options.DefaultForbidScheme = IdentityAuthenticationDefaults.AuthenticationScheme;
-    options.DefaultSignInScheme = IdentityAuthenticationDefaults.AuthenticationScheme;
-    options.DefaultSignOutScheme = IdentityAuthenticationDefaults.AuthenticationScheme;
-}).AddScheme<IdentityAuthenticationSchemeOptions, IdentityAuthenticationHandler>(IdentityAuthenticationDefaults.AuthenticationScheme, options =>
+    options.DefaultScheme = IdentityAuthenticationDefaultKeys.AuthenticationScheme;
+    options.DefaultAuthenticateScheme = IdentityAuthenticationDefaultKeys.AuthenticationScheme;
+    options.DefaultChallengeScheme = IdentityAuthenticationDefaultKeys.AuthenticationScheme;
+    options.DefaultForbidScheme = IdentityAuthenticationDefaultKeys.AuthenticationScheme;
+    options.DefaultSignInScheme = IdentityAuthenticationDefaultKeys.AuthenticationScheme;
+    options.DefaultSignOutScheme = IdentityAuthenticationDefaultKeys.AuthenticationScheme;
+}).AddScheme<IdentityAuthenticationSchemeOptions, IdentityAuthenticationHandler>(IdentityAuthenticationDefaultKeys.AuthenticationScheme, options =>
 {
     options.Events = new IdentityAuthenticationEvents
     {

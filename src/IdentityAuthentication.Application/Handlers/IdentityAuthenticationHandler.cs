@@ -24,7 +24,7 @@ namespace IdentityAuthentication.Application.Handlers
             IAuthenticationProvider authenticationProvider)
             : base(options, logger, encoder, clock)
         {
-            var ticket = new AuthenticationTicket(new ClaimsPrincipal(), IdentityAuthenticationDefaults.AuthenticationScheme);
+            var ticket = new AuthenticationTicket(new ClaimsPrincipal(), IdentityAuthenticationDefaultKeys.AuthenticationScheme);
             EmptyAuthenticateSuccessResult = AuthenticateResult.Success(ticket);
             _authenticationProvider = authenticationProvider;
         }

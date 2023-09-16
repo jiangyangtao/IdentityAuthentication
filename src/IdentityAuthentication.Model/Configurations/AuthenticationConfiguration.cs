@@ -7,7 +7,5 @@ namespace IdentityAuthentication.Model.Configurations
         public TokenType TokenType { set; get; } = TokenType.JWT;
 
         public bool EnableGrpcConnection { get; set; }
-
-        public RsaSignatureAlgorithm? RsaSignatureAlgorithm { set; get; }
     }
 }
