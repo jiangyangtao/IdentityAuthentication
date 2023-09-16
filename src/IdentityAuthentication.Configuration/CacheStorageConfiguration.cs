@@ -2,7 +2,7 @@
 
 namespace IdentityAuthentication.Configuration
 {
-    internal class CacheStorageConfiguration
+    public class CacheStorageConfiguration
     {
         public CacheStorageType StorageType { set; get; }
 

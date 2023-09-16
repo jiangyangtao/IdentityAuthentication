@@ -1,4 +1,5 @@
-﻿using IdentityAuthentication.TokenServices.Abstractions;
+﻿using IdentityAuthentication.Configuration;
+using IdentityAuthentication.Configuration.Enums;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Options;
 
@@ -15,7 +16,7 @@ namespace IdentityAuthentication.Cache
             _cacheStorageConfiguration = options.Value;
         }
 
-        public StorageType StorageType => StorageType.Memory;
+        public CacheStorageType StorageType => CacheStorageType.Memory;
 
         public Task<ReferenceToken> GetAsync(string key)
         {

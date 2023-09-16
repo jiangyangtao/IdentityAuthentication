@@ -1,5 +1,7 @@
-﻿using IdentityAuthentication.Model.Configurations;
-using IdentityAuthentication.TokenServices.Abstractions;
+﻿using IdentityAuthentication.Configuration;
+using IdentityAuthentication.Configuration.Enums;
+using IdentityAuthentication.Model.Configurations;
+using IdentityAuthentication.Model.Enums;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -19,7 +21,7 @@ namespace IdentityAuthentication.Cache
         {
             _cacheStorageConfiguration = cacheStorageConfig.Value;
 
-            if (authenticationConfig.Value.TokenType == TokenType.Reference && _cacheStorageConfiguration.StorageType == StorageType.Redis)
+            if (authenticationConfig.Value.TokenType == TokenType.Reference && _cacheStorageConfiguration.StorageType == CacheStorageType.Redis)
             {
                 var configurationOptions = ConfigurationOptions.Parse(_cacheStorageConfiguration.RedisConnection, true);
                 _database = ConnectionMultiplexer.Connect(configurationOptions).GetDatabase();
@@ -27,7 +29,7 @@ namespace IdentityAuthentication.Cache
         }
 
 
-        public StorageType StorageType => StorageType.Redis;
+        public CacheStorageType StorageType => CacheStorageType.Redis;
 
         private string BuildTokenKey(string key) => $"{_tokenContainerName}{key}";
 
