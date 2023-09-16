@@ -1,4 +1,5 @@
-﻿using Microsoft.IdentityModel.Tokens;
+﻿using IdentityAuthentication.Model.Enums;
+using Microsoft.IdentityModel.Tokens;
 
 namespace IdentityAuthentication.Model.Configurations
 {
@@ -9,25 +10,5 @@ namespace IdentityAuthentication.Model.Configurations
         public TokenType TokenType { set; get; } = TokenType.JWT;
 
         public bool EnableGrpcConnection { get; set; }
-
-        public bool EnableJwtEncrypt { get; set; } = false;
-    }
-
-    public enum TokenType
-    {
-        /// <summary>
-        /// Json Web Token
-        /// </summary>
-        JWT = 1,
-
-        /// <summary>
-        /// Reference Token
-        /// </summary>
-        Reference = 2,
-
-        /// <summary>
-        /// Encrypt Token
-        /// </summary>
-        Encrypt
     }
 }
