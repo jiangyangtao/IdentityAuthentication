@@ -200,8 +200,7 @@ namespace IdentityAuthentication.TokenServices.Providers
 
         private DateTime GetDateTimeClaim(string type)
         {
-            var claim = Claims.FirstOrDefault(a => a.Type == type);
-            if (claim == null) throw new Exception("Authentication failed");
+            var claim = Claims.FirstOrDefault(a => a.Type == type) ?? throw new Exception("Authentication failed");
 
             var parseResult = DateTime.TryParse(claim.Value, out DateTime time);
             if (parseResult == false) throw new Exception("Authentication failed");
@@ -212,7 +211,7 @@ namespace IdentityAuthentication.TokenServices.Providers
         public async Task<TokenValidationResult> AuthorizeAsync(string token)
         {
             token = HandleTokenDecrypt(token);
-            var validationParameters = _tokenValidation.GenerateAccessTokenValidation();
+            var validationParameters = _tokenValidation.GenerateTokenValidation();
             var tokenValidationResult = await _jwtSecurityTokenHandler.ValidateTokenAsync(token, validationParameters);
             return tokenValidationResult;
         }

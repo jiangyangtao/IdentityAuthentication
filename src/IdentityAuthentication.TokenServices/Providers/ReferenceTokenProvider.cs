@@ -41,8 +41,8 @@ namespace IdentityAuthentication.TokenServices.Providers
             try
             {
                 var data = await _cacheProvider.GetAsync(token);
-                if (data == null) return new TokenValidationResult { IsValid = false };
-                if (DateTime.Now > data.ExpirationTime) return new TokenValidationResult { IsValid = false };
+                if (data == null) return TokenValidation.FailedTokenValidationResult;
+                if (DateTime.Now > data.ExpirationTime) return TokenValidation.FailedTokenValidationResult;
 
                 var claims = data.GetAuthenticationResult().GetClaims();
                 var identity = new ClaimsIdentity(claims, data.GrantType);
@@ -55,7 +55,7 @@ namespace IdentityAuthentication.TokenServices.Providers
             }
             catch
             {
-                return new TokenValidationResult { IsValid = false };
+                return TokenValidation.FailedTokenValidationResult;
             }
         }
 

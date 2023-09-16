@@ -7,14 +7,16 @@ namespace IdentityAuthentication.Model
 {
     public class TokenValidation
     {
-        private readonly TokenBase Token;
+        private readonly TokenConfigurationBase Token;
         private readonly Credentials _credentials;
 
-        public TokenValidation(TokenBase token, Credentials credentials)
+        public TokenValidation(TokenConfigurationBase token, Credentials credentials)
         {
             Token = token;
             _credentials = credentials;
         }
+
+        public static readonly TokenValidationResult FailedTokenValidationResult = new() { IsValid = false };
 
         /// <summary>
         /// 生成 access_token 的 <see cref="JwtSecurityToken"/>
@@ -36,58 +38,18 @@ namespace IdentityAuthentication.Model
                      signingCredentials: signingCredentials);
         }
 
-        /// <summary>
-        /// 生成 refresh_token 的 <see cref="JwtSecurityToken"/>
-        /// </summary>
-        /// <param name="claims"></param>
-        /// <returns></returns>
-        public JwtSecurityToken GenerateRefreshSecurityToken(Claim[] claims)
+        public TokenValidationParameters GenerateTokenValidation()
         {
-            var signingCredentials = _credentials.GenerateSigningCredentials();
-
-            return new JwtSecurityToken(
-                    issuer: Token.Issuer,
-                    audience: Token.Audience,
-                    claims: claims,
-                    notBefore: DateTime.Now,
-                    expires: DateTime.Now.AddDays(_refreshTokenConfig.ExpirationTime),
-                    signingCredentials: signingCredentials);
-        }
-
-        /// <summary>
-        /// 生成 refresh_token 的 <see cref="TokenValidationParameters"/>，用于验签
-        /// </summary>
-        /// <returns></returns>
-        public TokenValidationParameters GenerateRefreshTokenValidation()
-        {
-            var securityKey = _credentials.GenerateValidateSecurityKey();
-
-            return new TokenValidationParameters
-            {
-                ValidateIssuerSigningKey = true,
-                IssuerSigningKey = securityKey,
-                ValidateIssuer = true,
-                ValidIssuer = _refreshTokenConfig.Issuer,
-                ValidateAudience = true,
-                ValidAudience = _refreshTokenConfig.Audience,
-                ValidateLifetime = true,
-                ClockSkew = TimeSpan.Zero,
-                RequireExpirationTime = true,
-            };
-        }
-
-        public TokenValidationParameters GenerateAccessTokenValidation()
-        {
-            var signingKey = _credentials.GenerateValidateSecurityKey();
+            var signingKey = _credentials.GenerateSignatureSecurityKey();
 
             return new TokenValidationParameters
             {
                 ValidateIssuerSigningKey = true,
                 IssuerSigningKey = signingKey,
                 ValidateIssuer = true,
-                ValidIssuer = _accessTokenConfig.Issuer,
+                ValidIssuer = Token.Issuer,
                 ValidateAudience = true,
-                ValidAudience = _accessTokenConfig.Audience,
+                ValidAudience = Token.Audience,
                 ValidateLifetime = true,
                 ClockSkew = TimeSpan.Zero,
                 RequireExpirationTime = true,

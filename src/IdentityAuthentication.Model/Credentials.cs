@@ -26,28 +26,13 @@ namespace IdentityAuthentication.Model
         }
 
         /// <summary>
-        /// 签名的凭据
+        /// 生成签名的 <see cref="SigningCredentials"/>
         /// </summary>
         /// <returns></returns>
         public SigningCredentials GenerateSigningCredentials()
         {
-            var signingKey = GetSignatureSecurityKey();
+            var signingKey = GenerateSignatureSecurityKey();
             return new SigningCredentials(signingKey, Algorithm);
-        }
-
-        private SecurityKey GetSignatureSecurityKey()
-        {
-            if (RSAKeyType.HasValue) return GenerateRsaSecurityKey(RSAKeyType.Value);
-
-            return GenerateSignatureSecurityKey();
-        }
-
-        public SecurityKey GenerateRsaSecurityKey(RSAKeyType keyType)
-        {
-            var rsa = RSA.Create();
-            rsa.ImportPublicKey(keyType, SigningKey);
-
-            return new RsaSecurityKey(rsa);
         }
 
         /// <summary>
@@ -55,6 +40,21 @@ namespace IdentityAuthentication.Model
         /// </summary>
         /// <returns></returns>
         public SecurityKey GenerateSignatureSecurityKey()
+        {
+            if (RSAKeyType.HasValue) return GenerateRsaSecurityKey(RSAKeyType.Value);
+
+            return GenerateSymmetricSecurityKey();
+        }
+
+        private SecurityKey GenerateRsaSecurityKey(RSAKeyType keyType)
+        {
+            var rsa = RSA.Create();
+            rsa.ImportPublicKey(keyType, SigningKey);
+
+            return new RsaSecurityKey(rsa);
+        }
+
+        private SecurityKey GenerateSymmetricSecurityKey()
         {
             var keyByteArray = Encoding.ASCII.GetBytes(SigningKey);
             return new SymmetricSecurityKey(keyByteArray);
