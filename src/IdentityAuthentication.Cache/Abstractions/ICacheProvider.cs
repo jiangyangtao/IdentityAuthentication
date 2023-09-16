@@ -1,7 +1,7 @@
 ﻿using IdentityAuthentication.Configuration.Enums;
 using IdentityAuthentication.Configuration.Model;
 
-namespace IdentityAuthentication.Cache
+namespace IdentityAuthentication.Cache.Abstractions
 {
     public interface ICacheProvider
     {

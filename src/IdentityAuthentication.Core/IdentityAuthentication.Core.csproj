@@ -13,8 +13,8 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\IdentityAuthentication.Authentication\IdentityAuthentication.Authentication.csproj" />
     <ProjectReference Include="..\IdentityAuthentication.Configuration\IdentityAuthentication.Configuration.csproj" />
-    <ProjectReference Include="..\IdentityAuthentication.TokenServices\IdentityAuthentication.TokenServices.csproj" />
     <ProjectReference Include="..\IdentityAuthentication.Token\IdentityAuthentication.Token.csproj" />
   </ItemGroup>
 
