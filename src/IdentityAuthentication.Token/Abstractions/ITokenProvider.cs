@@ -8,7 +8,7 @@ namespace IdentityAuthentication.Token.Abstractions
     {
         TokenType TokenType { get; }
 
-        Task<IToken> GenerateAsync(AuthenticationResult authenticationResult);
+        Task<ITokenResult> GenerateAsync(AuthenticationResult authenticationResult);
 
         Task<string> RefreshAsync();
 

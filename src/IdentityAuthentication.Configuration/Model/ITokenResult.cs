@@ -1,5 +1,4 @@
-﻿
-namespace IdentityAuthentication.Configuration.Abstractions
+﻿namespace IdentityAuthentication.Configuration.Model
 {
     public interface IToken
     {
@@ -17,6 +16,6 @@ namespace IdentityAuthentication.Configuration.Abstractions
 
     public interface ITokenResult : IToken, IRefreshToken
     {
-
+       
     }
 }
