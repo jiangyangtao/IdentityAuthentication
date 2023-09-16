@@ -13,7 +13,7 @@ namespace IdentityAuthentication.Configuration
             return new()
             {
                 RSAKeyType = RSAKeyType,
-                RsaSignatureAlgorithm = RsaSignatureAlgorithm,
+                AlgorithmType = AlgorithmType,
                 SignatureKey = PublicKey,
             };
         }
@@ -23,7 +23,7 @@ namespace IdentityAuthentication.Configuration
             return new()
             {
                 RSAKeyType = RSAKeyType,
-                RsaSignatureAlgorithm = RsaSignatureAlgorithm,
+                AlgorithmType = AlgorithmType,
                 SignatureKey = PrivateKey,
             };
         }

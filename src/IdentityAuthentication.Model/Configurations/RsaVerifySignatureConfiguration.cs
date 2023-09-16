@@ -15,7 +15,7 @@ namespace IdentityAuthentication.Model.Configurations
             return new()
             {
                 RSAKeyType = RSAKeyType,
-                RsaSignatureAlgorithm = RsaSignatureAlgorithm,
+                AlgorithmType = AlgorithmType,
                 SignatureKey = PublicKey,
             };
         }

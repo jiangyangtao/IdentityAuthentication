@@ -6,16 +6,16 @@ namespace IdentityAuthentication.Model.Models
 {
     public abstract class RsaBase
     {
-        public RsaSignatureAlgorithm RsaSignatureAlgorithm { set; get; }
+        public RsaAlgorithmType AlgorithmType { set; get; }
 
         public RSAKeyType RSAKeyType { set; get; }
 
-        public string RsaAlgorithm
+        public string Algorithm
         {
             get
             {
-                if (RsaSignatureAlgorithm == RsaSignatureAlgorithm.RsaSha256) return SecurityAlgorithms.RsaSha256;
-                if (RsaSignatureAlgorithm == RsaSignatureAlgorithm.RsaSha384) return SecurityAlgorithms.RsaSha384;
+                if (AlgorithmType == RsaAlgorithmType.RsaSha256) return SecurityAlgorithms.RsaSha256;
+                if (AlgorithmType == RsaAlgorithmType.RsaSha384) return SecurityAlgorithms.RsaSha384;
 
                 return SecurityAlgorithms.RsaSha512;
             }

@@ -1,7 +1,7 @@
 ﻿
 namespace IdentityAuthentication.Model.Enums
 {
-    public enum RsaSignatureAlgorithm
+    public enum RsaAlgorithmType
     {
         /// <summary>
         /// RS256

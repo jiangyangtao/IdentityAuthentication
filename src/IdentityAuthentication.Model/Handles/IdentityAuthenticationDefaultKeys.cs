@@ -3,7 +3,7 @@ using System.Security.Claims;
 
 namespace IdentityAuthentication.Model.Handles
 {
-    public static class IdentityAuthenticationDefaults
+    public static class IdentityAuthenticationDefaultKeys
     {
         public const string AuthenticationScheme = "IdentityAuthentication";
 

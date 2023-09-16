@@ -26,7 +26,7 @@ namespace IdentityAuthentication.Model
         {
         }
 
-        public Credentials([NotNull] RsaSignature rsaSignature) : this(rsaSignature.SignatureKey, rsaSignature.RsaAlgorithm)
+        public Credentials([NotNull] RsaSignature rsaSignature) : this(rsaSignature.SignatureKey, rsaSignature.Algorithm)
         {
             RSAKeyType = rsaSignature.RSAKeyType;
         }
