@@ -30,13 +30,13 @@ namespace IdentityAuthentication.Application.Controllers
         }
 
         [HttpGet]
-        [ProducesResponseType(typeof(AuthenticationEndpoints), 200)]
+        [ProducesResponseType(typeof(IdentityAuthenticationEndpoints), 200)]
         public IActionResult AuthenticationEndpoints()
         {
             var baseUrl = HttpContext.Request.GetOriginHost();
             var apiV1Path = $"{baseUrl}/api/v{AuthenticationConfigurationDefault.ApiV1.MajorVersion}";
 
-            var endpoints = new AuthenticationEndpoints
+            var endpoints = new IdentityAuthenticationEndpoints
             {
                 AuthenticationConfigurationEndpoint = $"{apiV1Path}/configuration/getconfiguration",
                 GenerateTokenEndpoint = $"{apiV1Path}/token/generate",

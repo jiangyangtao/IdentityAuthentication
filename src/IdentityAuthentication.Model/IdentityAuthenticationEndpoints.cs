@@ -1,7 +1,7 @@
 ﻿
 namespace IdentityAuthentication.Model
 {
-    public class AuthenticationEndpoints
+    public class IdentityAuthenticationEndpoints
     {
         public string AuthenticationConfigurationEndpoint { set; get; }
 
