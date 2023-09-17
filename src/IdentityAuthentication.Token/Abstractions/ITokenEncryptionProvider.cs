@@ -10,5 +10,7 @@ namespace IdentityAuthentication.Token.Abstractions
     internal interface ITokenEncryptionProvider
     {
         TokenEncryptionType EncryptionType { get; }
+
+
     }
 }
