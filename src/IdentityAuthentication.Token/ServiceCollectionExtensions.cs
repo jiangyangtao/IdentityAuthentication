@@ -17,7 +17,7 @@ namespace IdentityAuthentication.Token
             services.AddSingleton<ITokenEncryptionProvider, TokenAesEncryptionProvider>();
             services.AddSingleton<ITokenEncryptionProvider, TokenRsaEncryptionProvider>();
 
-            services.AddSingleton<ITokenValidationProvider, TokenValidationProvider>();
+            services.AddSingleton<ITokenSignatureProvider, TokenSignatureProvider>();
 
             return services;
         }

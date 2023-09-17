@@ -5,11 +5,11 @@ using System.IdentityModel.Tokens.Jwt;
 
 namespace IdentityAuthentication.Token
 {
-    internal class TokenValidationProvider : ITokenValidationProvider
+    internal class TokenSignatureProvider : ITokenSignatureProvider
     {
         private readonly IAuthenticationConfigurationProvider _configurationProvider;
 
-        public TokenValidationProvider(IAuthenticationConfigurationProvider configurationProvider)
+        public TokenSignatureProvider(IAuthenticationConfigurationProvider configurationProvider)
         {
             _configurationProvider = configurationProvider;
         }

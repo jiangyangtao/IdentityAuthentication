@@ -3,7 +3,7 @@ using System.IdentityModel.Tokens.Jwt;
 
 namespace IdentityAuthentication.Token.Abstractions
 {
-    internal interface ITokenValidationProvider
+    internal interface ITokenSignatureProvider
     {
         JwtSecurityToken AccessTokenSecurity { get; }
 
