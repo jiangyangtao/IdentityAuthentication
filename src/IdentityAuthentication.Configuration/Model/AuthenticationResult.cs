@@ -1,7 +1,7 @@
 ﻿using System.Security.Claims;
 using IdentityAuthentication.Extensions;
 
-namespace IdentityAuthentication.Configuration
+namespace IdentityAuthentication.Configuration.Model
 {
     public class AuthenticationResult
     {

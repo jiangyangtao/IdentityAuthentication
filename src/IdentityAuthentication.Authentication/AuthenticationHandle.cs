@@ -1,5 +1,6 @@
 ﻿using Authentication.Abstractions;
 using IdentityAuthentication.Configuration;
+using IdentityAuthentication.Configuration.Model;
 using IdentityAuthentication.Extensions;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
@@ -10,14 +11,14 @@ namespace IdentityAuthentication.Authentication
 {
     internal class AuthenticationHandle
     {
-        private readonly GrantDefaults _grantDefaults;
+        private readonly GrantDefaultConfiguration _grantDefaults;
         private readonly IServiceProvider _serviceProvider;
         private readonly IDictionary<string, Type> CredentialTypes;
 
         private readonly MethodInfo ExecuteAuthenticateMethod;
         private readonly MethodInfo ExecuteIdentityCheckMethod;
 
-        public AuthenticationHandle(IServiceProvider serviceProvider, IOptions<GrantDefaults> grantDefaultsOptions)
+        public AuthenticationHandle(IServiceProvider serviceProvider, IOptions<GrantDefaultConfiguration> grantDefaultsOptions)
         {
             _serviceProvider = serviceProvider;
             _grantDefaults = grantDefaultsOptions.Value;

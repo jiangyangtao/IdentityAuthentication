@@ -1,4 +1,4 @@
-﻿using IdentityAuthentication.Configuration;
+﻿using IdentityAuthentication.Configuration.Model;
 using Newtonsoft.Json.Linq;
 
 namespace IdentityAuthentication.Authentication

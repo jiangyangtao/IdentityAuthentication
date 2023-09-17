@@ -1,6 +1,6 @@
 ﻿namespace IdentityAuthentication.Configuration
 {
-    public class GrantDefaults
+    public class GrantDefaultConfiguration
     {
         public string GrantTypeDefault { set; get; }
 

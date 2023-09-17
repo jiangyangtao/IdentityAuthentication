@@ -1,5 +1,6 @@
 ﻿using IdentityAuthentication.Configuration;
 using IdentityAuthentication.Configuration.Enums;
+using IdentityAuthentication.Configuration.Model;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Options;
 

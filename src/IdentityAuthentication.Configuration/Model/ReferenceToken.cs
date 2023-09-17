@@ -1,7 +1,7 @@
 ﻿using IdentityAuthentication.Extensions;
 using IdentityAuthentication.Model.Handles;
 
-namespace IdentityAuthentication.Configuration
+namespace IdentityAuthentication.Configuration.Model
 {
     public class ReferenceToken
     {

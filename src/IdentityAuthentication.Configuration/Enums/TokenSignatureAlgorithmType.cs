@@ -4,7 +4,7 @@ namespace IdentityAuthentication.Configuration.Enums
     /// <summary>
     /// Jwt 签名算法
     /// </summary>
-    public enum JwtSignatureAlgorithmType
+    public enum TokenSignatureAlgorithmType
     {
         /// <summary>
         /// HS256
