@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace IdentityAuthentication.Token.TokenEncryption
 {
-    internal class TokenRsaEncryptionProvider : ITokenRsaEncryptionProvider
+    internal class TokenRsaEncryptionProvider : ITokenEncryptionProvider
     {
     }
 }

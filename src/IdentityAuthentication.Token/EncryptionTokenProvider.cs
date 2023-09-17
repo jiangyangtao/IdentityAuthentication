@@ -12,8 +12,11 @@ namespace IdentityAuthentication.Token
 {
     internal class EncryptionTokenProvider : ITokenProvider
     {
-        public EncryptionTokenProvider()
+        private readonly ITokenEncryptionProviderFactory _tokenEncryptionProviderFactory;
+
+        public EncryptionTokenProvider(ITokenEncryptionProviderFactory tokenEncryptionProviderFactory)
         {
+            _tokenEncryptionProviderFactory = tokenEncryptionProviderFactory;
         }
 
         public TokenType TokenType => throw new NotImplementedException();
