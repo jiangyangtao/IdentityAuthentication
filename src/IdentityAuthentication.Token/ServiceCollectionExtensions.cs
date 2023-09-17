@@ -1,4 +1,5 @@
 ﻿using IdentityAuthentication.Token.Abstractions;
+using IdentityAuthentication.Token.TokenEncryption;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace IdentityAuthentication.Token
@@ -11,6 +12,11 @@ namespace IdentityAuthentication.Token
             services.AddSingleton<ITokenProvider, ReferenceTokenProvider>();
             services.AddSingleton<ITokenProvider, EncryptionTokenProvider>();
             services.AddSingleton<ITokenProviderFactory, TokenProviderFactory>();
+
+            services.AddSingleton<ITokenEncryptionProviderFactory, TokenEncryptionProviderFactory>();
+            services.AddSingleton<ITokenAesEncryptionProvider, TokenAesEncryptionProvider>();
+            services.AddSingleton<ITokenRsaEncryptionProvider, TokenRsaEncryptionProvider>();
+
             services.AddSingleton<ITokenValidationProvider, TokenValidationProvider>();
 
             return services;

@@ -1,10 +1,7 @@
 ﻿using IdentityAuthentication.Configuration.Abstractions;
 using IdentityAuthentication.Token.Abstractions;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Microsoft.IdentityModel.Tokens;
+using System.IdentityModel.Tokens.Jwt;
 
 namespace IdentityAuthentication.Token
 {
@@ -16,5 +13,13 @@ namespace IdentityAuthentication.Token
         {
             _configurationProvider = configurationProvider;
         }
+
+        public JwtSecurityToken AccessTokenSecurity => throw new NotImplementedException();
+
+        public JwtSecurityToken? RefreshTTokenSecurity => throw new NotImplementedException();
+
+        public TokenValidationParameters AccessTokenValidationParameters => throw new NotImplementedException();
+
+        public TokenValidationParameters? RefreshTokenValidationParameters => throw new NotImplementedException();
     }
 }
