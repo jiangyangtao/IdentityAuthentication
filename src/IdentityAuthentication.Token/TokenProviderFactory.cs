@@ -1,21 +1,25 @@
-﻿using IdentityAuthentication.Token.Abstractions;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using IdentityAuthentication.Configuration.Abstractions;
+using IdentityAuthentication.Token.Abstractions;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace IdentityAuthentication.Token
 {
     internal class TokenProviderFactory : ITokenProviderFactory
     {
-        public TokenProviderFactory()
+        private readonly IAuthenticationConfigurationProvider _configurationProvider;
+        private readonly IServiceProvider _serviceProvider;
+
+        public TokenProviderFactory(
+            IAuthenticationConfigurationProvider configurationProvider,
+            IServiceProvider serviceProvider)
         {
+            _configurationProvider = configurationProvider;
+            _serviceProvider = serviceProvider;
         }
 
         public ITokenProvider CreateTokenService()
         {
-            throw new NotImplementedException();
+            return _serviceProvider.GetServices<ITokenProvider>().FirstOrDefault(a => a.TokenType == _configurationProvider.Authentication.TokenType);
         }
     }
 }

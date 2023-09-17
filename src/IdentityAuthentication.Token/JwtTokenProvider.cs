@@ -1,14 +1,18 @@
-﻿using IdentityAuthentication.Configuration.Model;
+﻿using IdentityAuthentication.Configuration.Abstractions;
+using IdentityAuthentication.Configuration.Model;
 using IdentityAuthentication.Model.Enums;
 using IdentityAuthentication.Token.Abstractions;
 using Microsoft.IdentityModel.Tokens;
 
 namespace IdentityAuthentication.Token
 {
-    public class JwtTokenProvider : ITokenProvider
+    internal class JwtTokenProvider : ITokenProvider
     {
-        public JwtTokenProvider()
+        private readonly IAuthenticationConfigurationProvider _configurationProvider;
+
+        public JwtTokenProvider(IAuthenticationConfigurationProvider configurationProvider)
         {
+            _configurationProvider = configurationProvider;
         }
 
         public TokenType TokenType => throw new NotImplementedException();

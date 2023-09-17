@@ -3,7 +3,7 @@ using IdentityAuthentication.Model.Configurations;
 
 namespace IdentityAuthentication.Configuration.Abstractions
 {
-    public interface IAuthenticationConfigurationBuilder
+    public interface IAuthenticationConfigurationProvider
     {
         AccessTokenConfiguration AccessToken { get; }
 

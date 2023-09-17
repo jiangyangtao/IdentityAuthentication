@@ -16,7 +16,7 @@ namespace IdentityAuthentication.Core
             services.AddAuthenticationConfiguration(); ;
 
             services.AddSingleton<IAuthenticationHandler, AuthenticationHandldr>();
-            services.AddSingleton<IAuthenticationConfigurationBuilder, AuthenticationConfigurationBuilder>();
+            services.AddSingleton<IAuthenticationConfigurationProvider, AuthenticationConfigurationProvider>();
             return services;
         }
 

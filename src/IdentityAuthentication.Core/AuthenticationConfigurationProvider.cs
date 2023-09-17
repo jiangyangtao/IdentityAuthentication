@@ -5,9 +5,9 @@ using Microsoft.Extensions.Options;
 
 namespace IdentityAuthentication.Core
 {
-    internal class AuthenticationConfigurationBuilder : IAuthenticationConfigurationBuilder
+    internal class AuthenticationConfigurationProvider : IAuthenticationConfigurationProvider
     {
-        public AuthenticationConfigurationBuilder(
+        public AuthenticationConfigurationProvider(
             IOptions<GrantDefaultConfiguration> grantDefaultOption,
             IOptions<AuthenticationConfiguration> authenticationOption,
             IOptions<AccessTokenConfiguration> accessTokenOption,
