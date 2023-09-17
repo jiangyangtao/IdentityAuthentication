@@ -1,15 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
+﻿
 namespace IdentityAuthentication.Configuration.Enums
 {
     /// <summary>
     /// Jwt 签名算法
     /// </summary>
-    public enum JwtSignatureAlgorithm
+    public enum JwtSignatureAlgorithmType
     {
         /// <summary>
         /// HS256
