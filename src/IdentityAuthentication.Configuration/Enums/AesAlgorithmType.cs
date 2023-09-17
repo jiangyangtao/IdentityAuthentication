@@ -1,7 +1,7 @@
 ﻿
 namespace IdentityAuthentication.Configuration.Enums
 {
-    public enum AesEncryptionAlgorithmType
+    public enum AesAlgorithmType
     {
         Aes128 = 1,
         Aes256 = 2,
