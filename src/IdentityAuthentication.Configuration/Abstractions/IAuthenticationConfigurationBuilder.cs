@@ -13,18 +13,18 @@ namespace IdentityAuthentication.Configuration.Abstractions
 
         GrantDefaultConfiguration GrantDefault { get; }
 
-        AuthenticationConfiguration Authentication { get; }  
+        AuthenticationConfiguration Authentication { get; }
 
 
 
-        RsaSignatureConfiguration RsaSignature { get; }
+        RsaSignatureConfiguration? RsaSignature { get; }
 
-        SymmetricSignatureConfiguration SymmetricSignature { get; }
+        SymmetricSignatureConfiguration? SymmetricSignature { get; }
 
 
 
-        RsaEncryptionConfiguration RsaEncryption { get; }
+        RsaEncryptionConfiguration? RsaEncryption { get; }
 
-        AesEncryptionConfiguration AesEncryption { get; }
+        AesEncryptionConfiguration? AesEncryption { get; }
     }
 }
