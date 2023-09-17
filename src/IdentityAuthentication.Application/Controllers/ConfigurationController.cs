@@ -1,10 +1,10 @@
-﻿using IdentityAuthentication.Model;
+﻿using IdentityAuthentication.Extensions;
+using IdentityAuthentication.Model;
 using IdentityAuthentication.Model.Configurations;
-using IdentityAuthentication.Extensions;
+using IdentityAuthentication.Model.Enums;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
-using IdentityAuthentication.Model.Models;
 
 namespace IdentityAuthentication.Application.Controllers
 {
@@ -13,20 +13,22 @@ namespace IdentityAuthentication.Application.Controllers
     {
 
         private readonly AccessTokenConfiguration _accessTokenConfiguration;
-        private readonly TokenConfigurationBase _refreshTokenConfiguration;
-        private readonly SecretKeyConfiguration _secretKeyConfiguration;
-        private readonly AuthenticationConfigurationBase _authenticationConfiguration;
+        private readonly RefreshTokenConfiguration _refreshTokenConfiguration;
+        private readonly AuthenticationConfiguration _authenticationConfiguration;
+        private readonly TokenSignatureConfiguration _tokenSignatureConfiguration;
 
         public ConfigurationController(
             IOptions<AccessTokenConfiguration> accessTokenOption,
-            IOptions<TokenConfigurationBase> refreshTokenOption,
-            IOptions<SecretKeyConfiguration> secretKeyOption,
-            IOptions<AuthenticationConfigurationBase> authenticationOption)
+            IOptions<RefreshTokenConfiguration> refreshTokenOption,
+            IOptions<AuthenticationConfiguration> authenticationOption,
+            IOptions<TokenSignatureConfiguration> tokenSignatureOption)
         {
             _accessTokenConfiguration = accessTokenOption.Value;
             _refreshTokenConfiguration = refreshTokenOption.Value;
             _authenticationConfiguration = authenticationOption.Value;
-            _secretKeyConfiguration = secretKeyOption.Value;
+
+            if (tokenSignatureOption.Value != null)
+                _tokenSignatureOption = tokenSignatureOption.Value;
         }
 
         [HttpGet]
@@ -51,16 +53,23 @@ namespace IdentityAuthentication.Application.Controllers
         [ProducesResponseType(typeof(IdentityAuthenticationConfiguration), 200)]
         public IActionResult GetConfiguration()
         {
-            var rsaDecryptPrivateKey = _secretKeyConfiguration.RsaDecryptPrivateKey;
-            if (_authenticationConfiguration.EnableJwtEncrypt == false) rsaDecryptPrivateKey = string.Empty;
-
             var config = new IdentityAuthenticationConfiguration
             {
                 AccessTokenConfiguration = _accessTokenConfiguration,
                 AuthenticationConfiguration = _authenticationConfiguration,
                 RefreshTokenConfiguration = _refreshTokenConfiguration,
-                SecretKeyConfiguration = new SecretKeyConfigurationBase(_secretKeyConfiguration.HmacSha256Key, _secretKeyConfiguration.RsaSignaturePublicKey),
             };
+
+            if (_accessTokenConfiguration.TokenType == TokenType.JWT && _tokenSignatureConfiguration != null && _tokenSignatureConfiguration.IsRsaSignature)
+            {
+                config.RsaVerifySignatureConfiguration = new RsaVerifySignatureConfiguration
+                {
+                    RSAKeyType = _tokenSignatureConfiguration.RsaSignature.RSAKeyType,
+                    PublicKey = _tokenSignatureConfiguration.RsaSignature.PublicKey,
+                    AlgorithmType = _tokenSignatureConfiguration.RsaSignature.AlgorithmType,
+                };
+            }
+
             return Ok(config);
         }
     }

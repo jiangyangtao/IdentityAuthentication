@@ -9,31 +9,31 @@ namespace IdentityAuthentication.Configuration.Enums
         /// <summary>
         /// HS256
         /// </summary>
-        HmacSha256,
+        HmacSha256 = 10,
 
         /// <summary>
         /// HS384
         /// </summary>
-        HmacSha384,
+        HmacSha384 = 11,
 
         /// <summary>
         /// HS512
         /// </summary>
-        HmacSha512,
+        HmacSha512 = 12,
 
         /// <summary>
         /// RS256
         /// </summary>
-        RsaSha256,
+        RsaSha256 = 20,
 
         /// <summary>
         /// RS384
         /// </summary>
-        RsaSha384,
+        RsaSha384 = 21,
 
         /// <summary>
         /// RS512
         /// </summary>
-        RsaSha512,
+        RsaSha512 = 22,
     }
 }
