@@ -4,6 +4,6 @@ namespace IdentityAuthentication.Configuration
 {
     public class RefreshTokenConfiguration : TokenConfigurationBase
     {
-        public const string ConfigurationKey = "Authentication";
+        public const string ConfigurationKey = "RefreshToken";
     }
 }

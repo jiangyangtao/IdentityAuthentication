@@ -19,5 +19,7 @@ namespace IdentityAuthentication.Configuration
                 return RSAEncryptionPadding.OaepSHA512;
             }
         }
+
+        public const string ConfigurationKey = "TokenRsaEncryption";
     }
 }

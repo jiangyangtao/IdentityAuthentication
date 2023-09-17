@@ -12,9 +12,9 @@ namespace IdentityAuthentication.Cache
             var serviceProvider = services.BuildServiceProvider();
             var configuration = serviceProvider.GetRequiredService<IConfiguration>();
 
-            services.Configure<CacheStorageConfiguration>(configuration.GetSection("CacheStorage"));
-
-            var cacheStorage = configuration.GetSection("CacheStorage");
+            var cacheStorage = configuration.GetSection(CacheStorageConfiguration.ConfigurationKey);
+            services.Configure<CacheStorageConfiguration>(cacheStorage);
+      
             services.AddMemoryCache(options =>
             {
                 var sizeLimit = cacheStorage.GetValue<int>("MemonySizeLimit");

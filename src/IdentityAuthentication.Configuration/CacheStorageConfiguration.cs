@@ -11,5 +11,7 @@ namespace IdentityAuthentication.Configuration
         public int CacheExpirationTime { set; get; }
 
         public string RedisConnection { set; get; }
+
+        public const string ConfigurationKey = "CacheStorage";
     }
 }

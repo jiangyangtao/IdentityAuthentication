@@ -31,21 +31,14 @@ namespace IdentityAuthentication.Core
             services.Configure<AuthenticationConfiguration>(authenticationConfig);
 
             var tokenType = authenticationConfig.GetValue<TokenType>(nameof(TokenType));
+            var tokenSignatureType = authenticationConfig.GetValue<TokenSignatureType>(nameof(TokenSignatureType));
+            var tokenEncryptionType = authenticationConfig.GetValue<TokenEncryptionType>(nameof(TokenEncryptionType));
             if (tokenType == TokenType.JWT || tokenType == TokenType.Reference)
             {
                 var signatureConfig = configuration.GetSection(TokenSignatureConfiguration.ConfigurationKey);
-                var algorithmType = signatureConfig.GetValue<TokenSignatureAlgorithmType>(nameof(TokenSignatureConfiguration.AlgorithmType));           
-                services.Configure<TokenSignatureConfiguration>(a =>
-                {
-                    a.AlgorithmType = algorithmType;
 
-                    var rsaSignatureConfig = signatureConfig.GetSection(RsaSignatureConfiguration.ConfigurationKey);
-                    a.RsaSignature = new RsaSignatureConfiguration
-                    {
-                        AlgorithmType = algorithmType;
-                    };
-                });
-            }
+    
+            }        
 
             if (tokenType == TokenType.Encrypt)
             {

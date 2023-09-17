@@ -28,6 +28,6 @@ namespace IdentityAuthentication.Configuration
             };
         }
 
-        public const string ConfigurationKey = "RsaSignature";
+        public const string ConfigurationKey = "TokenRsaSignature";
     }
 }

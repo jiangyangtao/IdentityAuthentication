@@ -6,17 +6,19 @@ namespace IdentityAuthentication.Configuration
 {
     public class SymmetricSignatureConfiguration : SymmetricSignature
     {
-        public TokenSignatureAlgorithmType SignatureAlgorithm { set; get; }
+        public SymmetricSignatureAlgorithmType SignatureAlgorithm { set; get; }
 
         public override string Algorithm
         {
             get
             {
-                if (SignatureAlgorithm == TokenSignatureAlgorithmType.HmacSha256) return SecurityAlgorithms.HmacSha256;
-                if (SignatureAlgorithm == TokenSignatureAlgorithmType.HmacSha384) return SecurityAlgorithms.HmacSha384;
+                if (SignatureAlgorithm == SymmetricSignatureAlgorithmType.HmacSha256) return SecurityAlgorithms.HmacSha256;
+                if (SignatureAlgorithm == SymmetricSignatureAlgorithmType.HmacSha384) return SecurityAlgorithms.HmacSha384;
 
                 return SecurityAlgorithms.HmacSha512;
             }
         }
+
+        public const string ConfigurationKey = "TokenSymmetricSignature";
     }
 }
