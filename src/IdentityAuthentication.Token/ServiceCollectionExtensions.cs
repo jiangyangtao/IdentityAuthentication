@@ -1,10 +1,5 @@
 ﻿using IdentityAuthentication.Token.Abstractions;
 using Microsoft.Extensions.DependencyInjection;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace IdentityAuthentication.Token
 {
@@ -14,8 +9,9 @@ namespace IdentityAuthentication.Token
         {
             services.AddSingleton<ITokenProvider, JwtTokenProvider>();
             services.AddSingleton<ITokenProvider, ReferenceTokenProvider>();
-            services.AddSingleton<ITokenProvider, EncryptionTokenProvider>(); 
+            services.AddSingleton<ITokenProvider, EncryptionTokenProvider>();
             services.AddSingleton<ITokenProviderFactory, TokenProviderFactory>();
+            services.AddSingleton<ITokenValidationProvider, TokenValidationProvider>();
 
             return services;
         }
