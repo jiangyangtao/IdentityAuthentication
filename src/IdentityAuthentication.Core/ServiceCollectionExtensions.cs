@@ -1,4 +1,5 @@
 ﻿using IdentityAuthentication.Configuration;
+using IdentityAuthentication.Configuration.Abstractions;
 using IdentityAuthentication.Configuration.Enums;
 using IdentityAuthentication.Model.Configurations;
 using IdentityAuthentication.Model.Enums;
@@ -15,6 +16,7 @@ namespace IdentityAuthentication.Core
             services.AddAuthenticationConfiguration(); ;
 
             services.AddSingleton<IAuthenticationHandler, AuthenticationHandldr>();
+            services.AddSingleton<IAuthenticationConfigurationBuilder, AuthenticationConfigurationBuilder>();
             return services;
         }
 
@@ -30,19 +32,33 @@ namespace IdentityAuthentication.Core
             var authenticationConfig = configuration.GetSection(AuthenticationConfiguration.ConfigurationKey);
             services.Configure<AuthenticationConfiguration>(authenticationConfig);
 
-            var tokenType = authenticationConfig.GetValue<TokenType>(nameof(TokenType));
-            var tokenSignatureType = authenticationConfig.GetValue<TokenSignatureType>(nameof(TokenSignatureType));
-            var tokenEncryptionType = authenticationConfig.GetValue<TokenEncryptionType>(nameof(TokenEncryptionType));
+            var tokenType = authenticationConfig.GetValue<TokenType>(nameof(AuthenticationConfiguration.TokenType));
+            var tokenSignatureType = authenticationConfig.GetValue<TokenSignatureType>(nameof(AuthenticationConfiguration.TokenSignatureType));
+            var tokenEncryptionType = authenticationConfig.GetValue<TokenEncryptionType>(nameof(AuthenticationConfiguration.TokenEncryptionType));
             if (tokenType == TokenType.JWT || tokenType == TokenType.Reference)
             {
-                var signatureConfig = configuration.GetSection(TokenSignatureConfiguration.ConfigurationKey);
+                if (tokenSignatureType == TokenSignatureType.Rsa)
+                {
+                    services.Configure<RsaSignatureConfiguration>(configuration.GetSection(RsaSignatureConfiguration.ConfigurationKey));
+                }
 
-    
-            }        
+                if (tokenSignatureType == TokenSignatureType.Symmetric)
+                {
+                    services.Configure<SymmetricSignatureConfiguration>(configuration.GetSection(SymmetricSignatureConfiguration.ConfigurationKey));
+                }
+            }
 
             if (tokenType == TokenType.Encrypt)
             {
-                services.Configure<TokenSignatureConfiguration>(configuration.GetSection(TokenSignatureConfiguration.ConfigurationKey));
+                if (tokenEncryptionType == TokenEncryptionType.Rsa)
+                {
+                    services.Configure<RsaEncryptionConfiguration>(configuration.GetSection(RsaEncryptionConfiguration.ConfigurationKey));
+                }
+
+                if (tokenEncryptionType == TokenEncryptionType.Aes)
+                {
+                    services.Configure<AesEncryptionConfiguration>(configuration.GetSection(AesEncryptionConfiguration.ConfigurationKey));
+                }
             }
 
             return services;
