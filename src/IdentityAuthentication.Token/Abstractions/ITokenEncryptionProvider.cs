@@ -1,9 +1,4 @@
 ﻿using IdentityAuthentication.Configuration.Enums;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace IdentityAuthentication.Token.Abstractions
 {
@@ -11,6 +6,8 @@ namespace IdentityAuthentication.Token.Abstractions
     {
         TokenEncryptionType EncryptionType { get; }
 
+        string Encrypt(string token);
 
+        string Decrypt(string token);
     }
 }

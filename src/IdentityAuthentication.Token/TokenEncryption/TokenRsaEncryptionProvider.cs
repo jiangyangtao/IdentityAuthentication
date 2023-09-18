@@ -15,5 +15,15 @@ namespace IdentityAuthentication.Token.TokenEncryption
         }
 
         public TokenEncryptionType EncryptionType => TokenEncryptionType.Rsa;
+
+        public string Decrypt(string token)
+        {
+            throw new NotImplementedException();
+        }
+
+        public string Encrypt(string token)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
