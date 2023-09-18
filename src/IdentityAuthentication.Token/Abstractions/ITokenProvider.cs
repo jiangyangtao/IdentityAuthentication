@@ -10,14 +10,14 @@ namespace IdentityAuthentication.Token.Abstractions
 
         Task<ITokenResult> GenerateAsync(AuthenticationResult authenticationResult);
 
-        Task<string> RefreshAsync();
+        Task<string> RefreshAsync(string token);
 
-        Task<string> DestroyAsync();
+        Task<string> DestroyAsync(string token);
 
-        Task<AuthenticationResult> GetAuthenticationResultAsync();
+        Task<AuthenticationResult> GetAuthenticationResultAsync(string token);
 
         Task<TokenValidationResult> AuthorizeAsync(string token);
 
-        Task<IReadOnlyDictionary<string, string>?> GetTokenInfoAsync();
+        Task<IReadOnlyDictionary<string, string>?> GetTokenInfoAsync(string token);
     }
 }

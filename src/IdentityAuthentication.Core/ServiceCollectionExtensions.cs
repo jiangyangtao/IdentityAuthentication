@@ -10,8 +10,7 @@ namespace IdentityAuthentication.Core
     {
         public static IServiceCollection AddIdentityAuthentication(this IServiceCollection services)
         {
-            services.AddHttpContextAccessor();
-            services.AddAuthenticationConfiguration(); ;
+            services.AddAuthenticationConfiguration();
 
             services.AddSingleton<IAuthenticationHandler, AuthenticationHandldr>();
             services.AddSingleton<IAuthenticationConfigurationProvider, AuthenticationConfigurationProvider>();
