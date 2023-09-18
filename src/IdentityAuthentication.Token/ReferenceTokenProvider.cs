@@ -18,7 +18,7 @@ namespace IdentityAuthentication.Token
 
         public TokenType TokenType => throw new NotImplementedException();
 
-        public Task<TokenValidationResult> AuthorizeAsync(string token)
+        public Task<TokenValidationResult> AuthorizeAsync()
         {
             throw new NotImplementedException();
         }
@@ -28,7 +28,7 @@ namespace IdentityAuthentication.Token
             throw new NotImplementedException();
         }
 
-        public Task<ITokenResult> GenerateAsync(AuthenticationResult authenticationResult)
+        public Task<IToken> GenerateAsync(AuthenticationResult authenticationResult)
         {
             throw new NotImplementedException();
         }

@@ -1,6 +1,7 @@
 ﻿using IdentityAuthentication.Configuration;
 using IdentityAuthentication.Configuration.Abstractions;
 using IdentityAuthentication.Model.Configurations;
+using IdentityAuthentication.Token;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -11,9 +12,11 @@ namespace IdentityAuthentication.Core
         public static IServiceCollection AddIdentityAuthentication(this IServiceCollection services)
         {
             services.AddAuthenticationConfiguration();
+            services.AddToken();       
 
             services.AddSingleton<IAuthenticationHandler, AuthenticationHandldr>();
             services.AddSingleton<IAuthenticationConfigurationProvider, AuthenticationConfigurationProvider>();
+
             return services;
         }
 

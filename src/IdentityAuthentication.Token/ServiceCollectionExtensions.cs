@@ -1,4 +1,5 @@
-﻿using IdentityAuthentication.Token.Abstractions;
+﻿using IdentityAuthentication.Cache;
+using IdentityAuthentication.Token.Abstractions;
 using IdentityAuthentication.Token.TokenEncryption;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -9,6 +10,7 @@ namespace IdentityAuthentication.Token
         public static IServiceCollection AddToken(this IServiceCollection services)
         {
             services.AddHttpContextAccessor();
+            services.AddCacheStorage();
 
             services.AddSingleton<ITokenProvider, JwtTokenProvider>();
             services.AddSingleton<ITokenProvider, ReferenceTokenProvider>();
@@ -21,6 +23,8 @@ namespace IdentityAuthentication.Token
 
             services.AddSingleton<IHttpTokenProvider, HttpTokenProvider>();
             services.AddSingleton<ITokenSignatureProvider, TokenSignatureProvider>();
+
+
 
             return services;
         }
