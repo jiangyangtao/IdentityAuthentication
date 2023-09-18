@@ -8,6 +8,8 @@ namespace IdentityAuthentication.Token
     {
         public static IServiceCollection AddToken(this IServiceCollection services)
         {
+            services.AddHttpContextAccessor();
+
             services.AddSingleton<ITokenProvider, JwtTokenProvider>();
             services.AddSingleton<ITokenProvider, ReferenceTokenProvider>();
             services.AddSingleton<ITokenProvider, EncryptionTokenProvider>();
@@ -17,6 +19,7 @@ namespace IdentityAuthentication.Token
             services.AddSingleton<ITokenEncryptionProvider, TokenRsaEncryptionProvider>();
             services.AddSingleton<ITokenEncryptionProviderFactory, TokenEncryptionProviderFactory>();
 
+            services.AddSingleton<IHttpTokenProvider, HttpTokenProvider>();
             services.AddSingleton<ITokenSignatureProvider, TokenSignatureProvider>();
 
             return services;
