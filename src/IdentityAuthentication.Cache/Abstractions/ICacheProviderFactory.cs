@@ -1,6 +1,6 @@
 ﻿namespace IdentityAuthentication.Cache.Abstractions
 {
-    internal interface ICacheProviderFactory
+    public interface ICacheProviderFactory
     {
         public ICacheProvider CreateCacheProvider();
     }
