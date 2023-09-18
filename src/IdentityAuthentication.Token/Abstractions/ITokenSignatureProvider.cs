@@ -1,17 +1,16 @@
 ﻿using Microsoft.IdentityModel.Tokens;
-using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 
 namespace IdentityAuthentication.Token.Abstractions
 {
     internal interface ITokenSignatureProvider
     {
-        JwtSecurityToken GenerateAccessSecurityToken(Claim[] claims, DateTime notBefore, DateTime expirationTime);
+        string BuildAccessToken(Claim[] claims, DateTime? notBefore = null, DateTime? expirationTime = null);
 
-        TokenValidationParameters GenerateAccessTokenValidation();
+        Task<TokenValidationResult> ValidateAccessTokenAsync(string token);
 
-        JwtSecurityToken? GenerateRefreshSecurityToken(Claim[] claims, DateTime notBefore, DateTime expirationTime);
+        string BuildRefreshToken(Claim[] claims);
 
-        TokenValidationParameters? GenerateRefreshTokenValidation();
+        Task<TokenValidationResult?> ValidateRefreshTokenAsync(string token);
     }
 }

@@ -8,16 +8,16 @@ namespace IdentityAuthentication.Token.Abstractions
     {
         TokenType TokenType { get; }
 
-        Task<ITokenResult> GenerateAsync(AuthenticationResult authenticationResult);
+        Task<IToken> GenerateAsync(AuthenticationResult authenticationResult);
 
-        Task<string> RefreshAsync(string token);
+        Task<string> RefreshAsync();
 
-        Task<string> DestroyAsync(string token);
+        Task<string> DestroyAsync();
 
-        Task<AuthenticationResult> GetAuthenticationResultAsync(string token);
+        Task<AuthenticationResult> GetAuthenticationResultAsync();
 
-        Task<TokenValidationResult> AuthorizeAsync(string token);
+        Task<TokenValidationResult> AuthorizeAsync();
 
-        Task<IReadOnlyDictionary<string, string>?> GetTokenInfoAsync(string token);
+        Task<IReadOnlyDictionary<string, string>?> GetTokenInfoAsync();
     }
 }

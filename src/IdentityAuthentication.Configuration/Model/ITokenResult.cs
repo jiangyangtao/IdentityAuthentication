@@ -7,15 +7,7 @@
         public long ExpiresIn { get; }
 
         public IReadOnlyDictionary<string, string> UserInfo { get; }
-    }
 
-    public interface IRefreshToken
-    {
         public string RefreshToken { get; }
-    }
-
-    public interface ITokenResult : IToken, IRefreshToken
-    {
-       
     }
 }

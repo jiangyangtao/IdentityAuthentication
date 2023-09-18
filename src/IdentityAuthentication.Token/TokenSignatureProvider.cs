@@ -2,6 +2,7 @@
 using IdentityAuthentication.Model;
 using IdentityAuthentication.Token.Abstractions;
 using Microsoft.IdentityModel.Tokens;
+using Org.BouncyCastle.Crypto.Parameters;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 
@@ -12,6 +13,7 @@ namespace IdentityAuthentication.Token
         private readonly IAuthenticationConfigurationProvider _configurationProvider;
         private readonly Credentials PrivateCredentials;
         private readonly Credentials PublicCredentials;
+        private readonly JwtSecurityTokenHandler _jwtSecurityTokenHandler;
 
         public TokenSignatureProvider(IAuthenticationConfigurationProvider configurationProvider)
         {
@@ -24,25 +26,32 @@ namespace IdentityAuthentication.Token
             _configurationProvider = configurationProvider;
             PrivateCredentials = configurationProvider.RsaSignature.GetPrivateCredentials();
             PublicCredentials = configurationProvider.RsaSignature.GetPublicCredentials();
+
+            _jwtSecurityTokenHandler = new JwtSecurityTokenHandler();
         }
 
         #region AccessToken    
 
         private TokenValidation AccessTokenSignature { set; get; }
 
-        public JwtSecurityToken GenerateAccessSecurityToken(Claim[] claims, DateTime notBefore, DateTime expirationTime)
+        public string BuildAccessToken(Claim[] claims, DateTime? notBefore = null, DateTime? expirationTime = null)
         {
             AccessTokenSignature ??= new TokenValidation(_configurationProvider.AccessToken, PrivateCredentials);
-            return AccessTokenSignature.GenerateSecurityToken(claims, notBefore, expirationTime);
-        }
 
+            var nbf = notBefore ?? DateTime.Now;
+            var expiration = expirationTime ?? DateTime.Now.AddSeconds(_configurationProvider.AccessToken.ExpirationTime);
+            var securityToken = AccessTokenSignature.GenerateSecurityToken(claims, nbf, expiration);
+            return _jwtSecurityTokenHandler.WriteToken(securityToken);
+        }
 
         private TokenValidation AccessTokenValidation { set; get; }
 
-        public TokenValidationParameters GenerateAccessTokenValidation()
+        public async Task<TokenValidationResult> ValidateAccessTokenAsync(string token)
         {
             AccessTokenValidation ??= new TokenValidation(_configurationProvider.AccessToken, PublicCredentials);
-            return AccessTokenValidation.GenerateTokenValidation();
+
+            var validationParameters = AccessTokenValidation.GenerateTokenValidation();
+            return await _jwtSecurityTokenHandler.ValidateTokenAsync(token, validationParameters);
         }
 
         #endregion
@@ -51,15 +60,27 @@ namespace IdentityAuthentication.Token
 
         private TokenValidation RefreshTokenSignature { set; get; }
 
-        public JwtSecurityToken? GenerateRefreshSecurityToken(Claim[] claims, DateTime notBefore, DateTime expirationTime)
+        public string BuildRefreshToken(Claim[] claims)
         {
-            if (_configurationProvider.Authentication.EnableTokenRefresh == false) return null;
+            if (_configurationProvider.Authentication.EnableTokenRefresh == false) return string.Empty;
 
             RefreshTokenSignature ??= new TokenValidation(_configurationProvider.RefreshToken, PrivateCredentials);
-            return RefreshTokenSignature.GenerateSecurityToken(claims, notBefore, expirationTime);
+            var securityToken = RefreshTokenSignature.GenerateSecurityToken(claims, DateTime.Now, DateTime.Now.AddDays(_configurationProvider.RefreshToken.ExpirationTime));
+
+            return _jwtSecurityTokenHandler.WriteToken(securityToken);
         }
 
         private TokenValidation RefreshTokenValidation { set; get; }
+
+        public async Task<TokenValidationResult?> ValidateRefreshTokenAsync(string refreshToken)
+        {
+
+            if (_configurationProvider.Authentication.EnableTokenRefresh == false) return null;
+
+            RefreshTokenValidation ??= new TokenValidation(_configurationProvider.RefreshToken, PublicCredentials);
+            var validationParameters = RefreshTokenValidation.GenerateTokenValidation();
+            return await _jwtSecurityTokenHandler.ValidateTokenAsync(refreshToken, validationParameters);
+        }
 
         public TokenValidationParameters? GenerateRefreshTokenValidation()
         {

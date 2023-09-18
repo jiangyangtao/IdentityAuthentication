@@ -2,7 +2,7 @@
 
 namespace IdentityAuthentication.Token
 {
-    internal class TokenResult : ITokenResult
+    internal class TokenResult : IToken
     {
         private TokenResult(string accessToken, long expiresIn, IReadOnlyDictionary<string, string> userInfo)
         {
@@ -24,10 +24,7 @@ namespace IdentityAuthentication.Token
 
         public string RefreshToken { set; get; }
 
-        public static IToken CreateToken(string accessToken, long expiresIn, IReadOnlyDictionary<string, string> userInfo)
-            => new TokenResult(accessToken, expiresIn, userInfo);
-
-        public static ITokenResult CreateToken(string accessToken, long expiresIn, IReadOnlyDictionary<string, string> userInfo, string refreshToken)
+        public static IToken CreateToken(string accessToken, long expiresIn, IReadOnlyDictionary<string, string> userInfo, string refreshToken = "")
            => new TokenResult(accessToken, expiresIn, userInfo, refreshToken);
     }
 }
