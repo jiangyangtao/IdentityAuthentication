@@ -1,4 +1,5 @@
 ﻿using IdentityAuthentication.Configuration.Abstractions;
+using IdentityAuthentication.Model;
 using IdentityAuthentication.Token.Abstractions;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
@@ -13,6 +14,8 @@ namespace IdentityAuthentication.Token
         {
             _configurationProvider = configurationProvider;
         }
+
+        private TokenValidation AccessTokenValidation { set; get; }
 
         public JwtSecurityToken AccessTokenSecurity => throw new NotImplementedException();
 

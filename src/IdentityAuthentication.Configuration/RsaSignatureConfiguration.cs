@@ -1,4 +1,5 @@
-﻿using IdentityAuthentication.Model.Models;
+﻿using IdentityAuthentication.Model;
+using IdentityAuthentication.Model.Models;
 
 namespace IdentityAuthentication.Configuration
 {
@@ -8,24 +9,28 @@ namespace IdentityAuthentication.Configuration
 
         public string PublicKey { set; get; }
 
-        public RsaSignature ToPublicRsa()
+        public Credentials GetPublicCredentials()
         {
-            return new()
+            var publicSignature = new RsaSignature()
             {
                 RSAKeyType = RSAKeyType,
                 AlgorithmType = AlgorithmType,
                 SignatureKey = PublicKey,
+                IsPublic = true,
             };
+            return new Credentials(publicSignature);
         }
 
-        public RsaSignature ToPrivateRsa()
+        public Credentials GetPrivateCredentials()
         {
-            return new()
+            var publicSignature = new RsaSignature()
             {
                 RSAKeyType = RSAKeyType,
                 AlgorithmType = AlgorithmType,
                 SignatureKey = PrivateKey,
+                IsPublic = false,
             };
+            return new Credentials(publicSignature);
         }
 
         public const string ConfigurationKey = "TokenRsaSignature";

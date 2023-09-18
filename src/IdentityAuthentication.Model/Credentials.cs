@@ -12,6 +12,7 @@ namespace IdentityAuthentication.Model
         private readonly string SigningKey;
         private readonly string Algorithm;
         private readonly RSAKeyType? RSAKeyType;
+        private readonly bool IsRsaPublic;
 
         public Credentials(string signingKey, string algorithm)
         {
@@ -29,10 +30,11 @@ namespace IdentityAuthentication.Model
         public Credentials([NotNull] RsaSignature rsaSignature) : this(rsaSignature.SignatureKey, rsaSignature.Algorithm)
         {
             RSAKeyType = rsaSignature.RSAKeyType;
+            IsRsaPublic = rsaSignature.IsPublic;
         }
 
         /// <summary>
-        /// 生成签名的 <see cref="SigningCredentials"/>
+        /// 生成 <see cref="SigningCredentials"/>
         /// </summary>
         /// <returns></returns>
         public SigningCredentials GenerateSigningCredentials()
@@ -42,7 +44,7 @@ namespace IdentityAuthentication.Model
         }
 
         /// <summary>
-        /// 生成签名的 <see cref="SecurityKey"/>
+        /// 生成 <see cref="SecurityKey"/>
         /// </summary>
         /// <returns></returns>
         public SecurityKey GenerateSignatureSecurityKey()
@@ -55,7 +57,9 @@ namespace IdentityAuthentication.Model
         private SecurityKey GenerateRsaSecurityKey(RSAKeyType keyType)
         {
             var rsa = RSA.Create();
-            rsa.ImportPublicKey(keyType, SigningKey);
+
+            if (IsRsaPublic) rsa.ImportPublicKey(keyType, SigningKey);
+            if (IsRsaPublic == false) rsa.ImportPrivateKey(keyType, SigningKey);
 
             return new RsaSecurityKey(rsa);
         }

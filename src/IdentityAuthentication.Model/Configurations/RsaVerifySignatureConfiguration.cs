@@ -17,6 +17,7 @@ namespace IdentityAuthentication.Model.Configurations
                 RSAKeyType = RSAKeyType,
                 AlgorithmType = AlgorithmType,
                 SignatureKey = PublicKey,
+                IsPublic = true,
             };
         }
     }
