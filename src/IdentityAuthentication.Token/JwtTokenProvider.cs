@@ -1,5 +1,6 @@
 ﻿using IdentityAuthentication.Configuration.Abstractions;
 using IdentityAuthentication.Configuration.Model;
+using IdentityAuthentication.Model;
 using IdentityAuthentication.Model.Enums;
 using IdentityAuthentication.Model.Handles;
 using IdentityAuthentication.Token.Abstractions;
@@ -30,7 +31,12 @@ namespace IdentityAuthentication.Token
 
         private DateTime TokenExpirationTime => DateTime.Now.AddSeconds(_configurationProvider.AccessToken.ExpirationTime);
 
-        public Task<TokenValidationResult> AuthorizeAsync() => _tokenSignatureProvider.ValidateAccessTokenAsync(_httpTokenProvider.AccessToken);
+        public async Task<TokenValidationResult> AuthorizeAsync()
+        {
+            if (_httpTokenProvider.AccessToken.IsNullOrEmpty()) return TokenValidation.FailedTokenValidationResult;
+
+            return await _tokenSignatureProvider.ValidateAccessTokenAsync(_httpTokenProvider.AccessToken);
+        }
 
         public Task<string> DestroyAsync()
         {
@@ -108,6 +114,8 @@ namespace IdentityAuthentication.Token
 
         public async Task<string> RefreshAsync()
         {
+            if (_configurationProvider.Authentication.EnableTokenRefresh == false) return string.Empty;
+
             var r = await CheckRefreshTokenAsync();
             if (r == false) return string.Empty;
 

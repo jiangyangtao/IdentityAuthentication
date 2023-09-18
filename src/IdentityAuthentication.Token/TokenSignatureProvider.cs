@@ -30,7 +30,7 @@ namespace IdentityAuthentication.Token
             _jwtSecurityTokenHandler = new JwtSecurityTokenHandler();
         }
 
-        #region AccessToken    
+        #region AccessToken
 
         private TokenValidation AccessTokenSignature { set; get; }
 
