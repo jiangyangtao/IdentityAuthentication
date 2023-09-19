@@ -65,15 +65,12 @@ namespace IdentityAuthentication.Token
 
         public Task<IToken> GenerateAsync(AuthenticationResult authenticationResult)
         {
-            var claims = new List<Claim>
-            {
-                new Claim(IdentityAuthenticationDefaultKeys.IssueTime,DateTime.Now.ToString()),
-                new Claim(IdentityAuthenticationDefaultKeys.Expiration,TokenExpirationTime.ToString()),
-            };
+            var tokenInfo = TokenInfo.CreateToken(authenticationResult);
 
-            claims.AddRange(authenticationResult.GetClaims());
-            var _claims = claims.ToArray();
-            var accessToken = _tokenSignatureProvider.BuildAccessToken(_claims);
+            tokenInfo.IssueTime = DateTime.Now;
+            tokenInfo.ExpirationTime = TokenExpirationTime;
+
+            var accessToken = _tokenSignatureProvider.BuildAccessToken(tokenInfo);
             var token = TokenResult.CreateToken(accessToken: accessToken, _configurationProvider.AccessToken.ExpirationTime, authenticationResult.ToReadOnlyDictionary());
 
             if (_configurationProvider.Authentication.EnableTokenRefresh)
@@ -84,8 +81,6 @@ namespace IdentityAuthentication.Token
 
             return Task.FromResult(token);
         }
-
-
 
         public Task<AuthenticationResult> GetAuthenticationResultAsync()
         {

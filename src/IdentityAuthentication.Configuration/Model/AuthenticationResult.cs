@@ -81,10 +81,5 @@ namespace IdentityAuthentication.Configuration.Model
         {
             return new(userId, username, grantSource, grantType, client, metadata);
         }
-
-        public static bool TryParse(string json,out AuthenticationResult result)
-        {
-
-        }
     }
 }

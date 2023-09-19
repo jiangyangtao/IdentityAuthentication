@@ -34,13 +34,12 @@ namespace IdentityAuthentication.Token
 
         private TokenValidation AccessTokenSignature { set; get; }
 
-        public string BuildAccessToken(Claim[] claims, DateTime? notBefore = null, DateTime? expirationTime = null)
+        public string BuildAccessToken(TokenInfo tokenInfo)
         {
             AccessTokenSignature ??= new TokenValidation(_configurationProvider.AccessToken, PrivateCredentials);
 
-            var nbf = notBefore ?? DateTime.Now;
-            var expiration = expirationTime ?? DateTime.Now.AddSeconds(_configurationProvider.AccessToken.ExpirationTime);
-            var securityToken = AccessTokenSignature.GenerateSecurityToken(claims, nbf, expiration);
+            var claims = tokenInfo.BuildClaims();
+            var securityToken = AccessTokenSignature.GenerateSecurityToken(claims, tokenInfo.NotBefore, tokenInfo.ExpirationTime);
             return _jwtSecurityTokenHandler.WriteToken(securityToken);
         }
 

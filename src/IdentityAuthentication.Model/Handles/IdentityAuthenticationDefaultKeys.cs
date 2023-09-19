@@ -19,10 +19,5 @@ namespace IdentityAuthentication.Model.Handles
         /// 过期时间
         /// </summary>
         public const string Expiration = ClaimTypes.Expiration;
-
-        /// <summary>
-        /// 签发时间
-        /// </summary>
-        public const string IssueTime = "IssueTime";
     }
 }

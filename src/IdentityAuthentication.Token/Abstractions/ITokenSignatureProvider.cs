@@ -5,7 +5,7 @@ namespace IdentityAuthentication.Token.Abstractions
 {
     internal interface ITokenSignatureProvider
     {
-        string BuildAccessToken(Claim[] claims, DateTime? notBefore = null, DateTime? expirationTime = null);
+        string BuildAccessToken(TokenInfo tokenInfo);
 
         Task<TokenValidationResult> ValidateAccessTokenAsync(string token);
 
