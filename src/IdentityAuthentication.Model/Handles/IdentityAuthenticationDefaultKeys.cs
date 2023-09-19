@@ -14,10 +14,5 @@ namespace IdentityAuthentication.Model.Handles
         public const string RefreToken = "refresh-token";
 
         public const string Authorization = "Authorization";
-
-        /// <summary>
-        /// 过期时间
-        /// </summary>
-        public const string Expiration = ClaimTypes.Expiration;
     }
 }

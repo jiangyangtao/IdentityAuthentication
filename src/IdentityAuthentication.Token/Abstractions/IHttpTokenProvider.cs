@@ -1,4 +1,5 @@
 ﻿using IdentityAuthentication.Model.Extensions;
+using Microsoft.IdentityModel.Tokens;
 using System.Security.Claims;
 
 namespace IdentityAuthentication.Token.Abstractions
@@ -14,5 +15,7 @@ namespace IdentityAuthentication.Token.Abstractions
         bool RefreshTokenIsEmpty => RefreshToken.IsNullOrEmpty();
 
         IEnumerable<Claim> UserClaims { get; }
+
+        TokenInfo? AccessTokenInfo { get; }
     }
 }

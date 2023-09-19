@@ -22,15 +22,15 @@ namespace IdentityAuthentication.Token
             Metadata = result.Metadata;
         }
 
-        public string UserId { get; }
+        public string UserId { set; get; }
 
-        public string Username { get; }
+        public string Username { set; get; }
 
-        public string GrantSource { get; }
+        public string GrantSource { set; get; }
 
-        public string GrantType { get; }
+        public string GrantType { set; get; }
 
-        public string Client { get; }
+        public string Client { set; get; }
 
         public DateTime NotBefore { set; get; } = DateTime.Now;
 
@@ -38,7 +38,7 @@ namespace IdentityAuthentication.Token
 
         public DateTime IssueTime { set; get; } = DateTime.Now;
 
-        public IReadOnlyDictionary<string, string> Metadata { get; }
+        public IReadOnlyDictionary<string, string> Metadata { set; get; }
 
         #region static property
 
@@ -58,7 +58,7 @@ namespace IdentityAuthentication.Token
 
         public static string ExpirationKey = ClaimTypes.Expiration;
 
-        public static string[] TokenPropertyKeys = new string[] 
+        public static string[] TokenPropertyKeys = new string[]
         {
             UserIdKey ,
             UsernameKey,
@@ -117,39 +117,80 @@ namespace IdentityAuthentication.Token
 
         public static TokenInfo CreateToken(AuthenticationResult result) => new(result);
 
-        public static bool TryParse(Claim[] claims, out TokenInfo? tokenInfo)
+        public static bool TryParse(IEnumerable<Claim> claims, out TokenInfo? tokenInfo)
         {
             tokenInfo = null;
             if (claims.IsNullOrEmpty()) return false;
 
+
             var userIdClaim = claims.FirstOrDefault(a => a.Type == UserIdKey);
             if (userIdClaim == null) return false;
+            if (userIdClaim.Value.IsNullOrEmpty()) return false;
+
 
             var usernameClaim = claims.FirstOrDefault(a => a.Type == UsernameKey);
             if (usernameClaim == null) return false;
+            if (usernameClaim.Value.IsNullOrEmpty()) return false;
+
 
             var grantSourceClaim = claims.FirstOrDefault(a => a.Type == GrantSourceKey);
             if (grantSourceClaim == null) return false;
+            if (grantSourceClaim.Value.IsNullOrEmpty()) return false;
+
 
             var grantTypeClaim = claims.FirstOrDefault(a => a.Type == GrantTypeKey);
             if (grantTypeClaim == null) return false;
+            if (grantTypeClaim.Value.IsNullOrEmpty()) return false;
+
 
             var clientClaim = claims.FirstOrDefault(a => a.Type == ClientKey);
             if (clientClaim == null) return false;
+            if (clientClaim.Value.IsNullOrEmpty()) return false;
+
+
 
             var notBeforeClaim = claims.FirstOrDefault(a => a.Type == NotBeforeKey);
             if (notBeforeClaim == null) return false;
 
+            var notBeforeClaimParseResult = DateTime.TryParse(notBeforeClaim.Value, out DateTime notBefore);
+            if (notBeforeClaimParseResult == false) return false;
+
+
+
             var issueTimeClaim = claims.FirstOrDefault(a => a.Type == IssueTimeKey);
             if (issueTimeClaim == null) return false;
+
+            var issueTimeClaimParseResult = DateTime.TryParse(issueTimeClaim.Value, out DateTime issueTime);
+            if (issueTimeClaimParseResult == false) return false;
+
+
 
             var expirationTimeClaim = claims.FirstOrDefault(a => a.Type == ExpirationKey);
             if (expirationTimeClaim == null) return false;
 
-            var metadataClaims = claims.Where(a => TokenPropertyKeys.Contains(a.Type) == false).ToDictionary(a => a.Type, a => a.Value);
-            if (metadataClaims.IsNullOrEmpty()) metadataClaims = new Dictionary<string, string>();
+            var expirationTimeParseResult = DateTime.TryParse(expirationTimeClaim.Value, out DateTime expirationTime);
+            if (expirationTimeParseResult == false) return false;
 
 
+            var metadata = new Dictionary<string, string>();
+            var metadataClaims = claims.Where(a => TokenPropertyKeys.Contains(a.Type) == false).ToArray();
+            if (metadataClaims.NotNullAndEmpty()) metadata = metadataClaims.ToDictionary(a => a.Type, a => a.Value);
+
+
+            tokenInfo = new()
+            {
+                UserId = userIdClaim.Value,
+                Username = userIdClaim.Value,
+                GrantSource = grantSourceClaim.Value,
+                GrantType = grantTypeClaim.Value,
+                Client = clientClaim.Value,
+                Metadata = metadata,
+                NotBefore = notBefore,
+                IssueTime = issueTime,
+                ExpirationTime = expirationTime,
+            };
+
+            return true;
         }
     }
 }

@@ -29,5 +29,19 @@ namespace IdentityAuthentication.Token
                 return claims;
             }
         }
+
+        public TokenInfo? AccessTokenInfo
+        {
+            get
+            {
+                if (UserClaims.IsNullOrEmpty()) return null;
+
+                var result = TokenInfo.TryParse(UserClaims, out TokenInfo? accessToken);
+                if (result == false) return null;
+                if (accessToken == null) return null;
+
+                return accessToken;
+            }
+        }
     }
 }

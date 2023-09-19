@@ -33,23 +33,17 @@ namespace IdentityAuthentication.Token
 
         public async Task<TokenValidationResult> AuthorizeAsync()
         {
-            if (_httpTokenProvider.AccessToken.IsNullOrEmpty()) return TokenValidation.FailedTokenValidationResult;
+            if (_httpTokenProvider.AccessTokenIsEmpty) return TokenValidation.FailedTokenValidationResult;
 
             return await _tokenSignatureProvider.ValidateAccessTokenAsync(_httpTokenProvider.AccessToken);
         }
 
         public Task<string> DestroyAsync()
         {
-            var issueTime = GetDateTimeClaim(IdentityAuthenticationDefaultKeys.IssueTime);
-            var expirationTime = issueTime.AddSeconds(1);
+            var tokenInfo = _httpTokenProvider.AccessTokenInfo ?? throw new Exception("Authentication failed");
 
-            var claims = new List<Claim>();
-            foreach (var item in _httpTokenProvider.UserClaims)
-            {
-                claims.Add(item.Clone());
-            }
-
-            var accessToken = _tokenSignatureProvider.BuildAccessToken(claims.ToArray(), issueTime, expirationTime);
+            tokenInfo.ExpirationTime = tokenInfo.IssueTime.AddSeconds(1);
+            var accessToken = _tokenSignatureProvider.BuildAccessToken(tokenInfo);
             return Task.FromResult(accessToken);
         }
 
@@ -131,8 +125,10 @@ namespace IdentityAuthentication.Token
 
         private async Task<bool> CheckRefreshTokenAsync()
         {
-            var expirationTime = GetDateTimeClaim(IdentityAuthenticationDefaultKeys.Expiration);
-            var timeSpan = expirationTime - DateTime.Now;
+            var tokenInfo = _httpTokenProvider.AccessTokenInfo;
+            if (tokenInfo == null) return false;
+
+            var timeSpan = tokenInfo.ExpirationTime - DateTime.Now;
             if (timeSpan.TotalSeconds > _configurationProvider.AccessToken.RefreshTime) return false;
 
             var refreshToken = _httpTokenProvider.RefreshToken;
