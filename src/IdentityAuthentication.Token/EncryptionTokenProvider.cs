@@ -1,6 +1,8 @@
 ﻿using IdentityAuthentication.Configuration.Model;
+using IdentityAuthentication.Model;
 using IdentityAuthentication.Model.Enums;
 using IdentityAuthentication.Token.Abstractions;
+using IdentityAuthentication.Token.TokenEncryption;
 using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Collections.Generic;
@@ -12,17 +14,28 @@ namespace IdentityAuthentication.Token
 {
     internal class EncryptionTokenProvider : ITokenProvider
     {
-        private readonly ITokenEncryptionProviderFactory _tokenEncryptionProviderFactory;
+        private readonly ITokenEncryptionProvider _tokenEncryptionProvider;
+        private readonly IHttpTokenProvider _httpTokenProvider;
 
-        public EncryptionTokenProvider(ITokenEncryptionProviderFactory tokenEncryptionProviderFactory)
+        public EncryptionTokenProvider(
+            ITokenEncryptionProviderFactory tokenEncryptionProviderFactory,
+            IHttpTokenProvider httpTokenProvider)
         {
-            _tokenEncryptionProviderFactory = tokenEncryptionProviderFactory;
+            _tokenEncryptionProvider = tokenEncryptionProviderFactory.CreateTokenEncryptionProvider();
+            _httpTokenProvider = httpTokenProvider;
         }
 
         public TokenType TokenType => TokenType.Encrypt;
 
         public Task<TokenValidationResult> AuthorizeAsync()
         {
+            if (_httpTokenProvider.AccessTokenIsEmpty) return TokenValidation.FailedTokenValidationResult;
+
+            var tokenJson = _tokenEncryptionProvider.Decrypt(_httpTokenProvider.AccessToken);
+            if (tokenJson.IsNullOrEmpty()) return TokenValidation.FailedTokenValidationResult;
+
+            var r = AuthenticationResult.TryParse(tokenJson)
+
             throw new NotImplementedException();
         }
 

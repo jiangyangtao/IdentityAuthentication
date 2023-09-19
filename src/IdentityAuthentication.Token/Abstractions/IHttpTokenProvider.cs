@@ -1,4 +1,5 @@
-﻿using System.Security.Claims;
+﻿using IdentityAuthentication.Model.Extensions;
+using System.Security.Claims;
 
 namespace IdentityAuthentication.Token.Abstractions
 {
@@ -7,6 +8,10 @@ namespace IdentityAuthentication.Token.Abstractions
         string? AccessToken { get; }
 
         string? RefreshToken { get; }
+
+        bool AccessTokenIsEmpty => AccessToken.IsNullOrEmpty();
+
+        bool RefreshTokenIsEmpty => RefreshToken.IsNullOrEmpty();
 
         IEnumerable<Claim> UserClaims { get; }
     }
