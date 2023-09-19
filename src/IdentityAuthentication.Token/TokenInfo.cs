@@ -116,6 +116,26 @@ namespace IdentityAuthentication.Token
             return AuthenticationResult.CreateAuthenticationResult(UserId, Username, GrantSource, GrantType, Client, Metadata);
         }
 
+        public IReadOnlyDictionary<string, string> BuildDictionary()
+        {
+            var dic = new Dictionary<string, string>
+            {
+                {UserIdKey, UserId},
+                {UserIdKey,Username},
+                {GrantSourceKey,GrantType},
+                {GrantSourceKey,GrantSource},
+                {ClientKey,Client},
+            };
+            if (Metadata.IsNullOrEmpty()) return dic;
+
+            foreach (var item in Metadata)
+            {
+                dic.Add(item.Key, item.Value);
+            }
+
+            return dic;
+        }
+
         #endregion
 
         #region Static Methods  

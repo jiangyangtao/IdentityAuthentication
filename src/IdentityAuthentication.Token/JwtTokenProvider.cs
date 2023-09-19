@@ -65,27 +65,19 @@ namespace IdentityAuthentication.Token
 
         public Task<AuthenticationResult> GetAuthenticationResultAsync()
         {
-            var userIdClaim = _httpTokenProvider.UserClaims.FirstOrDefault(a => a.Type == AuthenticationResult.UserIdPropertyName) ?? throw new Exception("Authentication failed");
-            var usernameClaim = _httpTokenProvider.UserClaims.FirstOrDefault(a => a.Type == AuthenticationResult.UsernamePropertyName) ?? throw new Exception("Authentication failed");
-            var grantTypeClaim = _httpTokenProvider.UserClaims.FirstOrDefault(a => a.Type == AuthenticationResult.GrantTypePropertyName) ?? throw new Exception("Authentication failed");
-            var grantSourceClaim = _httpTokenProvider.UserClaims.FirstOrDefault(a => a.Type == AuthenticationResult.GrantSourcePropertyName) ?? throw new Exception("Authentication failed");
-            var clientClaim = _httpTokenProvider.UserClaims.FirstOrDefault(a => a.Type == AuthenticationResult.ClientPropertyName) ?? throw new Exception("Authentication failed");
+            var accessTokenInfo = _httpTokenProvider.AccessTokenInfo ?? throw new Exception("Authentication failed");
 
-            var result = AuthenticationResult.CreateAuthenticationResult(
-                userId: userIdClaim.Value,
-                username: usernameClaim.Value,
-                grantSource: grantSourceClaim.Value,
-                grantType: grantTypeClaim.Value,
-                client: clientClaim.Value,
-                metadata: null);
-
+            var result = accessTokenInfo.BuildAuthenticationResult();
             return Task.FromResult(result);
         }
 
         public Task<IReadOnlyDictionary<string, string>?> GetTokenInfoAsync()
         {
-            var claiims = (IReadOnlyDictionary<string, string>)_httpTokenProvider.UserClaims.ToDictionary(a => a.Type, a => a.Value);
-            return Task.FromResult(claiims);
+            var accessTokenInfo = _httpTokenProvider.AccessTokenInfo ?? throw new Exception("Authentication failed");
+            if (accessTokenInfo == null) return null;
+
+            var claims = accessTokenInfo.BuildDictionary();
+            return Task.FromResult(claims);
         }
 
         public async Task<string> RefreshAsync()

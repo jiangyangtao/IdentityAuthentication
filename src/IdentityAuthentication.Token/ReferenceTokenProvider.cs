@@ -49,7 +49,7 @@ namespace IdentityAuthentication.Token
 
         public async Task<string> DestroyAsync()
         {
-            if (_httpTokenProvider.AccessToken.IsNullOrEmpty()) return string.Empty;
+            if (_httpTokenProvider.AccessTokenIsEmpty) return string.Empty;
 
             await _cacheProvider.RemoveAsync(_httpTokenProvider.AccessToken);
             return _httpTokenProvider.AccessToken;
@@ -57,12 +57,10 @@ namespace IdentityAuthentication.Token
 
         public async Task<IToken> GenerateAsync(AuthenticationResult authenticationResult)
         {
-            var expirationTime = DateTime.Now.AddSeconds(_authenticationConfigurationProvider.AccessToken.ExpirationTime);
-            var token = new ReferenceToken(authenticationResult, expirationTime);
+            var token = new ReferenceToken(authenticationResult, _authenticationConfigurationProvider.AccessToken.TokenExpirationTime);
 
             var accessToken = Guid.NewGuid().ToString();
             await _cacheProvider.SetAsync(accessToken, token);
-
             return TokenResult.CreateToken(accessToken, _authenticationConfigurationProvider.AccessToken.ExpirationTime, authenticationResult.ToReadOnlyDictionary());
         }
 
@@ -92,7 +90,7 @@ namespace IdentityAuthentication.Token
             if (_authenticationConfigurationProvider.Authentication.EnableTokenRefresh == false) return string.Empty;
 
             var token = await _cacheProvider.GetAsync(_httpTokenProvider.AccessToken);
-            token.ExpirationTime = token.ExpirationTime.AddSeconds(_authenticationConfigurationProvider.AccessToken.ExpirationTime);
+            token.ExpirationTime = _authenticationConfigurationProvider.AccessToken.TokenExpirationTime;
 
             await _cacheProvider.SetAsync(_httpTokenProvider.AccessToken, token);
             return _httpTokenProvider.AccessToken;
