@@ -72,6 +72,7 @@ namespace IdentityAuthentication.Token
 
         #endregion
 
+        #region Methods
         public override string ToString() => JsonConvert.SerializeObject(this);
 
         public Claim[] BuildClaims()
@@ -115,7 +116,20 @@ namespace IdentityAuthentication.Token
             return AuthenticationResult.CreateAuthenticationResult(UserId, Username, GrantSource, GrantType, Client, Metadata);
         }
 
+        #endregion
+
+        #region Static Methods  
+
         public static TokenInfo CreateToken(AuthenticationResult result) => new(result);
+
+        public static bool TryParse(IDictionary<string, object> claimDictionary, out TokenInfo? tokenInfo)
+        {
+            tokenInfo = null;
+            if (claimDictionary.IsNullOrEmpty()) return false;
+
+            var claims = claimDictionary.Select(a => new Claim(a.Key, a.Value.ToString())).ToArray();
+            return TryParse(claims, out tokenInfo);
+        }
 
         public static bool TryParse(IEnumerable<Claim> claims, out TokenInfo? tokenInfo)
         {
@@ -192,5 +206,18 @@ namespace IdentityAuthentication.Token
 
             return true;
         }
+
+        public bool Equals(TokenInfo tokenInfo)
+        {
+            if (UserId != tokenInfo.UserId) return false;
+            if (Username != tokenInfo.Username) return false;
+            if (GrantSource != tokenInfo.GrantSource) return false;
+            if (GrantType != tokenInfo.GrantType) return false;
+            if (Client != tokenInfo.Client) return false;
+
+            return true;
+        }
+
+        #endregion
     }
 }

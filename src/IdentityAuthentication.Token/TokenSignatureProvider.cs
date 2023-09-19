@@ -34,12 +34,12 @@ namespace IdentityAuthentication.Token
 
         private TokenValidation AccessTokenSignature { set; get; }
 
-        public string BuildAccessToken(TokenInfo tokenInfo)
+        public string BuildAccessToken(TokenInfo accessToken)
         {
             AccessTokenSignature ??= new TokenValidation(_configurationProvider.AccessToken, PrivateCredentials);
 
-            var claims = tokenInfo.BuildClaims();
-            var securityToken = AccessTokenSignature.GenerateSecurityToken(claims, tokenInfo.NotBefore, tokenInfo.ExpirationTime);
+            var claims = accessToken.BuildClaims();
+            var securityToken = AccessTokenSignature.GenerateSecurityToken(claims, accessToken.NotBefore, accessToken.ExpirationTime);
             return _jwtSecurityTokenHandler.WriteToken(securityToken);
         }
 
@@ -59,12 +59,13 @@ namespace IdentityAuthentication.Token
 
         private TokenValidation RefreshTokenSignature { set; get; }
 
-        public string BuildRefreshToken(Claim[] claims)
+        public string BuildRefreshToken(TokenInfo refreshToken)
         {
             if (_configurationProvider.Authentication.EnableTokenRefresh == false) return string.Empty;
 
             RefreshTokenSignature ??= new TokenValidation(_configurationProvider.RefreshToken, PrivateCredentials);
-            var securityToken = RefreshTokenSignature.GenerateSecurityToken(claims, DateTime.Now, DateTime.Now.AddDays(_configurationProvider.RefreshToken.ExpirationTime));
+            var claims = refreshToken.BuildClaims();
+            var securityToken = RefreshTokenSignature.GenerateSecurityToken(claims, refreshToken.NotBefore, refreshToken.ExpirationTime);
 
             return _jwtSecurityTokenHandler.WriteToken(securityToken);
         }

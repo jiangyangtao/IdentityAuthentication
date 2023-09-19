@@ -8,5 +8,7 @@ namespace IdentityAuthentication.Model.Configurations
         public long RefreshTime { set; get; } = 0;
 
         public const string ConfigurationKey = "AccessToken";
+
+        public DateTime TokenExpirationTime => DateTime.Now.AddSeconds(ExpirationTime);
     }
 }

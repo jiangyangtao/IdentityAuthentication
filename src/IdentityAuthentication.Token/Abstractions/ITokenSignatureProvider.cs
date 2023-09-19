@@ -9,7 +9,7 @@ namespace IdentityAuthentication.Token.Abstractions
 
         Task<TokenValidationResult> ValidateAccessTokenAsync(string token);
 
-        string BuildRefreshToken(Claim[] claims);
+        string BuildRefreshToken(TokenInfo refreshToken);
 
         Task<TokenValidationResult?> ValidateRefreshTokenAsync(string token);
     }

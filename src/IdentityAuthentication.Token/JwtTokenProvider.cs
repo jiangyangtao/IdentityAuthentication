@@ -2,11 +2,8 @@
 using IdentityAuthentication.Configuration.Model;
 using IdentityAuthentication.Model;
 using IdentityAuthentication.Model.Enums;
-using IdentityAuthentication.Model.Handles;
 using IdentityAuthentication.Token.Abstractions;
 using Microsoft.IdentityModel.Tokens;
-using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
 
 namespace IdentityAuthentication.Token
 {
@@ -29,8 +26,6 @@ namespace IdentityAuthentication.Token
 
         public TokenType TokenType => TokenType.JWT;
 
-        private DateTime TokenExpirationTime => DateTime.Now.AddSeconds(_configurationProvider.AccessToken.ExpirationTime);
-
         public async Task<TokenValidationResult> AuthorizeAsync()
         {
             if (_httpTokenProvider.AccessTokenIsEmpty) return TokenValidation.FailedTokenValidationResult;
@@ -47,29 +42,21 @@ namespace IdentityAuthentication.Token
             return Task.FromResult(accessToken);
         }
 
-        private DateTime GetDateTimeClaim(string type)
-        {
-            var claim = _httpTokenProvider.UserClaims.FirstOrDefault(a => a.Type == type) ?? throw new Exception("Authentication failed");
-
-            var parseResult = DateTime.TryParse(claim.Value, out DateTime time);
-            if (parseResult == false) throw new Exception("Authentication failed");
-
-            return time;
-        }
-
         public Task<IToken> GenerateAsync(AuthenticationResult authenticationResult)
         {
-            var tokenInfo = TokenInfo.CreateToken(authenticationResult);
+            var accessTokenInfo = TokenInfo.CreateToken(authenticationResult);
 
-            tokenInfo.IssueTime = DateTime.Now;
-            tokenInfo.ExpirationTime = TokenExpirationTime;
+            accessTokenInfo.ExpirationTime = _configurationProvider.AccessToken.TokenExpirationTime;
 
-            var accessToken = _tokenSignatureProvider.BuildAccessToken(tokenInfo);
+            var accessToken = _tokenSignatureProvider.BuildAccessToken(accessTokenInfo);
             var token = TokenResult.CreateToken(accessToken: accessToken, _configurationProvider.AccessToken.ExpirationTime, authenticationResult.ToReadOnlyDictionary());
 
             if (_configurationProvider.Authentication.EnableTokenRefresh)
             {
-                var refreshToken = _tokenSignatureProvider.BuildRefreshToken(_claims);
+                var refreshTokenInfo = TokenInfo.CreateToken(authenticationResult);
+                refreshTokenInfo.ExpirationTime = _configurationProvider.RefreshToken.TokenExpirationTime;
+
+                var refreshToken = _tokenSignatureProvider.BuildRefreshToken(refreshTokenInfo);
                 token = TokenResult.CreateToken(accessToken, _configurationProvider.AccessToken.ExpirationTime, authenticationResult.ToReadOnlyDictionary(), refreshToken: refreshToken);
             }
 
@@ -105,30 +92,22 @@ namespace IdentityAuthentication.Token
         {
             if (_configurationProvider.Authentication.EnableTokenRefresh == false) return string.Empty;
 
-            var r = await CheckRefreshTokenAsync();
+            var r = await ValidateRefreshTokenAsync();
             if (r == false) return string.Empty;
 
-            var expirationTime = TokenExpirationTime;
-            var issueTime = GetDateTimeClaim(IdentityAuthenticationDefaultKeys.IssueTime);
+            var accessTokenInfo = _httpTokenProvider.AccessTokenInfo;
+            accessTokenInfo.ExpirationTime = _configurationProvider.AccessToken.TokenExpirationTime;
 
-            var claims = new List<Claim>();
-            foreach (var item in _httpTokenProvider.UserClaims)
-            {
-                if (item.Type.Equals(JwtRegisteredClaimNames.Aud, StringComparison.OrdinalIgnoreCase)) continue;
-
-                claims.Add(item.Clone());
-            }
-
-            var accessToken = _tokenSignatureProvider.BuildAccessToken(claims.ToArray(), issueTime, expirationTime);
+            var accessToken = _tokenSignatureProvider.BuildAccessToken(accessTokenInfo);
             return accessToken;
         }
 
-        private async Task<bool> CheckRefreshTokenAsync()
+        private async Task<bool> ValidateRefreshTokenAsync()
         {
-            var tokenInfo = _httpTokenProvider.AccessTokenInfo;
-            if (tokenInfo == null) return false;
+            var accessTokenInfo = _httpTokenProvider.AccessTokenInfo;
+            if (accessTokenInfo == null) return false;
 
-            var timeSpan = tokenInfo.ExpirationTime - DateTime.Now;
+            var timeSpan = accessTokenInfo.ExpirationTime - DateTime.Now;
             if (timeSpan.TotalSeconds > _configurationProvider.AccessToken.RefreshTime) return false;
 
             var refreshToken = _httpTokenProvider.RefreshToken;
@@ -137,18 +116,11 @@ namespace IdentityAuthentication.Token
             var tokenValidationResult = await _tokenSignatureProvider.ValidateRefreshTokenAsync(refreshToken);
             if (tokenValidationResult.IsValid == false) return false;
 
-            foreach (var refreshClaim in tokenValidationResult.Claims)
-            {
-                if (refreshClaim.Key.Equals(JwtRegisteredClaimNames.Exp, StringComparison.OrdinalIgnoreCase)) continue;
-                if (refreshClaim.Key.Equals(JwtRegisteredClaimNames.Iss, StringComparison.OrdinalIgnoreCase)) continue;
-                if (refreshClaim.Key.Equals(JwtRegisteredClaimNames.Aud, StringComparison.OrdinalIgnoreCase)) continue;
+            var r = TokenInfo.TryParse(tokenValidationResult.Claims, out TokenInfo? refreshTokenInfo);
+            if (r == false) return false;
+            if (refreshTokenInfo == null) return false;
 
-                var accessClaim = _httpTokenProvider.UserClaims.FirstOrDefault(a => a.Type == refreshClaim.Key);
-                if (accessClaim == null) return false;
-                if (refreshClaim.Value.ToString() != accessClaim.Value) return false;
-            }
-
-            return true;
+            return refreshTokenInfo.Equals(accessTokenInfo);
         }
     }
 }
