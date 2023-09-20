@@ -1,6 +1,5 @@
 ﻿using IdentityAuthentication.Cache.Abstractions;
 using IdentityAuthentication.Configuration.Abstractions;
-using IdentityAuthentication.Configuration.Model;
 using IdentityAuthentication.Model;
 using IdentityAuthentication.Model.Enums;
 using IdentityAuthentication.Token.Abstractions;
@@ -55,25 +54,24 @@ namespace IdentityAuthentication.Token
             return _httpTokenProvider.AccessToken;
         }
 
-        public async Task<IToken> GenerateAsync(AuthenticationResult authenticationResult)
+        public async Task<IToken> GenerateAsync(IAuthenticationResult authenticationResult)
         {
-
             var token = TokenInfo.CreateToken(authenticationResult);
             token.ExpirationTime = _authenticationConfigurationProvider.AccessToken.TokenExpirationTime;
 
             var accessToken = Guid.NewGuid().ToString();
             await _cacheProvider.SetAsync(accessToken, token);
-            return TokenResult.CreateToken(accessToken, _authenticationConfigurationProvider.AccessToken.ExpirationTime, authenticationResult.ToReadOnlyDictionary());
+            return TokenResult.CreateToken(accessToken, _authenticationConfigurationProvider.AccessToken.ExpirationTime, token.BuildDictionary());
         }
 
-        public async Task<AuthenticationResult> GetAuthenticationResultAsync()
+        public async Task<IAuthenticationResult> GetAuthenticationResultAsync()
         {
             if (_httpTokenProvider.AccessToken.IsNullOrEmpty()) return null;
 
             var token = await _cacheProvider.GetAsync<TokenInfo>(_httpTokenProvider.AccessToken);
             if (token == null) return null;
 
-            return token.BuildAuthenticationResult();
+            return token.AuthenticationResult;
         }
 
         public async Task<IReadOnlyDictionary<string, string>?> GetTokenInfoAsync()

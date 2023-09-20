@@ -1,5 +1,4 @@
 ﻿using IdentityAuthentication.Configuration.Abstractions;
-using IdentityAuthentication.Configuration.Model;
 using IdentityAuthentication.Extensions;
 using IdentityAuthentication.Model.Extensions;
 using Newtonsoft.Json;
@@ -13,7 +12,7 @@ namespace IdentityAuthentication.Token
         {
         }
 
-        public TokenInfo(AuthenticationResult result)
+        private TokenInfo(IAuthenticationResult result)
         {
             UserId = result.UserId;
             Username = result.Username;
@@ -132,10 +131,8 @@ namespace IdentityAuthentication.Token
             }
         }
 
-        public AuthenticationResult BuildAuthenticationResult()
-        {
-            return AuthenticationResult.CreateAuthenticationResult(UserId, Username, GrantSource, GrantType, Client, Metadata);
-        }
+        public IAuthenticationResult AuthenticationResult => this;
+
 
         public IReadOnlyDictionary<string, string> BuildDictionary()
         {
@@ -172,7 +169,7 @@ namespace IdentityAuthentication.Token
 
         #region Static Methods  
 
-        public static TokenInfo CreateToken(AuthenticationResult result) => new(result);
+        public static TokenInfo CreateToken(IAuthenticationResult result) => new(result);
 
         public static bool TryParse(IDictionary<string, object> claimDictionary, out TokenInfo? tokenInfo)
         {

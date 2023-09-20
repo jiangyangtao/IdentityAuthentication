@@ -1,5 +1,4 @@
 ﻿using IdentityAuthentication.Configuration.Abstractions;
-using IdentityAuthentication.Configuration.Model;
 using IdentityAuthentication.Model.Enums;
 using Microsoft.IdentityModel.Tokens;
 
@@ -9,13 +8,13 @@ namespace IdentityAuthentication.Token.Abstractions
     {
         TokenType TokenType { get; }
 
-        Task<IToken> GenerateAsync(AuthenticationResult authenticationResult);
+        Task<IToken> GenerateAsync(IAuthenticationResult authenticationResult);
 
         Task<string> RefreshAsync();
 
         Task<string> DestroyAsync();
 
-        Task<AuthenticationResult> GetAuthenticationResultAsync();
+        Task<IAuthenticationResult> GetAuthenticationResultAsync();
 
         Task<TokenValidationResult> AuthorizeAsync();
 

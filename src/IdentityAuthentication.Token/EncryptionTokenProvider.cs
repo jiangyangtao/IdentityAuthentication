@@ -1,5 +1,4 @@
 ﻿using IdentityAuthentication.Configuration.Abstractions;
-using IdentityAuthentication.Configuration.Model;
 using IdentityAuthentication.Model;
 using IdentityAuthentication.Model.Enums;
 using IdentityAuthentication.Token.Abstractions;
@@ -64,7 +63,7 @@ namespace IdentityAuthentication.Token
             return Task.FromResult(accessToken);
         }
 
-        public Task<IToken> GenerateAsync(AuthenticationResult authenticationResult)
+        public Task<IToken> GenerateAsync(IAuthenticationResult authenticationResult)
         {
             var tokenInfo = TokenInfo.CreateToken(authenticationResult);
             tokenInfo.ExpirationTime = _configurationProvider.AccessToken.TokenExpirationTime;
@@ -77,13 +76,12 @@ namespace IdentityAuthentication.Token
             return Task.FromResult(token);
         }
 
-        public Task<AuthenticationResult> GetAuthenticationResultAsync()
+        public Task<IAuthenticationResult> GetAuthenticationResultAsync()
         {
             var (r, tokenInfo) = ValidateAccessToken();
             if (r == false) throw new SecurityTokenDecryptionFailedException("Authentication failed");
 
-            var result = tokenInfo.BuildAuthenticationResult();
-            return Task.FromResult(result);
+            return Task.FromResult(tokenInfo.AuthenticationResult);
         }
 
         public async Task<IReadOnlyDictionary<string, string>?> GetTokenInfoAsync()

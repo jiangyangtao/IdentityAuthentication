@@ -1,5 +1,4 @@
 ﻿using IdentityAuthentication.Configuration.Abstractions;
-using IdentityAuthentication.Configuration.Model;
 using IdentityAuthentication.Model;
 using IdentityAuthentication.Model.Enums;
 using IdentityAuthentication.Token.Abstractions;
@@ -42,7 +41,7 @@ namespace IdentityAuthentication.Token
             return Task.FromResult(accessToken);
         }
 
-        public Task<IToken> GenerateAsync(AuthenticationResult authenticationResult)
+        public Task<IToken> GenerateAsync(IAuthenticationResult authenticationResult)
         {
             var accessTokenInfo = TokenInfo.CreateToken(authenticationResult);
 
@@ -63,12 +62,11 @@ namespace IdentityAuthentication.Token
             return Task.FromResult(token);
         }
 
-        public Task<AuthenticationResult> GetAuthenticationResultAsync()
+        public Task<IAuthenticationResult> GetAuthenticationResultAsync()
         {
             var accessTokenInfo = _httpTokenProvider.AccessTokenInfo ?? throw new Exception("Authentication failed");
 
-            var result = accessTokenInfo.BuildAuthenticationResult();
-            return Task.FromResult(result);
+            return Task.FromResult(accessTokenInfo.AuthenticationResult);
         }
 
         public Task<IReadOnlyDictionary<string, string>?> GetTokenInfoAsync()
