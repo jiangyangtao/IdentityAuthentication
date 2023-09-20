@@ -1,4 +1,4 @@
-﻿namespace IdentityAuthentication.Configuration.Abstractions
+﻿namespace IdentityAuthentication.Abstractions
 {
     public interface IToken
     {
