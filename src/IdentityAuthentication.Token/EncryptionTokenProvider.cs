@@ -74,21 +74,37 @@ namespace IdentityAuthentication.Token
             var json = tokenInfo.ToString();
             var accessToken = _tokenEncryptionProvider.Encrypt(json);
             var token = TokenResult.CreateToken(accessToken, _configurationProvider.AccessToken.ExpirationTime, tokenInfo.BuildDictionary());
+            return Task.FromResult(token);
         }
 
         public Task<AuthenticationResult> GetAuthenticationResultAsync()
         {
-            throw new NotImplementedException();
+            var (r, tokenInfo) = ValidateAccessToken();
+            if (r == false) throw new SecurityTokenDecryptionFailedException("Authentication failed");
+
+            var result = tokenInfo.BuildAuthenticationResult();
+            return Task.FromResult(result);
         }
 
-        public Task<IReadOnlyDictionary<string, string>?> GetTokenInfoAsync()
+        public async Task<IReadOnlyDictionary<string, string>?> GetTokenInfoAsync()
         {
-            throw new NotImplementedException();
+            var (r, tokenInfo) = ValidateAccessToken();
+            if (r == false) return null;
+
+            var dic = tokenInfo.BuildDictionary();
+            return await Task.FromResult(dic);
         }
 
         public Task<string> RefreshAsync()
         {
-            throw new NotImplementedException();
+            var (r, tokenInfo) = ValidateAccessToken();
+            if (r == false) return Task.FromResult(string.Empty);
+
+            tokenInfo.ExpirationTime = _configurationProvider.AccessToken.TokenExpirationTime;
+            var json = tokenInfo.ToString();
+            var accessToken = _tokenEncryptionProvider.Encrypt(json);
+            return Task.FromResult(accessToken);
+
         }
     }
 }
