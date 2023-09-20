@@ -1,17 +1,15 @@
 ﻿using IdentityAuthentication.Cache.Abstractions;
 using IdentityAuthentication.Configuration;
+using IdentityAuthentication.Configuration.Abstractions;
 using IdentityAuthentication.Configuration.Enums;
-using IdentityAuthentication.Configuration.Model;
-using IdentityAuthentication.Model.Configurations;
 using IdentityAuthentication.Model.Enums;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 using StackExchange.Redis;
 
 namespace IdentityAuthentication.Cache
 {
-    internal class RedisCacheProvider : ICacheProvider
+    internal class RedisCacheProvider<T> : ICacheProvider<T> where T : IAuthenticationResult, new()
     {
         private const string _tokenContainerName = "Token:";
         private const string _userTokenContainerName = "UserToken:";
@@ -33,19 +31,15 @@ namespace IdentityAuthentication.Cache
 
         public CacheStorageType StorageType => CacheStorageType.Redis;
 
-        private string BuildTokenKey(string key) => $"{_tokenContainerName}{key}";
+        private static string BuildTokenKey(string key) => $"{_tokenContainerName}{key}";
 
-        private string BuildUserTokenKey(ReferenceToken data) => $"{_userTokenContainerName}{data.UserId}:{data.Client}";
-
-
-        public async Task<ReferenceToken> GetAsync(string key)
+        public async Task<T?> GetAsync(string key)
         {
             key = BuildTokenKey(key);
             var json = await _database.StringGetAsync(key);
-            if (json.IsNullOrEmpty) return null;
+            if (json.IsNullOrEmpty) return default;
 
-            var obj = JObject.Parse(json.ToString());
-            return obj.ToObject<ReferenceToken>();
+            return JsonConvert.DeserializeObject<T>(json.ToString());
         }
 
         public async Task RemoveAsync(string key)
@@ -54,7 +48,7 @@ namespace IdentityAuthentication.Cache
             await _database.KeyDeleteAsync(key);
         }
 
-        public async Task SetAsync(string key, ReferenceToken data)
+        public async Task SetAsync(string key, T data)
         {
             key = BuildTokenKey(key);
             var json = JsonConvert.SerializeObject(data);
@@ -68,9 +62,9 @@ namespace IdentityAuthentication.Cache
         /// <param name="token"></param>
         /// <param name="tokenKey"></param>
         /// <returns></returns>
-        private async Task SetUserTokenAsync(ReferenceToken token, string tokenKey)
+        private async Task SetUserTokenAsync(T token, string tokenKey)
         {
-            var key = BuildUserTokenKey(token);
+            var key = $"{_userTokenContainerName}{token.UserId}:{token.Client}";
             tokenKey = tokenKey["Bearer ".Length..].Trim();
             await _database.StringSetAsync(key, tokenKey, TimeSpan.FromDays(90), When.Always);
         }
