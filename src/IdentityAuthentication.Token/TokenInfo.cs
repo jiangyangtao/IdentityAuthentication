@@ -2,6 +2,7 @@
 using IdentityAuthentication.Extensions;
 using IdentityAuthentication.Model.Extensions;
 using Newtonsoft.Json;
+using Org.BouncyCastle.Asn1.Cms;
 using System.Security.Claims;
 
 namespace IdentityAuthentication.Token
@@ -74,6 +75,10 @@ namespace IdentityAuthentication.Token
 
         #region Methods
 
+        /// <summary>
+        /// Build to json
+        /// </summary>
+        /// <returns></returns>
         public override string ToString() => JsonConvert.SerializeObject(this);
 
         public Claim[] BuildClaims()
@@ -107,9 +112,24 @@ namespace IdentityAuthentication.Token
 
             var token = JsonConvert.DeserializeObject<TokenInfo>(json);
             if (token == null) return false;
+            if (token.IsEmpty == false) return false;
 
             accessToken = token;
             return true;
+        }
+
+        public bool IsEmpty
+        {
+            get
+            {
+                if (UserId.IsNullOrEmpty()) return false;
+                if (Username.IsNullOrEmpty()) return false;
+                if (GrantSource.IsNullOrEmpty()) return false;
+                if (GrantType.IsNullOrEmpty()) return false;
+                if (Client.IsNullOrEmpty()) return false;
+
+                return true;
+            }
         }
 
         public AuthenticationResult BuildAuthenticationResult()
@@ -135,6 +155,17 @@ namespace IdentityAuthentication.Token
             }
 
             return dic;
+        }
+
+        public bool Equals(TokenInfo tokenInfo)
+        {
+            if (UserId != tokenInfo.UserId) return false;
+            if (Username != tokenInfo.Username) return false;
+            if (GrantSource != tokenInfo.GrantSource) return false;
+            if (GrantType != tokenInfo.GrantType) return false;
+            if (Client != tokenInfo.Client) return false;
+
+            return true;
         }
 
         #endregion
@@ -224,17 +255,6 @@ namespace IdentityAuthentication.Token
                 IssueTime = issueTime,
                 ExpirationTime = expirationTime,
             };
-
-            return true;
-        }
-
-        public bool Equals(TokenInfo tokenInfo)
-        {
-            if (UserId != tokenInfo.UserId) return false;
-            if (Username != tokenInfo.Username) return false;
-            if (GrantSource != tokenInfo.GrantSource) return false;
-            if (GrantType != tokenInfo.GrantType) return false;
-            if (Client != tokenInfo.Client) return false;
 
             return true;
         }

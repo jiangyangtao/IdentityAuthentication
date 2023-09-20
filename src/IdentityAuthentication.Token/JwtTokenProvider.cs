@@ -49,7 +49,7 @@ namespace IdentityAuthentication.Token
             accessTokenInfo.ExpirationTime = _configurationProvider.AccessToken.TokenExpirationTime;
 
             var accessToken = _tokenSignatureProvider.BuildAccessToken(accessTokenInfo);
-            var token = TokenResult.CreateToken(accessToken: accessToken, _configurationProvider.AccessToken.ExpirationTime, authenticationResult.ToReadOnlyDictionary());
+            var token = TokenResult.CreateToken(accessToken, _configurationProvider.AccessToken.ExpirationTime, accessTokenInfo.BuildDictionary());
 
             if (_configurationProvider.Authentication.EnableTokenRefresh)
             {
@@ -57,7 +57,7 @@ namespace IdentityAuthentication.Token
                 refreshTokenInfo.ExpirationTime = _configurationProvider.RefreshToken.TokenExpirationTime;
 
                 var refreshToken = _tokenSignatureProvider.BuildRefreshToken(refreshTokenInfo);
-                token = TokenResult.CreateToken(accessToken, _configurationProvider.AccessToken.ExpirationTime, authenticationResult.ToReadOnlyDictionary(), refreshToken: refreshToken);
+                token = TokenResult.CreateToken(accessToken, _configurationProvider.AccessToken.ExpirationTime, accessTokenInfo.BuildDictionary(), refreshToken);
             }
 
             return Task.FromResult(token);
