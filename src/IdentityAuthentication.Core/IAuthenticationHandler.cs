@@ -1,11 +1,12 @@
-﻿using Microsoft.IdentityModel.Tokens;
+﻿using IdentityAuthentication.Abstractions;
+using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json.Linq;
 
 namespace IdentityAuthentication.Core
 {
     public interface IAuthenticationHandler
     {
-        Task<ITokenResult> AuthenticateAsync(JObject credentialObject);
+        Task<IToken> AuthenticateAsync(JObject credentialObject);
 
         Task<string> RefreshTokenAsync();
 
