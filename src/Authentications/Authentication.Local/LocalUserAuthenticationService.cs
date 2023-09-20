@@ -1,6 +1,6 @@
 ﻿using Authentication.Abstractions;
 using Authentication.Abstractions.Credentials;
-using IdentityAuthentication.Configuration.Abstractions;
+using IdentityAuthentication.Abstractions;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 

@@ -1,5 +1,5 @@
 ﻿using IdentityAuthentication.Configuration;
-using IdentityAuthentication.Configuration.Abstractions;
+using IdentityAuthentication.Abstractions;
 using IdentityAuthentication.Model.Configurations;
 using IdentityAuthentication.Token;
 using Microsoft.Extensions.Configuration;

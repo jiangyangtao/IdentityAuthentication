@@ -12,8 +12,9 @@
 		<PackageReference Include="StackExchange.Redis" Version="2.6.70" />
 	</ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\IdentityAuthentication.Configuration\IdentityAuthentication.Configuration.csproj" />
-  </ItemGroup>
+
+	<ItemGroup>
+	  <ProjectReference Include="..\IdentityAuthentication.Abstractions\IdentityAuthentication.Abstractions.csproj" />
+	</ItemGroup>
 
 </Project>

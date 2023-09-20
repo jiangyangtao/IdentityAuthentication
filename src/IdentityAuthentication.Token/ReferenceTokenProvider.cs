@@ -1,5 +1,5 @@
 ﻿using IdentityAuthentication.Cache.Abstractions;
-using IdentityAuthentication.Configuration.Abstractions;
+using IdentityAuthentication.Abstractions;
 using IdentityAuthentication.Model;
 using IdentityAuthentication.Model.Enums;
 using IdentityAuthentication.Token.Abstractions;

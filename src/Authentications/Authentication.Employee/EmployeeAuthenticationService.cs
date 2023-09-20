@@ -1,7 +1,7 @@
 ﻿using Authentication.Abstractions;
 using Authentication.Abstractions.Credentials;
 using Employee.GrpcClient;
-using IdentityAuthentication.Configuration.Abstractions;
+using IdentityAuthentication.Abstractions;
 
 namespace Authentication.Employee
 {

@@ -1,4 +1,4 @@
-﻿using IdentityAuthentication.Configuration.Abstractions;
+﻿using IdentityAuthentication.Abstractions;
 using Newtonsoft.Json.Linq;
 
 namespace IdentityAuthentication.Authentication

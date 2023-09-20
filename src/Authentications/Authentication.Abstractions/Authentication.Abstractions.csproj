@@ -13,7 +13,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <ProjectReference Include="..\..\IdentityAuthentication.Configuration\IdentityAuthentication.Configuration.csproj" />
+	  <ProjectReference Include="..\..\IdentityAuthentication.Abstractions\IdentityAuthentication.Abstractions.csproj" />
 	  <ProjectReference Include="..\..\IdentityAuthentication.Extensions\IdentityAuthentication.Extensions.csproj" />
 	</ItemGroup>
 

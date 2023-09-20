@@ -1,6 +1,6 @@
-﻿using IdentityAuthentication.Cache.Abstractions;
+﻿using IdentityAuthentication.Abstractions;
+using IdentityAuthentication.Cache.Abstractions;
 using IdentityAuthentication.Configuration;
-using IdentityAuthentication.Configuration.Abstractions;
 using IdentityAuthentication.Configuration.Enums;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Options;

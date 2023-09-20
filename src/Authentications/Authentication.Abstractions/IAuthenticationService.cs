@@ -1,4 +1,4 @@
-﻿using IdentityAuthentication.Configuration.Abstractions;
+﻿using IdentityAuthentication.Abstractions;
 
 namespace Authentication.Abstractions
 {

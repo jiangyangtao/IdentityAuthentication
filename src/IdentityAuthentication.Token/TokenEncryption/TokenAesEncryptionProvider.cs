@@ -1,4 +1,4 @@
-﻿using IdentityAuthentication.Configuration.Abstractions;
+﻿using IdentityAuthentication.Abstractions;
 using IdentityAuthentication.Configuration.Enums;
 using IdentityAuthentication.Token.Abstractions;
 using System.Security.Cryptography;

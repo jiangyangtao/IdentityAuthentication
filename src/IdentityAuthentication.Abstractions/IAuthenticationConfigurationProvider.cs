@@ -1,4 +1,7 @@
 ﻿
+using IdentityAuthentication.Configuration;
+using IdentityAuthentication.Model.Configurations;
+
 namespace IdentityAuthentication.Abstractions
 {
     public interface IAuthenticationConfigurationProvider
