@@ -1,6 +1,6 @@
 ﻿using Authentication.Abstractions;
 using Authentication.Abstractions.Credentials;
-using IdentityAuthentication.Configuration.Model;
+using IdentityAuthentication.Configuration.Abstractions;
 using Microsoft.Extensions.Options;
 using Novell.Directory.Ldap;
 using System;
@@ -20,7 +20,7 @@ namespace Authentication.LDAP
 
         public string GrantSource => "LDAP";
 
-        public Task<AuthenticationResult> AuthenticateAsync(PasswordCredential credential)
+        public Task<IAuthenticationResult> AuthenticateAsync(PasswordCredential credential)
         {
             var username = GetUsername(credential);
             using (var validateConnection = new LdapConnection())

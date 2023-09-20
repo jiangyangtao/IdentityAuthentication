@@ -1,4 +1,4 @@
-﻿using IdentityAuthentication.Configuration.Model;
+﻿using IdentityAuthentication.Configuration.Abstractions;
 
 namespace Authentication.Abstractions
 {
@@ -6,7 +6,7 @@ namespace Authentication.Abstractions
     {
         string GrantSource { get; }
 
-        Task<AuthenticationResult> AuthenticateAsync(TCredential credential);
+        Task<IAuthenticationResult> AuthenticateAsync(TCredential credential);
 
         Task<bool> IdentityCheckAsync(string id, string username);
     }

@@ -1,7 +1,7 @@
 ﻿using Authentication.Abstractions;
 using Authentication.Abstractions.Credentials;
 using Employee.GrpcClient;
-using IdentityAuthentication.Configuration.Model;
+using IdentityAuthentication.Configuration.Abstractions;
 
 namespace Authentication.Employee
 {
@@ -16,7 +16,7 @@ namespace Authentication.Employee
 
         public string GrantSource => "Employee";
 
-        public async Task<AuthenticationResult> AuthenticateAsync(PasswordCredential credential)
+        public async Task<IAuthenticationResult> AuthenticateAsync(PasswordCredential credential)
         {
             var r = await _employeeProvider.LoginAsync(credential.Username, credential.Password);
             if (r.Result == null) throw new Exception(r.Error.Message);

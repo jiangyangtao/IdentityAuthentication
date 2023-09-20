@@ -1,6 +1,6 @@
 ﻿using Authentication.Abstractions;
 using Authentication.Abstractions.Credentials;
-using IdentityAuthentication.Configuration.Model;
+using IdentityAuthentication.Configuration.Abstractions;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 
@@ -17,7 +17,7 @@ namespace Authentication.Local
 
         public string GrantSource => "Local";
 
-        public Task<AuthenticationResult> AuthenticateAsync(PasswordCredential credential)
+        public Task<IAuthenticationResult> AuthenticateAsync(PasswordCredential credential)
         {
             var json = JsonConvert.SerializeObject(credential);
             _logger.LogInformation(json);
