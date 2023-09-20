@@ -76,16 +76,16 @@ namespace IdentityAuthentication.Authentication
 
         private ICredential GetCredential(JObject credentialObject)
         {
-            if (credentialObject.ContainsKey(IAuthenticationResult.GrantTypePropertyName) == false)
-                credentialObject[IAuthenticationResult.GrantTypePropertyName] = _grantDefaults.GrantTypeDefault;
+            if (credentialObject.ContainsKey(ICredential.GrantTypePropertyName) == false)
+                credentialObject[ICredential.GrantTypePropertyName] = _grantDefaults.GrantTypeDefault;
 
-            if (credentialObject.ContainsKey(IAuthenticationResult.GrantSourcePropertyName) == false)
-                credentialObject[IAuthenticationResult.GrantSourcePropertyName] = _grantDefaults.GrantSourceDefault;
+            if (credentialObject.ContainsKey(ICredential.GrantSourcePropertyName) == false)
+                credentialObject[ICredential.GrantSourcePropertyName] = _grantDefaults.GrantSourceDefault;
 
-            if (credentialObject.ContainsKey(IAuthenticationResult.ClientPropertyName) == false)
-                credentialObject[IAuthenticationResult.ClientPropertyName] = _grantDefaults.ClientDefault;
+            if (credentialObject.ContainsKey(ICredential.ClientPropertyName) == false)
+                credentialObject[ICredential.ClientPropertyName] = _grantDefaults.ClientDefault;
 
-            var grantType = credentialObject[IAuthenticationResult.GrantTypePropertyName].Value<string>();
+            var grantType = credentialObject[ICredential.GrantTypePropertyName].Value<string>();
             if (CredentialTypes.ContainsKey(grantType) == false) throw new Exception($"Unknown GrantType: {grantType}");
 
             var type = CredentialTypes[grantType];

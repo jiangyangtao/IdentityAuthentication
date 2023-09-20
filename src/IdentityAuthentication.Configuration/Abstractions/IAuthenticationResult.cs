@@ -2,17 +2,6 @@
 {
     public interface IAuthenticationResult
     {
-        static string UserIdPropertyName => nameof(UserId);
-
-        static string UsernamePropertyName => nameof(Username);
-
-        static string GrantSourcePropertyName => nameof(GrantSource);
-
-        static string GrantTypePropertyName => nameof(GrantType);
-
-        static string ClientPropertyName => nameof(Client);
-
-
         string UserId { get; }
 
         string Username { get; }
