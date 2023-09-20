@@ -1,4 +1,4 @@
-﻿using IdentityAuthentication.Configuration.Model;
+﻿using IdentityAuthentication.Configuration.Abstractions;
 
 namespace IdentityAuthentication.Token
 {
