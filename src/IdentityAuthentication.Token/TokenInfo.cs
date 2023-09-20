@@ -1,13 +1,13 @@
-﻿using IdentityAuthentication.Configuration.Model;
+﻿using IdentityAuthentication.Configuration.Abstractions;
+using IdentityAuthentication.Configuration.Model;
 using IdentityAuthentication.Extensions;
 using IdentityAuthentication.Model.Extensions;
 using Newtonsoft.Json;
-using Org.BouncyCastle.Asn1.Cms;
 using System.Security.Claims;
 
 namespace IdentityAuthentication.Token
 {
-    internal class TokenInfo
+    internal class TokenInfo : IAuthenticationResult
     {
         public TokenInfo()
         {

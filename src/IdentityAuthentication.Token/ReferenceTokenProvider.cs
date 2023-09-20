@@ -11,7 +11,7 @@ namespace IdentityAuthentication.Token
 {
     internal class ReferenceTokenProvider : ITokenProvider
     {
-        private readonly ICacheProvider _cacheProvider;
+        private readonly ICacheProvider<TokenInfo> _cacheProvider;
         private readonly IHttpTokenProvider _httpTokenProvider;
         private readonly IAuthenticationConfigurationProvider _authenticationConfigurationProvider;
 
@@ -33,12 +33,12 @@ namespace IdentityAuthentication.Token
             {
                 if (_httpTokenProvider.AccessToken.IsNullOrEmpty()) return TokenValidation.FailedTokenValidationResult;
 
-                var data = await _cacheProvider.GetAsync(_httpTokenProvider.AccessToken);
-                if (data == null) return TokenValidation.FailedTokenValidationResult;
-                if (DateTime.Now > data.ExpirationTime) return TokenValidation.FailedTokenValidationResult;
+                var tokenInfo = await _cacheProvider.GetAsync(_httpTokenProvider.AccessToken);
+                if (tokenInfo == null) return TokenValidation.FailedTokenValidationResult;
+                if (DateTime.Now > tokenInfo.ExpirationTime) return TokenValidation.FailedTokenValidationResult;
 
-                var claims = data.GetAuthenticationResult().GetClaims();
-                var identity = new ClaimsIdentity(claims, data.GrantType);
+                var claims = tokenInfo.BuildClaims();
+                var identity = new ClaimsIdentity(claims, tokenInfo.GrantType);
                 return new TokenValidationResult { IsValid = true, ClaimsIdentity = identity, };
             }
             catch
@@ -57,7 +57,9 @@ namespace IdentityAuthentication.Token
 
         public async Task<IToken> GenerateAsync(AuthenticationResult authenticationResult)
         {
-            var token = new ReferenceToken(authenticationResult, _authenticationConfigurationProvider.AccessToken.TokenExpirationTime);
+
+            var token = TokenInfo.CreateToken(authenticationResult);
+            token.ExpirationTime = _authenticationConfigurationProvider.AccessToken.TokenExpirationTime;
 
             var accessToken = Guid.NewGuid().ToString();
             await _cacheProvider.SetAsync(accessToken, token);
@@ -71,7 +73,7 @@ namespace IdentityAuthentication.Token
             var token = await _cacheProvider.GetAsync(_httpTokenProvider.AccessToken);
             if (token == null) return null;
 
-            return token.GetAuthenticationResult();
+            return token.BuildAuthenticationResult();
         }
 
         public async Task<IReadOnlyDictionary<string, string>?> GetTokenInfoAsync()
@@ -81,7 +83,7 @@ namespace IdentityAuthentication.Token
             var token = await _cacheProvider.GetAsync(_httpTokenProvider.AccessToken);
             if (token == null) return null;
 
-            return token.ToReadOnlyDictionary();
+            return token.BuildDictionary();
         }
 
         public async Task<string> RefreshAsync()
