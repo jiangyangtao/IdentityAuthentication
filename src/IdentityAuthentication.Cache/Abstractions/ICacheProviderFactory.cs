@@ -1,9 +1,7 @@
-﻿using IdentityAuthentication.Configuration.Abstractions;
-
-namespace IdentityAuthentication.Cache.Abstractions
+﻿namespace IdentityAuthentication.Cache.Abstractions
 {
-    public interface ICacheProviderFactory<T> where T : IAuthenticationResult, new()
+    public interface ICacheProviderFactory
     {
-        public ICacheProvider<T> CreateCacheProvider();
+        public ICacheProvider CreateCacheProvider();
     }
 }

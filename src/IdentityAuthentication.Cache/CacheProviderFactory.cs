@@ -1,11 +1,12 @@
 ﻿using IdentityAuthentication.Cache.Abstractions;
 using IdentityAuthentication.Configuration;
+using IdentityAuthentication.Configuration.Abstractions;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 
 namespace IdentityAuthentication.Cache
 {
-    internal class CacheProviderFactory : ICacheProviderFactory
+    internal class CacheProviderFactory<T> : ICacheProviderFactory<T> where T : IAuthenticationResult, new()
     {
         private readonly IServiceProvider _serviceProvider;
         private readonly CacheStorageConfiguration _cacheStorageConfiguration;
@@ -16,9 +17,9 @@ namespace IdentityAuthentication.Cache
             _cacheStorageConfiguration = options.Value;
         }
 
-        public ICacheProvider CreateCacheProvider()
+        public ICacheProvider<T> CreateCacheProvider()
         {
-            return _serviceProvider.GetServices<ICacheProvider>().FirstOrDefault(a => a.StorageType == _cacheStorageConfiguration.StorageType);
+            return _serviceProvider.GetServices<ICacheProvider<T>>().FirstOrDefault(a => a.StorageType == _cacheStorageConfiguration.StorageType);
         }
     }
 }

@@ -11,7 +11,7 @@ namespace IdentityAuthentication.Token
 {
     internal class ReferenceTokenProvider : ITokenProvider
     {
-        private readonly ICacheProvider<TokenInfo> _cacheProvider;
+        private readonly ICacheProvider _cacheProvider;
         private readonly IHttpTokenProvider _httpTokenProvider;
         private readonly IAuthenticationConfigurationProvider _authenticationConfigurationProvider;
 
@@ -33,7 +33,7 @@ namespace IdentityAuthentication.Token
             {
                 if (_httpTokenProvider.AccessToken.IsNullOrEmpty()) return TokenValidation.FailedTokenValidationResult;
 
-                var tokenInfo = await _cacheProvider.GetAsync(_httpTokenProvider.AccessToken);
+                var tokenInfo = await _cacheProvider.GetAsync<TokenInfo>(_httpTokenProvider.AccessToken);
                 if (tokenInfo == null) return TokenValidation.FailedTokenValidationResult;
                 if (DateTime.Now > tokenInfo.ExpirationTime) return TokenValidation.FailedTokenValidationResult;
 
@@ -70,7 +70,7 @@ namespace IdentityAuthentication.Token
         {
             if (_httpTokenProvider.AccessToken.IsNullOrEmpty()) return null;
 
-            var token = await _cacheProvider.GetAsync(_httpTokenProvider.AccessToken);
+            var token = await _cacheProvider.GetAsync<TokenInfo>(_httpTokenProvider.AccessToken);
             if (token == null) return null;
 
             return token.BuildAuthenticationResult();
@@ -80,7 +80,7 @@ namespace IdentityAuthentication.Token
         {
             if (_httpTokenProvider.AccessToken.IsNullOrEmpty()) return null;
 
-            var token = await _cacheProvider.GetAsync(_httpTokenProvider.AccessToken);
+            var token = await _cacheProvider.GetAsync<TokenInfo>(_httpTokenProvider.AccessToken);
             if (token == null) return null;
 
             return token.BuildDictionary();
@@ -91,7 +91,7 @@ namespace IdentityAuthentication.Token
             if (_httpTokenProvider.AccessToken.IsNullOrEmpty()) return string.Empty;
             if (_authenticationConfigurationProvider.Authentication.EnableTokenRefresh == false) return string.Empty;
 
-            var token = await _cacheProvider.GetAsync(_httpTokenProvider.AccessToken);
+            var token = await _cacheProvider.GetAsync<TokenInfo>(_httpTokenProvider.AccessToken);
             token.ExpirationTime = _authenticationConfigurationProvider.AccessToken.TokenExpirationTime;
 
             await _cacheProvider.SetAsync(_httpTokenProvider.AccessToken, token);

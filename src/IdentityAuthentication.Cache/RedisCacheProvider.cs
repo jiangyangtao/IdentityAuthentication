@@ -9,7 +9,7 @@ using StackExchange.Redis;
 
 namespace IdentityAuthentication.Cache
 {
-    internal class RedisCacheProvider<T> : ICacheProvider<T> where T : IAuthenticationResult, new()
+    internal class RedisCacheProvider : ICacheProvider
     {
         private const string _tokenContainerName = "Token:";
         private const string _userTokenContainerName = "UserToken:";
@@ -33,7 +33,7 @@ namespace IdentityAuthentication.Cache
 
         private static string BuildTokenKey(string key) => $"{_tokenContainerName}{key}";
 
-        public async Task<T?> GetAsync(string key)
+        public async Task<T?> GetAsync<T>(string key) where T : IAuthenticationResult, new()
         {
             key = BuildTokenKey(key);
             var json = await _database.StringGetAsync(key);
@@ -48,7 +48,7 @@ namespace IdentityAuthentication.Cache
             await _database.KeyDeleteAsync(key);
         }
 
-        public async Task SetAsync(string key, T data)
+        public async Task SetAsync<T>(string key, T data) where T : IAuthenticationResult, new()
         {
             key = BuildTokenKey(key);
             var json = JsonConvert.SerializeObject(data);
@@ -62,7 +62,7 @@ namespace IdentityAuthentication.Cache
         /// <param name="token"></param>
         /// <param name="tokenKey"></param>
         /// <returns></returns>
-        private async Task SetUserTokenAsync(T token, string tokenKey)
+        private async Task SetUserTokenAsync<T>(T token, string tokenKey) where T : IAuthenticationResult, new()
         {
             var key = $"{_userTokenContainerName}{token.UserId}:{token.Client}";
             tokenKey = tokenKey["Bearer ".Length..].Trim();
