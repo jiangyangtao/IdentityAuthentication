@@ -1,7 +1,6 @@
-﻿
-using IdentityAuthentication.Configuration.Model;
+﻿using IdentityAuthentication.Configuration.Abstractions;
 using IdentityAuthentication.Extensions;
-using System.Net;
+using IdentityAuthentication.Model.Extensions;
 
 namespace Authentication.Abstractions.Credentials
 {
@@ -17,7 +16,7 @@ namespace Authentication.Abstractions.Credentials
 
         public string Password { set; get; }
 
-        public AuthenticationResult CreateAuthenticationResult(string id, IReadOnlyDictionary<string, string> metadata, string username = "")
+        public IAuthenticationResult CreateAuthenticationResult(string id, IReadOnlyDictionary<string, string> metadata, string username = "")
         {
             return AuthenticationResult.CreateAuthenticationResult(
                 userId: id,

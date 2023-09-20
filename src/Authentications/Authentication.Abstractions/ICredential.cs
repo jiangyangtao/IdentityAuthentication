@@ -1,4 +1,4 @@
-﻿using IdentityAuthentication.Configuration.Model;
+﻿using IdentityAuthentication.Configuration.Abstractions;
 
 namespace Authentication.Abstractions
 {
@@ -10,6 +10,6 @@ namespace Authentication.Abstractions
 
         public string Client { get; }
 
-        AuthenticationResult CreateAuthenticationResult(string id, IReadOnlyDictionary<string, string> metadata, string username = "");
+        IAuthenticationResult CreateAuthenticationResult(string id, IReadOnlyDictionary<string, string> metadata, string username = "");
     }
 }
