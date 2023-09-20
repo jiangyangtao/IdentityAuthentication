@@ -2,13 +2,8 @@
 using IdentityAuthentication.Model;
 using IdentityAuthentication.Model.Enums;
 using IdentityAuthentication.Token.Abstractions;
-using IdentityAuthentication.Token.TokenEncryption;
 using Microsoft.IdentityModel.Tokens;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Security.Claims;
 
 namespace IdentityAuthentication.Token
 {
@@ -27,16 +22,23 @@ namespace IdentityAuthentication.Token
 
         public TokenType TokenType => TokenType.Encrypt;
 
-        public Task<TokenValidationResult> AuthorizeAsync()
+        public async Task<TokenValidationResult> AuthorizeAsync()
         {
             if (_httpTokenProvider.AccessTokenIsEmpty) return TokenValidation.FailedTokenValidationResult;
 
             var tokenJson = _tokenEncryptionProvider.Decrypt(_httpTokenProvider.AccessToken);
             if (tokenJson.IsNullOrEmpty()) return TokenValidation.FailedTokenValidationResult;
 
-            var r = AuthenticationResult.TryParse(tokenJson)
+            var r = TokenInfo.TryParse(tokenJson, out TokenInfo? tokenInfo);
+            if (r == false) return TokenValidation.FailedTokenValidationResult;
+            if (tokenInfo == null) return TokenValidation.FailedTokenValidationResult;
 
-            throw new NotImplementedException();
+            if (DateTime.Now > tokenInfo.ExpirationTime) return TokenValidation.FailedTokenValidationResult;
+
+            var claims = tokenInfo.BuildClaims();
+            var identity = new ClaimsIdentity(claims, tokenInfo.GrantType);
+            var result = new TokenValidationResult { IsValid = true, ClaimsIdentity = identity, };
+            return await Task.FromResult(result);
         }
 
         public Task<string> DestroyAsync()

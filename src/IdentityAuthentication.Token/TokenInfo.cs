@@ -73,6 +73,7 @@ namespace IdentityAuthentication.Token
         #endregion
 
         #region Methods
+
         public override string ToString() => JsonConvert.SerializeObject(this);
 
         public Claim[] BuildClaims()
