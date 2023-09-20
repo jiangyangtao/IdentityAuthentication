@@ -1,6 +1,6 @@
 ﻿using Authentication.Abstractions;
 using IdentityAuthentication.Configuration;
-using IdentityAuthentication.Configuration.Model;
+using IdentityAuthentication.Configuration.Abstractions;
 using IdentityAuthentication.Extensions;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
@@ -54,16 +54,16 @@ namespace IdentityAuthentication.Authentication
             return dic;
         }
 
-        public async Task<AuthenticationResult> AuthenticateAsync(JObject credentialObject)
+        public async Task<IAuthenticationResult> AuthenticateAsync(JObject credentialObject)
         {
             var credential = GetCredential(credentialObject);
             var method = ExecuteAuthenticateMethod.MakeGenericMethod(credential.GetType());
-            var result = await (Task<AuthenticationResult>)method.Invoke(this, new object[] { credential });
+            var result = await (Task<IAuthenticationResult>)method.Invoke(this, new object[] { credential });
 
             return result;
         }
 
-        public async Task<bool> IdentityCheckAsync(AuthenticationResult authenticationResult)
+        public async Task<bool> IdentityCheckAsync(IAuthenticationResult authenticationResult)
         {
             var credentialObject = JObject.FromObject(authenticationResult);
 
@@ -76,16 +76,16 @@ namespace IdentityAuthentication.Authentication
 
         private ICredential GetCredential(JObject credentialObject)
         {
-            if (credentialObject.ContainsKey(AuthenticationResult.GrantTypePropertyName) == false)
-                credentialObject[AuthenticationResult.GrantTypePropertyName] = _grantDefaults.GrantTypeDefault;
+            if (credentialObject.ContainsKey(IAuthenticationResult.GrantTypePropertyName) == false)
+                credentialObject[IAuthenticationResult.GrantTypePropertyName] = _grantDefaults.GrantTypeDefault;
 
-            if (credentialObject.ContainsKey(AuthenticationResult.GrantSourcePropertyName) == false)
-                credentialObject[AuthenticationResult.GrantSourcePropertyName] = _grantDefaults.GrantSourceDefault;
+            if (credentialObject.ContainsKey(IAuthenticationResult.GrantSourcePropertyName) == false)
+                credentialObject[IAuthenticationResult.GrantSourcePropertyName] = _grantDefaults.GrantSourceDefault;
 
-            if (credentialObject.ContainsKey(AuthenticationResult.ClientPropertyName) == false)
-                credentialObject[AuthenticationResult.ClientPropertyName] = _grantDefaults.ClientDefault;
+            if (credentialObject.ContainsKey(IAuthenticationResult.ClientPropertyName) == false)
+                credentialObject[IAuthenticationResult.ClientPropertyName] = _grantDefaults.ClientDefault;
 
-            var grantType = credentialObject[AuthenticationResult.GrantTypePropertyName].Value<string>();
+            var grantType = credentialObject[IAuthenticationResult.GrantTypePropertyName].Value<string>();
             if (CredentialTypes.ContainsKey(grantType) == false) throw new Exception($"Unknown GrantType: {grantType}");
 
             var type = CredentialTypes[grantType];
@@ -94,7 +94,7 @@ namespace IdentityAuthentication.Authentication
             return credential;
         }
 
-        private async Task<AuthenticationResult?> ExecuteAuthenticateAsync<T>(T credential) where T : ICredential
+        private async Task<IAuthenticationResult?> ExecuteAuthenticateAsync<T>(T credential) where T : ICredential
         {
             var authenticationService = GetAuthenticationService(credential);
 

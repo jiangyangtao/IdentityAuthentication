@@ -1,12 +1,12 @@
-﻿using IdentityAuthentication.Configuration.Model;
+﻿using IdentityAuthentication.Configuration.Abstractions;
 using Newtonsoft.Json.Linq;
 
 namespace IdentityAuthentication.Authentication
 {
     public interface IAuthenticationProvider
     {
-        Task<AuthenticationResult> AuthenticateAsync(JObject credentialObject);
+        Task<IAuthenticationResult> AuthenticateAsync(JObject credentialObject);
 
-        Task<bool> AuthenticateAsync(AuthenticationResult authenticationResult);
+        Task<bool> AuthenticateAsync(IAuthenticationResult authenticationResult);
     }
 }
