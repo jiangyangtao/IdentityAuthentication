@@ -2,7 +2,7 @@
 using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json.Linq;
 
-namespace IdentityAuthentication.Core
+namespace IdentityAuthentication.Core.Abstractions
 {
     public interface IAuthenticationProvider
     {

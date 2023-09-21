@@ -1,7 +1,7 @@
 ﻿using Grpc.Core;
 using IdentityAuthentication.Abstractions;
 using IdentityAuthentication.Application.Grpc.Provider;
-using IdentityAuthentication.Core;
+using IdentityAuthentication.Core.Abstractions;
 using IdentityAuthentication.Model.Enums;
 using IdentityAuthentication.Model.Extensions;
 using Microsoft.AspNetCore.Authorization;

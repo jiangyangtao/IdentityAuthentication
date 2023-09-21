@@ -1,4 +1,4 @@
-﻿using IdentityAuthentication.Core;
+﻿using IdentityAuthentication.Core.Abstractions;
 using IdentityAuthentication.Model.Extensions;
 using IdentityAuthentication.Model.Handlers;
 using IdentityAuthentication.Model.Handles;
