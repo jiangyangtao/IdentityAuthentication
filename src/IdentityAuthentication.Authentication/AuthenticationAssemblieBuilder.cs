@@ -5,7 +5,7 @@ using System.Reflection;
 
 namespace IdentityAuthentication.Authentication
 {
-    internal class AssemblyProvider
+    internal class AuthenticationAssemblieBuilder
     {
         private static IReadOnlyCollection<Assembly> AuthenticationAssemblies;
 

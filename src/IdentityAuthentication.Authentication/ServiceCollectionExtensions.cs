@@ -22,7 +22,7 @@ namespace IdentityAuthentication.Authentication
 
         private static IServiceCollection AddGrantSources(this IServiceCollection services, IConfiguration configuration)
         {
-            var authenticationInitializations = AssemblyProvider.AuthenticationInitializations;
+            var authenticationInitializations = AuthenticationAssemblieBuilder.AuthenticationInitializations;
             if (authenticationInitializations.NotNullAndEmpty())
             {
                 foreach (var authenticationInitialization in authenticationInitializations)
@@ -36,7 +36,7 @@ namespace IdentityAuthentication.Authentication
 
         public static IApplicationBuilder UseIdentityAuthentication(this IApplicationBuilder builder)
         {
-            var authenticationInitializations = AssemblyProvider.AuthenticationInitializations;
+            var authenticationInitializations = AuthenticationAssemblieBuilder.AuthenticationInitializations;
             if (authenticationInitializations.NotNullAndEmpty())
             {
                 foreach (var authenticationInitialization in authenticationInitializations)
