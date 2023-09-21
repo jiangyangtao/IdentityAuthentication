@@ -4,6 +4,8 @@ using IdentityAuthentication.Model.Configurations;
 using IdentityAuthentication.Token;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.AspNetCore.Builder;
+using IdentityAuthentication.Extensions;
 
 namespace IdentityAuthentication.Core
 {
@@ -11,19 +13,24 @@ namespace IdentityAuthentication.Core
     {
         public static IServiceCollection AddIdentityAuthentication(this IServiceCollection services)
         {
-            services.AddAuthenticationConfiguration();
-            services.AddToken();       
+            var serviceProvider = services.BuildServiceProvider();
+            var configuration = serviceProvider.GetRequiredService<IConfiguration>();
 
+            services.AddAuthenticationConfiguration(configuration);
+            services.AddToken();
+
+            services.AddSingleton<AuthenticationHandle>();
             services.AddSingleton<IAuthenticationProvider, AuthenticationProvider>();
             services.AddSingleton<IAuthenticationConfigurationProvider, AuthenticationConfigurationProvider>();
+
+            services.AddGrantSources(configuration);
 
             return services;
         }
 
-        private static IServiceCollection AddAuthenticationConfiguration(this IServiceCollection services)
+        private static IServiceCollection AddAuthenticationConfiguration(this IServiceCollection services, IConfiguration configuration)
         {
-            var serviceProvider = services.BuildServiceProvider();
-            var configuration = serviceProvider.GetRequiredService<IConfiguration>();
+
 
             services.Configure<GrantDefaultConfiguration>(configuration.GetSection(GrantDefaultConfiguration.ConfigurationKey));
             services.Configure<AccessTokenConfiguration>(configuration.GetSection(AccessTokenConfiguration.ConfigurationKey));
@@ -35,6 +42,34 @@ namespace IdentityAuthentication.Core
             services.Configure<AesEncryptionConfiguration>(configuration.GetSection(AesEncryptionConfiguration.ConfigurationKey));
 
             return services;
+        }
+
+        private static IServiceCollection AddGrantSources(this IServiceCollection services, IConfiguration configuration)
+        {
+            var authenticationInitializations = AuthenticationAssemblyBuilder.AuthenticationInitializations;
+            if (authenticationInitializations.NotNullAndEmpty())
+            {
+                foreach (var authenticationInitialization in authenticationInitializations)
+                {
+                    authenticationInitialization?.InitializationService(services, configuration);
+                }
+            }
+
+            return services;
+        }
+
+        public static IApplicationBuilder UseIdentityAuthentication(this IApplicationBuilder builder)
+        {
+            var authenticationInitializations = AuthenticationAssemblyBuilder.AuthenticationInitializations;
+            if (authenticationInitializations.NotNullAndEmpty())
+            {
+                foreach (var authenticationInitialization in authenticationInitializations)
+                {
+                    authenticationInitialization?.InitializationApplication(builder);
+                }
+            }
+
+            return builder;
         }
     }
 }

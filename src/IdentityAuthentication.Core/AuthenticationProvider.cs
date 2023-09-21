@@ -1,5 +1,4 @@
 ﻿using IdentityAuthentication.Abstractions;
-using IdentityAuthentication.Authentication;
 using IdentityAuthentication.Token.Abstractions;
 using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json.Linq;
@@ -8,20 +7,20 @@ namespace IdentityAuthentication.Core
 {
     internal class AuthenticationProvider : IAuthenticationProvider
     {
-        private readonly IAuthenticationService _authenticationService;
+        private readonly AuthenticationHandle _authenticationHandle;
         private readonly ITokenProvider _tokenProvider;
 
         public AuthenticationProvider(
            ITokenProviderFactory tokenProviderFactory,
-           IAuthenticationService authenticationService)
+           AuthenticationHandle authenticationHandle)
         {
             _tokenProvider = tokenProviderFactory.CreateTokenService();
-            _authenticationService = authenticationService;
+            _authenticationHandle = authenticationHandle;
         }
 
         public async Task<IToken> AuthenticateAsync(JObject credentialObject)
         {
-            var authenticationResult = await _authenticationService.AuthenticateAsync(credentialObject);
+            var authenticationResult = await _authenticationHandle.AuthenticateAsync(credentialObject);
             var token = await _tokenProvider.GenerateAsync(authenticationResult);
 
             return token;
@@ -32,7 +31,7 @@ namespace IdentityAuthentication.Core
         public async Task<string> RefreshTokenAsync()
         {
             var authenticationResult = await _tokenProvider.GetAuthenticationResultAsync() ?? throw new Exception("Authentication failed;");
-            var checkResult = await _authenticationService.AuthenticateAsync(authenticationResult);
+            var checkResult = await _authenticationHandle.AuthenticateAsync(authenticationResult);
             var token = checkResult ? await _tokenProvider.RefreshAsync() : await _tokenProvider.DestroyAsync();
 
             return token;
