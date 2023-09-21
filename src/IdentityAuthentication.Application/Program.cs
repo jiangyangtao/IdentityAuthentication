@@ -3,7 +3,6 @@ using IdentityAuthentication.Application;
 using IdentityAuthentication.Application.Filters;
 using IdentityAuthentication.Application.GrpcServices;
 using IdentityAuthentication.Application.Handlers;
-using IdentityAuthentication.Authentication;
 using IdentityAuthentication.Core;
 using IdentityAuthentication.Model.Handlers;
 using IdentityAuthentication.Model.Handles;

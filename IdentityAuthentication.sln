@@ -29,11 +29,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IdentityAuthentication.Cach
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IdentityAuthentication.Token", "src\IdentityAuthentication.Token\IdentityAuthentication.Token.csproj", "{E75D15D6-1B56-4E2A-86CE-35B3CCA712FE}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IdentityAuthentication.Authentication", "src\IdentityAuthentication.Authentication\IdentityAuthentication.Authentication.csproj", "{E142E32E-BF6B-475F-B23A-D41F2EB454BF}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IdentityAuthentication.Configuration", "src\IdentityAuthentication.Configuration\IdentityAuthentication.Configuration.csproj", "{4A2FB8CF-5975-4B43-BD19-5C13E6BE1713}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IdentityAuthentication.Abstractions", "src\IdentityAuthentication.Abstractions\IdentityAuthentication.Abstractions.csproj", "{D1573396-F99A-4F85-9E3A-25669088195E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IdentityAuthentication.Abstractions", "src\IdentityAuthentication.Abstractions\IdentityAuthentication.Abstractions.csproj", "{D1573396-F99A-4F85-9E3A-25669088195E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -81,10 +79,6 @@ Global
 		{E75D15D6-1B56-4E2A-86CE-35B3CCA712FE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E75D15D6-1B56-4E2A-86CE-35B3CCA712FE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E75D15D6-1B56-4E2A-86CE-35B3CCA712FE}.Release|Any CPU.Build.0 = Release|Any CPU
-		{E142E32E-BF6B-475F-B23A-D41F2EB454BF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{E142E32E-BF6B-475F-B23A-D41F2EB454BF}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{E142E32E-BF6B-475F-B23A-D41F2EB454BF}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{E142E32E-BF6B-475F-B23A-D41F2EB454BF}.Release|Any CPU.Build.0 = Release|Any CPU
 		{4A2FB8CF-5975-4B43-BD19-5C13E6BE1713}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{4A2FB8CF-5975-4B43-BD19-5C13E6BE1713}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4A2FB8CF-5975-4B43-BD19-5C13E6BE1713}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -109,7 +103,6 @@ Global
 		{05D27335-B00A-4351-B86A-024DD6263432} = {255F7F1B-EBE9-4967-BCBA-C457C436A636}
 		{741C8AC4-D323-49F9-A73F-3F194AA7840F} = {817F15A1-CB29-4E0B-A2B5-C0E70CE6512C}
 		{E75D15D6-1B56-4E2A-86CE-35B3CCA712FE} = {817F15A1-CB29-4E0B-A2B5-C0E70CE6512C}
-		{E142E32E-BF6B-475F-B23A-D41F2EB454BF} = {817F15A1-CB29-4E0B-A2B5-C0E70CE6512C}
 		{4A2FB8CF-5975-4B43-BD19-5C13E6BE1713} = {817F15A1-CB29-4E0B-A2B5-C0E70CE6512C}
 		{D1573396-F99A-4F85-9E3A-25669088195E} = {817F15A1-CB29-4E0B-A2B5-C0E70CE6512C}
 	EndGlobalSection
