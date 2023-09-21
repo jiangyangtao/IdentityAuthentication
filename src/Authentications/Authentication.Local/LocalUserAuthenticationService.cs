@@ -30,7 +30,7 @@ namespace Authentication.Local
             return Task.FromResult(result);
         }
 
-        public Task<bool> IdentityCheckAsync(string id, string username)
+        public Task<bool> IdentityValidationAsync(string id, string username)
         {
             return Task.FromResult(true);
         }

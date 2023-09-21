@@ -38,7 +38,7 @@ namespace Authentication.LDAP
             return Task.FromResult(result);
         }
 
-        public Task<bool> IdentityCheckAsync(string id, string username)
+        public Task<bool> IdentityValidationAsync(string id, string username)
         {
             throw new NotImplementedException();
         }

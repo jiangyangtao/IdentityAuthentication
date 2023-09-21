@@ -105,7 +105,7 @@ namespace IdentityAuthentication.Authentication
         private async Task<bool> ExecuteIdentityCheckAsync<T>(T credential, string id, string username) where T : ICredential
         {
             var authenticationService = GetAuthenticationService(credential);
-            return await authenticationService.IdentityCheckAsync(id, username);
+            return await authenticationService.IdentityValidationAsync(id, username);
         }
 
         private IAuthenticationService<T> GetAuthenticationService<T>(T credential) where T : ICredential

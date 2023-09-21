@@ -29,7 +29,7 @@ namespace Authentication.Employee
             return credential.CreateAuthenticationResult(user.UserId, metadata, username: user.Username);
         }
 
-        public async Task<bool> IdentityCheckAsync(string id, string username)
+        public async Task<bool> IdentityValidationAsync(string id, string username)
         {
             var r = await _employeeProvider.GetEmployeeAsync(id);
             if (r == null) return false;

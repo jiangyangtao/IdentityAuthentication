@@ -8,6 +8,6 @@ namespace Authentication.Abstractions
 
         Task<IAuthenticationResult> AuthenticateAsync(TCredential credential);
 
-        Task<bool> IdentityCheckAsync(string id, string username);
+        Task<bool> IdentityValidationAsync(string id, string username);
     }
 }
