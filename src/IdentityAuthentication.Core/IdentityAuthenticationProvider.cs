@@ -8,20 +8,20 @@ namespace IdentityAuthentication.Core
 {
     internal class IdentityAuthenticationProvider : IIdentityAuthenticationProvider
     {
-        private readonly IAuthenticationService _authenticationProvider;
+        private readonly IAuthenticationService _authenticationService;
         private readonly ITokenProvider _tokenProvider;
 
         public IdentityAuthenticationProvider(
            ITokenProviderFactory tokenProviderFactory,
-           IAuthenticationService authenticationProvider)
+           IAuthenticationService authenticationService)
         {
             _tokenProvider = tokenProviderFactory.CreateTokenService();
-            _authenticationProvider = authenticationProvider;
+            _authenticationService = authenticationService;
         }
 
         public async Task<IToken> AuthenticateAsync(JObject credentialObject)
         {
-            var authenticationResult = await _authenticationProvider.AuthenticateAsync(credentialObject);
+            var authenticationResult = await _authenticationService.AuthenticateAsync(credentialObject);
             var token = await _tokenProvider.GenerateAsync(authenticationResult);
 
             return token;
@@ -32,7 +32,7 @@ namespace IdentityAuthentication.Core
         public async Task<string> RefreshTokenAsync()
         {
             var authenticationResult = await _tokenProvider.GetAuthenticationResultAsync() ?? throw new Exception("Authentication failed;");
-            var checkResult = await _authenticationProvider.AuthenticateAsync(authenticationResult);
+            var checkResult = await _authenticationService.AuthenticateAsync(authenticationResult);
             var token = checkResult ? await _tokenProvider.RefreshAsync() : await _tokenProvider.DestroyAsync();
 
             return token;

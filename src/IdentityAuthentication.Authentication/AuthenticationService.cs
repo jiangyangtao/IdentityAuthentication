@@ -3,7 +3,7 @@ using Newtonsoft.Json.Linq;
 
 namespace IdentityAuthentication.Authentication
 {
-    internal class AuthenticationProvider : IAuthenticationProvider
+    internal class AuthenticationService : IAuthenticationService
     {
         public Task<IAuthenticationResult> AuthenticateAsync(JObject credentialObject)
         {
