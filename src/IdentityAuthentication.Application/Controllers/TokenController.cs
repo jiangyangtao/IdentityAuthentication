@@ -9,12 +9,12 @@ namespace IdentityAuthentication.Application.Controllers
 {
     public class TokenController : BaseController
     {
-        private readonly IAuthenticationProvider _identityAuthenticationProvider;
+        private readonly IAuthenticationProvider _authenticationProvider;
         private readonly IAuthenticationConfigurationProvider _authenticationConfigProvider;
 
-        public TokenController(IAuthenticationProvider identityAuthenticationProvider, IAuthenticationConfigurationProvider authenticationConfigProvider)
+        public TokenController(IAuthenticationProvider authenticationProvider, IAuthenticationConfigurationProvider authenticationConfigProvider)
         {
-            _identityAuthenticationProvider = identityAuthenticationProvider;
+            _authenticationProvider = authenticationProvider;
             _authenticationConfigProvider = authenticationConfigProvider;
         }
 
@@ -23,7 +23,7 @@ namespace IdentityAuthentication.Application.Controllers
         [ProducesResponseType(typeof(TokenResult), 200)]
         public async Task<IActionResult> Generate([FromBody] JObject credentialData)
         {
-            var token = await _identityAuthenticationProvider.AuthenticateAsync(credentialData);
+            var token = await _authenticationProvider.AuthenticateAsync(credentialData);
             if (token == null) return new NotFoundResult();
 
             using var factory = new TokenResultFactory(token, _authenticationConfigProvider.Authentication.TokenType);
@@ -36,14 +36,14 @@ namespace IdentityAuthentication.Application.Controllers
         [ProducesResponseType(typeof(AccessTokenResult), 200)]
         public async Task<IActionResult> Refresh()
         {
-            var token = await _identityAuthenticationProvider.RefreshTokenAsync();
+            var token = await _authenticationProvider.RefreshTokenAsync();
             return Ok(new AccessTokenResult(token));
         }
 
         [HttpPost]
         public async Task<IActionResult> Authorize()
         {
-            var result = await _identityAuthenticationProvider.GetTokenInfoAsync();
+            var result = await _authenticationProvider.GetTokenInfoAsync();
             return Ok(result);
         }
     }
