@@ -1,4 +1,5 @@
 ﻿using IdentityAuthentication.Model;
+using IdentityAuthentication.Model.Configurations;
 using IdentityAuthentication.Model.Models;
 
 namespace IdentityAuthentication.Configuration
@@ -31,6 +32,16 @@ namespace IdentityAuthentication.Configuration
                 IsPublic = false,
             };
             return new Credentials(publicSignature);
+        }
+
+        public RsaVerifySignatureConfiguration BuildRsaVerifySignatureConfiguration()
+        {
+            return new()
+            {
+                RSAKeyType = RSAKeyType,
+                PublicKey = PublicKey,
+                AlgorithmType = AlgorithmType,
+            };
         }
 
         public const string ConfigurationKey = "TokenRsaSignature";

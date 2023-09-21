@@ -1,34 +1,20 @@
-﻿using IdentityAuthentication.Extensions;
+﻿using IdentityAuthentication.Abstractions;
+using IdentityAuthentication.Extensions;
 using IdentityAuthentication.Model;
 using IdentityAuthentication.Model.Configurations;
-using IdentityAuthentication.Model.Enums;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Options;
 
 namespace IdentityAuthentication.Application.Controllers
 {
     [AllowAnonymous]
     public class ConfigurationController : BaseController
     {
+        private readonly IAuthenticationConfigurationProvider _authenticationConfigProvider;
 
-        private readonly AccessTokenConfiguration _accessTokenConfiguration;
-        private readonly RefreshTokenConfiguration _refreshTokenConfiguration;
-        private readonly AuthenticationConfiguration _authenticationConfiguration;
-        private readonly TokenSignatureConfiguration _tokenSignatureConfiguration;
-
-        public ConfigurationController(
-            IOptions<AccessTokenConfiguration> accessTokenOption,
-            IOptions<RefreshTokenConfiguration> refreshTokenOption,
-            IOptions<AuthenticationConfiguration> authenticationOption,
-            IOptions<TokenSignatureConfiguration> tokenSignatureOption)
+        public ConfigurationController(IAuthenticationConfigurationProvider authenticationConfigProvider)
         {
-            _accessTokenConfiguration = accessTokenOption.Value;
-            _refreshTokenConfiguration = refreshTokenOption.Value;
-            _authenticationConfiguration = authenticationOption.Value;
-
-            if (tokenSignatureOption.Value != null)
-                _tokenSignatureOption = tokenSignatureOption.Value;
+            _authenticationConfigProvider = authenticationConfigProvider;
         }
 
         [HttpGet]
@@ -55,19 +41,14 @@ namespace IdentityAuthentication.Application.Controllers
         {
             var config = new IdentityAuthenticationConfiguration
             {
-                AccessTokenConfiguration = _accessTokenConfiguration,
-                AuthenticationConfiguration = _authenticationConfiguration,
-                RefreshTokenConfiguration = _refreshTokenConfiguration,
+                AccessTokenConfiguration = _authenticationConfigProvider.AccessToken,
+                AuthenticationConfiguration = _authenticationConfigProvider.Authentication,
+                RefreshTokenConfiguration = _authenticationConfigProvider.RefreshToken,
             };
 
-            if (_accessTokenConfiguration.TokenType == TokenType.JWT && _tokenSignatureConfiguration != null && _tokenSignatureConfiguration.IsRsaSignature)
+            if (_authenticationConfigProvider.Authentication.IsJwtAndRsaSignature && _authenticationConfigProvider.RsaSignature != null)
             {
-                config.RsaVerifySignatureConfiguration = new RsaVerifySignatureConfiguration
-                {
-                    RSAKeyType = _tokenSignatureConfiguration.RsaSignature.RSAKeyType,
-                    PublicKey = _tokenSignatureConfiguration.RsaSignature.PublicKey,
-                    AlgorithmType = _tokenSignatureConfiguration.RsaSignature.AlgorithmType,
-                };
+                config.RsaVerifySignatureConfiguration = _authenticationConfigProvider.RsaSignature.BuildRsaVerifySignatureConfiguration();
             }
 
             return Ok(config);
