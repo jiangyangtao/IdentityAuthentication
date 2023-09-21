@@ -1,5 +1,6 @@
 ﻿using IdentityAuthentication.Abstractions;
 using IdentityAuthentication.Application.Dto;
+using IdentityAuthentication.Core;
 using IdentityAuthentication.Model.Configurations;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -10,7 +11,7 @@ namespace IdentityAuthentication.Application.Controllers
 {
     public class TokenController : BaseController
     {
-        private readonly IAuthenticationProvider _authenticationProvider;
+        private readonly IAuthenticationHandler _authenticationHandler;
         private readonly AuthenticationConfigurationBase _authenticationConfiguration;
 
         public TokenController(IAuthenticationProvider authenticationProvider, IOptions<AuthenticationConfigurationBase> authenticationOption)

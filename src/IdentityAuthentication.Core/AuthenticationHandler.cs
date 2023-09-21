@@ -6,12 +6,12 @@ using Newtonsoft.Json.Linq;
 
 namespace IdentityAuthentication.Core
 {
-    internal class AuthenticationHandldr : IAuthenticationHandler
+    internal class AuthenticationHandler : IAuthenticationHandler
     {
         private readonly IAuthenticationProvider _authenticationProvider;
         private readonly ITokenProvider _tokenProvider;
 
-        public AuthenticationHandldr(
+        public AuthenticationHandler(
            ITokenProviderFactory tokenProviderFactory,
            IAuthenticationProvider authenticationProvider)
         {
