@@ -11,13 +11,13 @@ namespace IdentityAuthentication.Application.Controllers
 {
     public class TokenController : BaseController
     {
-        private readonly IAuthenticationHandler _authenticationHandler;
+        private readonly IIdentityAuthenticationProvider _identityAuthenticationProvider;
         private readonly AuthenticationConfigurationBase _authenticationConfiguration;
 
-        public TokenController(IAuthenticationProvider authenticationProvider, IOptions<AuthenticationConfigurationBase> authenticationOption)
+        public TokenController(IOptions<AuthenticationConfigurationBase> authenticationOption, IIdentityAuthenticationProvider identityAuthenticationProvider)
         {
-            _authenticationProvider = authenticationProvider;
             _authenticationConfiguration = authenticationOption.Value;
+            _identityAuthenticationProvider = identityAuthenticationProvider;
         }
 
         [HttpPost]
