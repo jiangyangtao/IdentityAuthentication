@@ -8,12 +8,12 @@ namespace IdentityAuthentication.Core
 {
     internal class IdentityAuthenticationProvider : IIdentityAuthenticationProvider
     {
-        private readonly IAuthenticationProvider _authenticationProvider;
+        private readonly IAuthenticationService _authenticationProvider;
         private readonly ITokenProvider _tokenProvider;
 
         public IdentityAuthenticationProvider(
            ITokenProviderFactory tokenProviderFactory,
-           IAuthenticationProvider authenticationProvider)
+           IAuthenticationService authenticationProvider)
         {
             _tokenProvider = tokenProviderFactory.CreateTokenService();
             _authenticationProvider = authenticationProvider;

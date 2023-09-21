@@ -11,7 +11,7 @@ namespace IdentityAuthentication.Authentication
         public static IServiceCollection AddAuthentication(this IServiceCollection services)
         {
             services.AddSingleton<AuthenticationHandle>();
-            services.AddSingleton<IAuthenticationProvider, AuthenticationProvider>();
+            services.AddSingleton<IAuthenticationService, AuthenticationService>();
 
             var serviceProvider = services.BuildServiceProvider();
             var configuration = serviceProvider.GetRequiredService<IConfiguration>();
