@@ -6,10 +6,11 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json.Linq;
 using System.Reflection;
+using IdentityAuthentication.Core.Abstractions;
 
 namespace IdentityAuthentication.Core
 {
-    internal class AuthenticationHandle
+    internal class AuthenticationHandler : IAuthenticationHandler
     {
         private readonly GrantDefaultConfiguration _grantDefaults;
         private readonly IServiceProvider _serviceProvider;
@@ -18,12 +19,12 @@ namespace IdentityAuthentication.Core
         private readonly MethodInfo ExecuteAuthenticateMethod;
         private readonly MethodInfo ExecuteIdentityCheckMethod;
 
-        public AuthenticationHandle(IServiceProvider serviceProvider, IOptions<GrantDefaultConfiguration> grantDefaultsOptions)
+        public AuthenticationHandler(IServiceProvider serviceProvider, IOptions<GrantDefaultConfiguration> grantDefaultsOptions)
         {
             _serviceProvider = serviceProvider;
             _grantDefaults = grantDefaultsOptions.Value;
 
-            var authenticationHandleType = typeof(AuthenticationHandle);
+            var authenticationHandleType = typeof(AuthenticationHandler);
             ExecuteAuthenticateMethod = authenticationHandleType.GetMethod(nameof(ExecuteAuthenticateAsync), BindingFlags.NonPublic | BindingFlags.Instance);
             ExecuteIdentityCheckMethod = authenticationHandleType.GetMethod(nameof(ExecuteIdentityCheckAsync), BindingFlags.NonPublic | BindingFlags.Instance);
 

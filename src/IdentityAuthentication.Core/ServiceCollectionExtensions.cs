@@ -6,6 +6,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Builder;
 using IdentityAuthentication.Extensions;
+using IdentityAuthentication.Core.Abstractions;
 
 namespace IdentityAuthentication.Core
 {
@@ -19,7 +20,7 @@ namespace IdentityAuthentication.Core
             services.AddAuthenticationConfiguration(configuration);
             services.AddToken();
 
-            services.AddSingleton<AuthenticationHandle>();
+            services.AddSingleton<IAuthenticationHandler, AuthenticationHandler>();
             services.AddSingleton<IAuthenticationProvider, AuthenticationProvider>();
             services.AddSingleton<IAuthenticationConfigurationProvider, AuthenticationConfigurationProvider>();
 

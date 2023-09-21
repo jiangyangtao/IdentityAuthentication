@@ -1,4 +1,5 @@
 ﻿using IdentityAuthentication.Abstractions;
+using IdentityAuthentication.Core.Abstractions;
 using IdentityAuthentication.Token.Abstractions;
 using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json.Linq;
@@ -7,12 +8,12 @@ namespace IdentityAuthentication.Core
 {
     internal class AuthenticationProvider : IAuthenticationProvider
     {
-        private readonly AuthenticationHandle _authenticationHandle;
+        private readonly IAuthenticationHandler _authenticationHandle;
         private readonly ITokenProvider _tokenProvider;
 
         public AuthenticationProvider(
            ITokenProviderFactory tokenProviderFactory,
-           AuthenticationHandle authenticationHandle)
+           AuthenticationHandler authenticationHandle)
         {
             _tokenProvider = tokenProviderFactory.CreateTokenService();
             _authenticationHandle = authenticationHandle;
