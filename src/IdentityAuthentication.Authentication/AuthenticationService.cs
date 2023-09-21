@@ -5,14 +5,16 @@ namespace IdentityAuthentication.Authentication
 {
     internal class AuthenticationService : IAuthenticationService
     {
-        public Task<IAuthenticationResult> AuthenticateAsync(JObject credentialObject)
+        private readonly AuthenticationHandle _authenticationHandle;
+
+        public AuthenticationService(AuthenticationHandle authenticationHandle)
         {
-            throw new NotImplementedException();
+            _authenticationHandle = authenticationHandle;
         }
 
-        public Task<bool> AuthenticateAsync(IAuthenticationResult authenticationResult)
-        {
-            throw new NotImplementedException();
-        }
+        public Task<IAuthenticationResult> AuthenticateAsync(JObject credentialObject) => _authenticationHandle.AuthenticateAsync(credentialObject);
+
+
+        public Task<bool> AuthenticateAsync(IAuthenticationResult authenticationResult) => _authenticationHandle.AuthenticateAsync(authenticationResult);
     }
 }

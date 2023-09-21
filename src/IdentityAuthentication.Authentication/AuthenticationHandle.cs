@@ -63,7 +63,7 @@ namespace IdentityAuthentication.Authentication
             return result;
         }
 
-        public async Task<bool> IdentityCheckAsync(IAuthenticationResult authenticationResult)
+        public async Task<bool> AuthenticateAsync(IAuthenticationResult authenticationResult)
         {
             var credentialObject = JObject.FromObject(authenticationResult);
 
