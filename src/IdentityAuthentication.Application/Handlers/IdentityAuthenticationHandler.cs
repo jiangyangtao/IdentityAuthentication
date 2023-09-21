@@ -1,4 +1,5 @@
 ﻿using IdentityAuthentication.Abstractions;
+using IdentityAuthentication.Core;
 using IdentityAuthentication.Model.Extensions;
 using IdentityAuthentication.Model.Handlers;
 using IdentityAuthentication.Model.Handles;
@@ -14,19 +15,19 @@ namespace IdentityAuthentication.Application.Handlers
     public class IdentityAuthenticationHandler : AuthenticationHandler<IdentityAuthenticationSchemeOptions>
     {
         private readonly AuthenticateResult EmptyAuthenticateSuccessResult;
-        private readonly IAuthenticationProvider _authenticationProvider;
+        private readonly IIdentityAuthenticationProvider _identityAuthenticationProvider;
 
         public IdentityAuthenticationHandler(
             IOptionsMonitor<IdentityAuthenticationSchemeOptions> options,
             ILoggerFactory logger,
             UrlEncoder encoder,
             ISystemClock clock,
-            IAuthenticationProvider authenticationProvider)
+            IIdentityAuthenticationProvider identityAuthenticationProvider)
             : base(options, logger, encoder, clock)
         {
             var ticket = new AuthenticationTicket(new ClaimsPrincipal(), IdentityAuthenticationDefaultKeys.AuthenticationScheme);
             EmptyAuthenticateSuccessResult = AuthenticateResult.Success(ticket);
-            _authenticationProvider = authenticationProvider;
+            _identityAuthenticationProvider = identityAuthenticationProvider;
         }
 
         protected new IdentityAuthenticationEvents Events
@@ -59,7 +60,7 @@ namespace IdentityAuthentication.Application.Handlers
                 if (token.IsNullOrEmpty()) return AuthenticateResult.NoResult();
             }
 
-            var tokenValidationResult = await _authenticationProvider.ValidateTokenAsync(token);
+            var tokenValidationResult = await _identityAuthenticationProvider.ValidateTokenAsync(token);
             if (tokenValidationResult.IsValid == false) return AuthenticateResult.NoResult();
 
             var principal = tokenValidationResult.ClaimsIdentity.ToClaimsPrincipal();

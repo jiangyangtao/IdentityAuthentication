@@ -1,10 +1,8 @@
 ﻿using IdentityAuthentication.Abstractions;
 using IdentityAuthentication.Application.Dto;
 using IdentityAuthentication.Core;
-using IdentityAuthentication.Model.Configurations;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Options;
 using Newtonsoft.Json.Linq;
 
 namespace IdentityAuthentication.Application.Controllers
@@ -12,12 +10,12 @@ namespace IdentityAuthentication.Application.Controllers
     public class TokenController : BaseController
     {
         private readonly IIdentityAuthenticationProvider _identityAuthenticationProvider;
-        private readonly AuthenticationConfigurationBase _authenticationConfiguration;
+        private readonly IAuthenticationConfigurationProvider _authenticationConfigProvider;
 
-        public TokenController(IOptions<AuthenticationConfigurationBase> authenticationOption, IIdentityAuthenticationProvider identityAuthenticationProvider)
+        public TokenController(IIdentityAuthenticationProvider identityAuthenticationProvider, IAuthenticationConfigurationProvider authenticationConfigProvider)
         {
-            _authenticationConfiguration = authenticationOption.Value;
             _identityAuthenticationProvider = identityAuthenticationProvider;
+            _authenticationConfigProvider = authenticationConfigProvider;
         }
 
         [HttpPost]
@@ -25,10 +23,10 @@ namespace IdentityAuthentication.Application.Controllers
         [ProducesResponseType(typeof(TokenResult), 200)]
         public async Task<IActionResult> Generate([FromBody] JObject credentialData)
         {
-            var token = await _authenticationProvider.AuthenticateAsync(credentialData);
+            var token = await _identityAuthenticationProvider.AuthenticateAsync(credentialData);
             if (token == null) return new NotFoundResult();
 
-            using var factory = new TokenResultFactory(token, _authenticationConfiguration.TokenType);
+            using var factory = new TokenResultFactory(token, _authenticationConfigProvider.Authentication.TokenType);
             var result = factory.CreateTokenResult();
 
             return Ok(result);
@@ -38,14 +36,14 @@ namespace IdentityAuthentication.Application.Controllers
         [ProducesResponseType(typeof(AccessTokenResult), 200)]
         public async Task<IActionResult> Refresh()
         {
-            var token = await _authenticationProvider.RefreshTokenAsync();
+            var token = await _identityAuthenticationProvider.RefreshTokenAsync();
             return Ok(new AccessTokenResult(token));
         }
 
         [HttpPost]
         public async Task<IActionResult> Authorize()
         {
-            var result = await _authenticationProvider.GetTokenInfoAsync();
+            var result = await _identityAuthenticationProvider.GetTokenInfoAsync();
             return Ok(result);
         }
     }

@@ -3,8 +3,8 @@ using IdentityAuthentication.Application;
 using IdentityAuthentication.Application.Filters;
 using IdentityAuthentication.Application.GrpcServices;
 using IdentityAuthentication.Application.Handlers;
+using IdentityAuthentication.Authentication;
 using IdentityAuthentication.Core;
-using IdentityAuthentication.Model;
 using IdentityAuthentication.Model.Handlers;
 using IdentityAuthentication.Model.Handles;
 using Microsoft.IdentityModel.Tokens;
@@ -67,7 +67,7 @@ services.AddAuthentication(options =>
     {
         OnMessageReceived = context =>
         {
-            context.Token = context.Request.Query[HttpHeaderKeyDefaults.AccessToken];
+            context.Token = context.Request.Query[IdentityAuthenticationDefaultKeys.AccessToken];
             return Task.CompletedTask;
         },
         OnAuthenticationFailed = context =>
