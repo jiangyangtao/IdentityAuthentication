@@ -32,7 +32,7 @@ namespace IdentityAuthentication.Authentication
 
         private static IDictionary<string, Type> GetCredentialTypes()
         {
-            var assembly = AuthenticationAssemblieBuilder.Authentications.FirstOrDefault(a => a.FullName.Contains("Abstractions"));
+            var assembly = AuthenticationAssemblyBuilder.Authentications.FirstOrDefault(a => a.FullName.Contains("Abstractions"));
             var credentialType = typeof(ICredential);
             var types = assembly.GetTypes();
 
