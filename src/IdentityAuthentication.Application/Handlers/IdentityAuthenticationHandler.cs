@@ -15,14 +15,14 @@ namespace IdentityAuthentication.Application.Handlers
     public class IdentityAuthenticationHandler : AuthenticationHandler<IdentityAuthenticationSchemeOptions>
     {
         private readonly AuthenticateResult EmptyAuthenticateSuccessResult;
-        private readonly IIdentityAuthenticationProvider _identityAuthenticationProvider;
+        private readonly IAuthenticationProvider _identityAuthenticationProvider;
 
         public IdentityAuthenticationHandler(
             IOptionsMonitor<IdentityAuthenticationSchemeOptions> options,
             ILoggerFactory logger,
             UrlEncoder encoder,
             ISystemClock clock,
-            IIdentityAuthenticationProvider identityAuthenticationProvider)
+            IAuthenticationProvider identityAuthenticationProvider)
             : base(options, logger, encoder, clock)
         {
             var ticket = new AuthenticationTicket(new ClaimsPrincipal(), IdentityAuthenticationDefaultKeys.AuthenticationScheme);

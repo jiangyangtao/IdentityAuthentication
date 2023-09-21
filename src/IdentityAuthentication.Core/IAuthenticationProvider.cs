@@ -4,7 +4,7 @@ using Newtonsoft.Json.Linq;
 
 namespace IdentityAuthentication.Core
 {
-    public interface IIdentityAuthenticationProvider
+    public interface IAuthenticationProvider
     {
         Task<IToken> AuthenticateAsync(JObject credentialObject);
 

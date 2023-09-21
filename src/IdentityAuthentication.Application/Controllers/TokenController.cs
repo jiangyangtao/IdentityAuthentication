@@ -9,10 +9,10 @@ namespace IdentityAuthentication.Application.Controllers
 {
     public class TokenController : BaseController
     {
-        private readonly IIdentityAuthenticationProvider _identityAuthenticationProvider;
+        private readonly IAuthenticationProvider _identityAuthenticationProvider;
         private readonly IAuthenticationConfigurationProvider _authenticationConfigProvider;
 
-        public TokenController(IIdentityAuthenticationProvider identityAuthenticationProvider, IAuthenticationConfigurationProvider authenticationConfigProvider)
+        public TokenController(IAuthenticationProvider identityAuthenticationProvider, IAuthenticationConfigurationProvider authenticationConfigProvider)
         {
             _identityAuthenticationProvider = identityAuthenticationProvider;
             _authenticationConfigProvider = authenticationConfigProvider;

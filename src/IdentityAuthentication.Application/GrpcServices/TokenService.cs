@@ -12,10 +12,10 @@ namespace IdentityAuthentication.Application.GrpcServices
     [Authorize]
     public class TokenService : TokenGrpcProvider.TokenGrpcProviderBase
     {
-        private readonly IIdentityAuthenticationProvider _identityAuthenticationProvider;
+        private readonly IAuthenticationProvider _identityAuthenticationProvider;
         private readonly IAuthenticationConfigurationProvider _authenticationConfigProvider;
 
-        public TokenService(IIdentityAuthenticationProvider identityAuthenticationProvider, IAuthenticationConfigurationProvider authenticationConfigProvider)
+        public TokenService(IAuthenticationProvider identityAuthenticationProvider, IAuthenticationConfigurationProvider authenticationConfigProvider)
         {
             _identityAuthenticationProvider = identityAuthenticationProvider;
             _authenticationConfigProvider = authenticationConfigProvider;
