@@ -139,8 +139,8 @@ namespace IdentityAuthentication.Token
             var dic = new Dictionary<string, string>
             {
                 {UserIdKey, UserId},
-                {UserIdKey,Username},
-                {GrantSourceKey,GrantType},
+                {UsernameKey,Username},
+                {GrantTypeKey,GrantType},
                 {GrantSourceKey,GrantSource},
                 {ClientKey,Client},
             };
