@@ -13,10 +13,6 @@ namespace IdentityAuthentication.Cache
             var serviceProvider = services.BuildServiceProvider();
             var configuration = serviceProvider.GetRequiredService<IConfiguration>();
 
-            var authenticationConfig = configuration.GetSection(AuthenticationConfiguration.ConfigurationKey);
-            var tokenType = authenticationConfig.GetValue<TokenType>(nameof(AuthenticationConfiguration.TokenType));
-            if (tokenType != TokenType.Reference) return services;
-
             var cacheStorage = configuration.GetSection(CacheStorageConfiguration.ConfigurationKey);
             services.Configure<CacheStorageConfiguration>(cacheStorage);
 

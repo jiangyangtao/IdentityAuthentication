@@ -5,7 +5,7 @@ using Microsoft.Extensions.Options;
 
 namespace IdentityAuthentication.Cache
 {
-    internal class CacheProviderFactory: ICacheProviderFactory
+    internal class CacheProviderFactory : ICacheProviderFactory
     {
         private readonly IServiceProvider _serviceProvider;
         private readonly CacheStorageConfiguration _cacheStorageConfiguration;

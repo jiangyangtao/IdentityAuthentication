@@ -1,34 +1,35 @@
 ﻿using Authentication.Abstractions;
-using IdentityAuthentication.Configuration;
 using IdentityAuthentication.Abstractions;
+using IdentityAuthentication.Core.Abstractions;
 using IdentityAuthentication.Extensions;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Options;
 using Newtonsoft.Json.Linq;
 using System.Reflection;
-using IdentityAuthentication.Core.Abstractions;
 
 namespace IdentityAuthentication.Core
 {
     internal class AuthenticationHandler : IAuthenticationHandler
     {
-        private readonly GrantDefaultConfiguration _grantDefaults;
         private readonly IServiceProvider _serviceProvider;
-        private readonly IDictionary<string, Type> CredentialTypes;
+        private readonly IAuthenticationConfigurationProvider _authenticationConfigurationProvider;
 
+        private readonly IDictionary<string, Type> CredentialTypes;
         private readonly MethodInfo ExecuteAuthenticateMethod;
         private readonly MethodInfo ExecuteIdentityCheckMethod;
 
-        public AuthenticationHandler(IServiceProvider serviceProvider, IOptions<GrantDefaultConfiguration> grantDefaultsOptions)
+
+        public AuthenticationHandler(
+            IServiceProvider serviceProvider,
+            IAuthenticationConfigurationProvider authenticationConfigurationProvider)
         {
             _serviceProvider = serviceProvider;
-            _grantDefaults = grantDefaultsOptions.Value;
 
             var authenticationHandleType = typeof(AuthenticationHandler);
             ExecuteAuthenticateMethod = authenticationHandleType.GetMethod(nameof(ExecuteAuthenticateAsync), BindingFlags.NonPublic | BindingFlags.Instance);
             ExecuteIdentityCheckMethod = authenticationHandleType.GetMethod(nameof(ExecuteIdentityCheckAsync), BindingFlags.NonPublic | BindingFlags.Instance);
 
             CredentialTypes = GetCredentialTypes();
+            _authenticationConfigurationProvider = authenticationConfigurationProvider;
         }
 
         private static IDictionary<string, Type> GetCredentialTypes()
@@ -78,13 +79,13 @@ namespace IdentityAuthentication.Core
         private ICredential GetCredential(JObject credentialObject)
         {
             if (credentialObject.ContainsKey(ICredential.GrantTypePropertyName) == false)
-                credentialObject[ICredential.GrantTypePropertyName] = _grantDefaults.GrantTypeDefault;
+                credentialObject[ICredential.GrantTypePropertyName] = _authenticationConfigurationProvider.GrantDefault.GrantTypeDefault;
 
             if (credentialObject.ContainsKey(ICredential.GrantSourcePropertyName) == false)
-                credentialObject[ICredential.GrantSourcePropertyName] = _grantDefaults.GrantSourceDefault;
+                credentialObject[ICredential.GrantSourcePropertyName] = _authenticationConfigurationProvider.GrantDefault.GrantSourceDefault;
 
             if (credentialObject.ContainsKey(ICredential.ClientPropertyName) == false)
-                credentialObject[ICredential.ClientPropertyName] = _grantDefaults.ClientDefault;
+                credentialObject[ICredential.ClientPropertyName] = _authenticationConfigurationProvider.GrantDefault.ClientDefault;
 
             var grantType = credentialObject[ICredential.GrantTypePropertyName].Value<string>();
             if (CredentialTypes.ContainsKey(grantType) == false) throw new Exception($"Unknown GrantType: {grantType}");

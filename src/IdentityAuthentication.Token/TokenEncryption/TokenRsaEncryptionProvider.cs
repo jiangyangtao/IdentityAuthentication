@@ -19,7 +19,7 @@ namespace IdentityAuthentication.Token.TokenEncryption
             RsaEncryptionConfiguration = authenticationConfigurationProvider.RsaEncryption;
             Rsa = RSA.Create();
             Rsa.ImportPrivateKey(RsaEncryptionConfiguration.RSAKeyType, RsaEncryptionConfiguration.PrivateKey);
-            Rsa.ImportPrivateKey(RsaEncryptionConfiguration.RSAKeyType, RsaEncryptionConfiguration.PublicKey);
+            Rsa.ImportPublicKey(RsaEncryptionConfiguration.RSAKeyType, RsaEncryptionConfiguration.PublicKey);
         }
 
         public TokenEncryptionType EncryptionType => TokenEncryptionType.Rsa;

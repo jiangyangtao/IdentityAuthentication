@@ -13,7 +13,7 @@ namespace IdentityAuthentication.Core
 
         public AuthenticationProvider(
            ITokenProviderFactory tokenProviderFactory,
-           AuthenticationHandler authenticationHandle)
+           IAuthenticationHandler authenticationHandle)
         {
             _tokenProvider = tokenProviderFactory.CreateTokenService();
             _authenticationHandle = authenticationHandle;
