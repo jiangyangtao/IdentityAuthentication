@@ -1,4 +1,5 @@
 ﻿using IdentityAuthentication.Abstractions;
+using IdentityAuthentication.Configuration;
 using IdentityAuthentication.Extensions;
 using IdentityAuthentication.Model;
 using IdentityAuthentication.Model.Configurations;
@@ -41,13 +42,13 @@ namespace IdentityAuthentication.Application.Controllers
         {
             var config = new IdentityAuthenticationConfiguration
             {
-                AccessTokenConfiguration = _authenticationConfigProvider.AccessToken,
                 AuthenticationConfiguration = _authenticationConfigProvider.Authentication,
-                RefreshTokenConfiguration = _authenticationConfigProvider.RefreshToken,
             };
 
             if (_authenticationConfigProvider.Authentication.IsJwtAndRsaSignature && _authenticationConfigProvider.RsaSignature != null)
             {
+                config.AccessTokenConfiguration = _authenticationConfigProvider.AccessToken;
+                config.RefreshTokenConfiguration = _authenticationConfigProvider.RefreshToken;
                 config.RsaVerifySignatureConfiguration = _authenticationConfigProvider.RsaSignature.BuildRsaVerifySignatureConfiguration();
             }
 

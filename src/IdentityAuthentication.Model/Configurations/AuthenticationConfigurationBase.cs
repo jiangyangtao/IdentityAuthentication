@@ -1,9 +1,12 @@
 ﻿using IdentityAuthentication.Model.Enums;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 
 namespace IdentityAuthentication.Model.Configurations
 {
     public abstract class AuthenticationConfigurationBase
     {
+        [JsonConverter(typeof(StringEnumConverter))]
         public TokenType TokenType { set; get; } = TokenType.JWT;
 
         /// <summary>

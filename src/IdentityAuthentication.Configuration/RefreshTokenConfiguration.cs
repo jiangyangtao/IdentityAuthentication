@@ -1,4 +1,5 @@
 ﻿using IdentityAuthentication.Model.Models;
+using Newtonsoft.Json;
 
 namespace IdentityAuthentication.Configuration
 {
@@ -6,6 +7,6 @@ namespace IdentityAuthentication.Configuration
     {
         public const string ConfigurationKey = "RefreshToken";
 
-        public DateTime TokenExpirationTime => DateTime.Now.AddDays(ExpirationTime);
+        public override DateTime TokenExpirationTime => DateTime.Now.AddDays(ExpirationTime);
     }
 }

@@ -1,5 +1,6 @@
 ﻿
 using IdentityAuthentication.Model.Models;
+using Newtonsoft.Json;
 
 namespace IdentityAuthentication.Model.Configurations
 {
@@ -9,6 +10,6 @@ namespace IdentityAuthentication.Model.Configurations
 
         public const string ConfigurationKey = "AccessToken";
 
-        public DateTime TokenExpirationTime => DateTime.Now.AddSeconds(ExpirationTime);
+        public override DateTime TokenExpirationTime => DateTime.Now.AddSeconds(ExpirationTime);
     }
 }
