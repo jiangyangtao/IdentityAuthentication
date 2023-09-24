@@ -71,7 +71,7 @@ namespace IdentityAuthentication.Token
             var token = await _cacheProvider.GetAsync<TokenInfo>(_httpTokenProvider.AccessToken);
             if (token == null) return null;
 
-            return token.AuthenticationResult;
+            return token.GetAuthenticationResult();
         }
 
         public async Task<IReadOnlyDictionary<string, string>?> GetTokenInfoAsync()

@@ -58,7 +58,7 @@ namespace IdentityAuthentication.Token
             if (r == false) return Task.FromResult(string.Empty);
 
             tokenInfo.ExpirationTime = tokenInfo.IssueTime.AddSeconds(1);
-            var json = tokenInfo.ToString();
+            var json = tokenInfo.ToJson();
             var accessToken = _tokenEncryptionProvider.Encrypt(json);
             return Task.FromResult(accessToken);
         }
@@ -70,7 +70,7 @@ namespace IdentityAuthentication.Token
             tokenInfo.IssueTime = DateTime.Now;
             tokenInfo.NotBefore = DateTime.Now;
 
-            var json = tokenInfo.ToString();
+            var json = tokenInfo.ToJson();
             var accessToken = _tokenEncryptionProvider.Encrypt(json);
             var token = TokenResult.CreateToken(accessToken, _configurationProvider.AccessToken.ExpirationTime, tokenInfo.BuildDictionary());
             return Task.FromResult(token);
@@ -81,7 +81,7 @@ namespace IdentityAuthentication.Token
             var (r, tokenInfo) = ValidateAccessToken();
             if (r == false) throw new SecurityTokenDecryptionFailedException("Authentication failed");
 
-            return Task.FromResult(tokenInfo.AuthenticationResult);
+            return Task.FromResult(tokenInfo.GetAuthenticationResult());
         }
 
         public async Task<IReadOnlyDictionary<string, string>?> GetTokenInfoAsync()
@@ -99,7 +99,7 @@ namespace IdentityAuthentication.Token
             if (r == false) return Task.FromResult(string.Empty);
 
             tokenInfo.ExpirationTime = _configurationProvider.AccessToken.TokenExpirationTime;
-            var json = tokenInfo.ToString();
+            var json = tokenInfo.ToJson();
             var accessToken = _tokenEncryptionProvider.Encrypt(json);
             return Task.FromResult(accessToken);
 

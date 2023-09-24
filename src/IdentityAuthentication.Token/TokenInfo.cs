@@ -12,16 +12,6 @@ namespace IdentityAuthentication.Token
         {
         }
 
-        private TokenInfo(IAuthenticationResult result)
-        {
-            UserId = result.UserId;
-            Username = result.Username;
-            GrantSource = result.GrantSource;
-            GrantType = result.GrantType;
-            Client = result.Client;
-            Metadata = result.Metadata;
-        }
-
         public string UserId { set; get; }
 
         public string Username { set; get; }
@@ -80,6 +70,8 @@ namespace IdentityAuthentication.Token
         /// <returns></returns>
         public override string ToString() => JsonConvert.SerializeObject(this);
 
+        public string ToJson() => JsonConvert.SerializeObject(this);
+
         public Claim[] BuildClaims()
         {
             var claims = new List<Claim>
@@ -131,7 +123,7 @@ namespace IdentityAuthentication.Token
             }
         }
 
-        public IAuthenticationResult AuthenticationResult => this;
+        public IAuthenticationResult GetAuthenticationResult() => this;
 
 
         public IReadOnlyDictionary<string, string> BuildDictionary()
@@ -169,7 +161,15 @@ namespace IdentityAuthentication.Token
 
         #region Static Methods  
 
-        public static TokenInfo CreateToken(IAuthenticationResult result) => new(result);
+        public static TokenInfo CreateToken(IAuthenticationResult result) => new()
+        {
+            UserId = result.UserId,
+            Username = result.Username,
+            GrantSource = result.GrantSource,
+            GrantType = result.GrantType,
+            Client = result.Client,
+            Metadata = result.Metadata
+        };
 
         public static bool TryParse(IDictionary<string, object> claimDictionary, out TokenInfo? tokenInfo)
         {

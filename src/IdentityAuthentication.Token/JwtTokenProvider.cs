@@ -66,7 +66,7 @@ namespace IdentityAuthentication.Token
         {
             var accessTokenInfo = _httpTokenProvider.AccessTokenInfo ?? throw new Exception("Authentication failed");
 
-            return Task.FromResult(accessTokenInfo.AuthenticationResult);
+            return Task.FromResult(accessTokenInfo.GetAuthenticationResult());
         }
 
         public Task<IReadOnlyDictionary<string, string>?> GetTokenInfoAsync()
