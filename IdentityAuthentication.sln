@@ -33,6 +33,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IdentityAuthentication.Conf
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IdentityAuthentication.Abstractions", "src\IdentityAuthentication.Abstractions\IdentityAuthentication.Abstractions.csproj", "{D1573396-F99A-4F85-9E3A-25669088195E}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "protos", "protos", "{F1AD5862-FCC7-4CE6-B6E4-08873F86D845}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
