@@ -1,4 +1,6 @@
-﻿namespace IdentityAuthentication.Model.Handles
+﻿using System.Security.Claims;
+
+namespace IdentityAuthentication.Model.Handles
 {
     public static class IdentityAuthenticationDefaultKeys
     {
@@ -11,5 +13,11 @@
         public const string RefreToken = "refresh-token";
 
         public const string Authorization = "Authorization";
+
+        public const string Expiration = ClaimTypes.Expiration;
+
+        public const string NotBefore = nameof(NotBefore);
+
+        public const string IssueTime = nameof(IssueTime);
     }
 }

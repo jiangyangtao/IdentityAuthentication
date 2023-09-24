@@ -1,6 +1,7 @@
 ﻿using IdentityAuthentication.Abstractions;
 using IdentityAuthentication.Extensions;
 using IdentityAuthentication.Model.Extensions;
+using IdentityAuthentication.Model.Handles;
 using Newtonsoft.Json;
 using System.Security.Claims;
 
@@ -42,11 +43,11 @@ namespace IdentityAuthentication.Token
 
         public static string ClientKey = nameof(Client);
 
-        public static string NotBeforeKey = nameof(NotBefore);
+        public static string NotBeforeKey = IdentityAuthenticationDefaultKeys.NotBefore;
 
-        public static string IssueTimeKey = nameof(IssueTime);
+        public static string IssueTimeKey = IdentityAuthenticationDefaultKeys.IssueTime;
 
-        public static string ExpirationKey = ClaimTypes.Expiration;
+        public static string ExpirationKey = IdentityAuthenticationDefaultKeys.Expiration;
 
         public static string[] TokenPropertyKeys = new string[]
         {
