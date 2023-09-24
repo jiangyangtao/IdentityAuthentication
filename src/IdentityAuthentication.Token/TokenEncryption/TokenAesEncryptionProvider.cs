@@ -1,7 +1,9 @@
 ﻿using IdentityAuthentication.Abstractions;
 using IdentityAuthentication.Configuration.Enums;
 using IdentityAuthentication.Token.Abstractions;
+using Newtonsoft.Json.Linq;
 using System.Security.Cryptography;
+using System.Text;
 
 namespace IdentityAuthentication.Token.TokenEncryption
 {
@@ -24,20 +26,17 @@ namespace IdentityAuthentication.Token.TokenEncryption
 
         public string Decrypt(string token)
         {
+            var valueBytes = Convert.FromBase64String(token);
             var cryptoTransform = Aes.CreateDecryptor();
-            return AesHandle(token, cryptoTransform);
+            var resultArray = cryptoTransform.TransformFinalBlock(valueBytes, 0, valueBytes.Length);
+            return Encoding.UTF8.GetString(resultArray);
         }
 
         public string Encrypt(string token)
         {
+            var bytes = Encoding.UTF8.GetBytes(token);
             var cryptoTransform = Aes.CreateEncryptor();
-            return AesHandle(token, cryptoTransform);
-        }
-
-        private static string AesHandle(string value, ICryptoTransform cryptoTransform)
-        {
-            var valueBytes = Convert.FromBase64String(value);
-            var resultArray = cryptoTransform.TransformFinalBlock(valueBytes, 0, valueBytes.Length);
+            var resultArray = cryptoTransform.TransformFinalBlock(bytes, 0, bytes.Length);
             return Convert.ToBase64String(resultArray);
         }
     }
