@@ -1,7 +1,4 @@
-﻿
-using System.Security.Claims;
-
-namespace IdentityAuthentication.Model.Handles
+﻿namespace IdentityAuthentication.Model.Handles
 {
     public static class IdentityAuthenticationDefaultKeys
     {

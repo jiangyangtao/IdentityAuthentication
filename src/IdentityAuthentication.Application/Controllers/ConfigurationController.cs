@@ -1,5 +1,4 @@
 ﻿using IdentityAuthentication.Abstractions;
-using IdentityAuthentication.Configuration;
 using IdentityAuthentication.Extensions;
 using IdentityAuthentication.Model;
 using IdentityAuthentication.Model.Configurations;
