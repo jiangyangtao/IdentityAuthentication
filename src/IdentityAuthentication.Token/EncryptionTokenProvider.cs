@@ -58,7 +58,7 @@ namespace IdentityAuthentication.Token
             if (r == false) return Task.FromResult(string.Empty);
 
             tokenInfo.ExpirationTime = tokenInfo.IssueTime.AddSeconds(1);
-            var json = tokenInfo.ToJson();
+            var json = tokenInfo.ToString();
             var accessToken = _tokenEncryptionProvider.Encrypt(json);
             return Task.FromResult(accessToken);
         }
@@ -70,7 +70,7 @@ namespace IdentityAuthentication.Token
             tokenInfo.IssueTime = DateTime.Now;
             tokenInfo.NotBefore = DateTime.Now;
 
-            var json = tokenInfo.ToJson();
+            var json = tokenInfo.ToString();
             var accessToken = _tokenEncryptionProvider.Encrypt(json);
             var token = TokenResult.CreateToken(accessToken, _configurationProvider.AccessToken.ExpirationTime, tokenInfo.BuildDictionary());
             return Task.FromResult(token);
@@ -99,7 +99,7 @@ namespace IdentityAuthentication.Token
             if (r == false) return Task.FromResult(string.Empty);
 
             tokenInfo.ExpirationTime = _configurationProvider.AccessToken.TokenExpirationTime;
-            var json = tokenInfo.ToJson();
+            var json = tokenInfo.ToString();
             var accessToken = _tokenEncryptionProvider.Encrypt(json);
             return Task.FromResult(accessToken);
 

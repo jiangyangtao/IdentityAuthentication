@@ -71,8 +71,6 @@ namespace IdentityAuthentication.Token
         /// <returns></returns>
         public override string ToString() => JsonConvert.SerializeObject(this);
 
-        public string ToJson() => JsonConvert.SerializeObject(this);
-
         public Claim[] BuildClaims()
         {
             var claims = new List<Claim>
