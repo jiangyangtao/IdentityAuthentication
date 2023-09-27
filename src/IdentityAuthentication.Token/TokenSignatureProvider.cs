@@ -2,9 +2,7 @@
 using IdentityAuthentication.Model;
 using IdentityAuthentication.Token.Abstractions;
 using Microsoft.IdentityModel.Tokens;
-using Org.BouncyCastle.Crypto.Parameters;
 using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
 
 namespace IdentityAuthentication.Token
 {
