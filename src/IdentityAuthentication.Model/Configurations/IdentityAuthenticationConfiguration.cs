@@ -8,11 +8,11 @@ namespace IdentityAuthentication.Model.Configurations
         {
         }
 
-        public AuthenticationConfigurationBase AuthenticationConfiguration { set; get; }
+        public AuthenticationBaseConfiguration AuthenticationConfiguration { set; get; }
 
         public AccessTokenConfiguration AccessTokenConfiguration { set; get; }
 
-        public TokenConfigurationBase RefreshTokenConfiguration { set; get; }
+        public TokenBaseConfiguration RefreshTokenConfiguration { set; get; }
 
         public RsaVerifySignatureConfiguration? RsaVerifySignatureConfiguration { set; get; }
     }

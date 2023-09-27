@@ -4,7 +4,7 @@ using Newtonsoft.Json.Converters;
 
 namespace IdentityAuthentication.Model.Configurations
 {
-    public abstract class AuthenticationConfigurationBase
+    public class AuthenticationBaseConfiguration
     {
         [JsonConverter(typeof(StringEnumConverter))]
         public TokenType TokenType { set; get; } = TokenType.JWT;

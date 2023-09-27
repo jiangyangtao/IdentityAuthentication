@@ -8,30 +8,30 @@ namespace IdentityAuthentication.Model
 {
     public class TokenValidation : IDisposable
     {
-        private readonly TokenConfigurationBase Token;
+        private readonly TokenBaseConfiguration Token;
         private readonly Credentials Credentials;
 
-        private TokenValidation([NotNull] TokenConfigurationBase token)
+        private TokenValidation([NotNull] TokenBaseConfiguration token)
         {
             Token = token;
         }
 
-        public TokenValidation([NotNull] TokenConfigurationBase token, [NotNull] Credentials credentials) : this(token)
+        public TokenValidation([NotNull] TokenBaseConfiguration token, [NotNull] Credentials credentials) : this(token)
         {
             Credentials = credentials;
         }
 
-        public TokenValidation([NotNull] TokenConfigurationBase token, [NotNull] RsaSignature rsaSignature) : this(token)
+        public TokenValidation([NotNull] TokenBaseConfiguration token, [NotNull] RsaSignature rsaSignature) : this(token)
         {
             Credentials = new Credentials(rsaSignature);
         }
 
-        public TokenValidation([NotNull] TokenConfigurationBase token, [NotNull] SymmetricSignature signature) : this(token)
+        public TokenValidation([NotNull] TokenBaseConfiguration token, [NotNull] SymmetricSignature signature) : this(token)
         {
             Credentials = new Credentials(signature);
         }
 
-        public TokenValidation([NotNull] TokenConfigurationBase token, [NotNull] string signingKey, [NotNull] string algorithm) : this(token)
+        public TokenValidation([NotNull] TokenBaseConfiguration token, [NotNull] string signingKey, [NotNull] string algorithm) : this(token)
         {
             Credentials = new Credentials(signingKey, algorithm);
         }

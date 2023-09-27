@@ -4,7 +4,7 @@ using Newtonsoft.Json;
 
 namespace IdentityAuthentication.Configuration
 {
-    public class AuthenticationConfiguration : AuthenticationConfigurationBase
+    public class AuthenticationConfiguration : AuthenticationBaseConfiguration
     {
         [JsonIgnore]
         public TokenSignatureType TokenSignatureType { set; get; }
