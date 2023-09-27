@@ -1,7 +1,6 @@
 ﻿using IdentityAuthentication.Cache;
 using IdentityAuthentication.Token.Abstractions;
 using IdentityAuthentication.Token.TokenEncryption;
-using IdentityAuthentication.Token.TokenSignature;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace IdentityAuthentication.Token
@@ -24,9 +23,7 @@ namespace IdentityAuthentication.Token
 
             services.AddSingleton<IHttpTokenProvider, HttpTokenProvider>();
 
-            services.AddSingleton<ITokenSignatureFactory, TokenSignatureFactory>();
-            services.AddSingleton<ITokenSignatureProvider, RsaSignatureProvider>();
-            services.AddSingleton<ITokenSignatureProvider, SymmetricSignatureProvider>();
+            services.AddSingleton<ITokenSignatureProvider, TokenSignatureProvider>();
 
             return services;
         }

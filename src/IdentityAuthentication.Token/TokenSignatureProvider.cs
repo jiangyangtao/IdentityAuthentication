@@ -5,27 +5,37 @@ using IdentityAuthentication.Token.Abstractions;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 
-namespace IdentityAuthentication.Token.TokenSignature
+namespace IdentityAuthentication.Token
 {
-    internal class RsaSignatureProvider : ITokenSignatureProvider
+    internal class TokenSignatureProvider : ITokenSignatureProvider
     {
         private readonly IAuthenticationConfigurationProvider _configurationProvider;
         private readonly Credentials PrivateCredentials;
         private readonly Credentials PublicCredentials;
         private readonly JwtSecurityTokenHandler _jwtSecurityTokenHandler;
 
-        public RsaSignatureProvider(IAuthenticationConfigurationProvider configurationProvider)
+        public TokenSignatureProvider(IAuthenticationConfigurationProvider configurationProvider)
         {
             if (configurationProvider.AccessToken == null) throw new ArgumentException(nameof(configurationProvider.AccessToken));
-            if (configurationProvider.RsaSignature == null) throw new ArgumentException(nameof(configurationProvider.RsaSignature));
             if (configurationProvider.Authentication.EnableTokenRefresh && configurationProvider.RefreshToken == null)
                 throw new ArgumentException(nameof(configurationProvider.RefreshToken));
 
+            if (configurationProvider.Authentication.TokenSignatureType == TokenSignatureType.Rsa)
+            {
+                if (configurationProvider.RsaSignature == null) throw new ArgumentException(nameof(configurationProvider.RsaSignature));
+                PrivateCredentials = configurationProvider.RsaSignature.GetPrivateCredentials();
+                PublicCredentials = configurationProvider.RsaSignature.GetPublicCredentials();
+            }
+
+            if (configurationProvider.Authentication.TokenSignatureType == TokenSignatureType.Symmetric)
+            {
+                if (configurationProvider.SymmetricSignature == null) throw new ArgumentException(nameof(configurationProvider.SymmetricSignature));
+
+                PrivateCredentials = new(configurationProvider.SymmetricSignature);
+                PublicCredentials = new(configurationProvider.SymmetricSignature);
+            }
 
             _configurationProvider = configurationProvider;
-            PrivateCredentials = configurationProvider.RsaSignature.GetPrivateCredentials();
-            PublicCredentials = configurationProvider.RsaSignature.GetPublicCredentials();
-
             _jwtSecurityTokenHandler = new JwtSecurityTokenHandler();
         }
 

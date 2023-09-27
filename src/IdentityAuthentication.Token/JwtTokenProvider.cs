@@ -15,11 +15,11 @@ namespace IdentityAuthentication.Token
 
         public JwtTokenProvider(
             IAuthenticationConfigurationProvider configurationProvider,
-            ITokenSignatureFactory tokenSignatureFactory,
+            ITokenSignatureProvider tokenSignatureProvider,
             IHttpTokenProvider httpTokenProvider)
         {
             _configurationProvider = configurationProvider;
-            _tokenSignatureProvider = tokenSignatureFactory.CreateTokenSignatureProvider();
+            _tokenSignatureProvider = tokenSignatureProvider;
             _httpTokenProvider = httpTokenProvider;
         }
 
