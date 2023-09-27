@@ -1,19 +1,20 @@
 ﻿using IdentityAuthentication.Abstractions;
+using IdentityAuthentication.Configuration.Enums;
 using IdentityAuthentication.Model;
 using IdentityAuthentication.Token.Abstractions;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 
-namespace IdentityAuthentication.Token
+namespace IdentityAuthentication.Token.TokenSignature
 {
-    internal class TokenSignatureProvider : ITokenSignatureProvider
+    internal class RsaSignatureProvider : ITokenSignatureProvider
     {
         private readonly IAuthenticationConfigurationProvider _configurationProvider;
         private readonly Credentials PrivateCredentials;
         private readonly Credentials PublicCredentials;
         private readonly JwtSecurityTokenHandler _jwtSecurityTokenHandler;
 
-        public TokenSignatureProvider(IAuthenticationConfigurationProvider configurationProvider)
+        public RsaSignatureProvider(IAuthenticationConfigurationProvider configurationProvider)
         {
             if (configurationProvider.AccessToken == null) throw new ArgumentException(nameof(configurationProvider.AccessToken));
             if (configurationProvider.RsaSignature == null) throw new ArgumentException(nameof(configurationProvider.RsaSignature));
@@ -27,6 +28,8 @@ namespace IdentityAuthentication.Token
 
             _jwtSecurityTokenHandler = new JwtSecurityTokenHandler();
         }
+
+        public TokenSignatureType TokenSignatureType => TokenSignatureType.Rsa;
 
         #region AccessToken
 

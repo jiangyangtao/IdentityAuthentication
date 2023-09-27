@@ -25,9 +25,8 @@ namespace IdentityAuthentication.Token
             services.AddSingleton<IHttpTokenProvider, HttpTokenProvider>();
 
             services.AddSingleton<ITokenSignatureFactory, TokenSignatureFactory>();
-            services.AddSingleton<ITokenSignatureProvider, TokenSignatureProvider>();
-
-
+            services.AddSingleton<ITokenSignatureProvider, RsaSignatureProvider>();
+            services.AddSingleton<ITokenSignatureProvider, SymmetricSignatureProvider>();
 
             return services;
         }
