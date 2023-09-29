@@ -1,5 +1,4 @@
 ﻿using IdentityAuthentication.Abstractions;
-using IdentityAuthentication.Model.Configurations;
 using IdentityAuthentication.Model.Enums;
 
 namespace IdentityAuthentication.Application.Dto
@@ -20,7 +19,7 @@ namespace IdentityAuthentication.Application.Dto
         {
             if (TokenType == TokenType.Reference)
             {
-                return new TokenResult(Token);
+                return new AccessTokenResult(Token);
             }
 
             return new RefreshTokenResult(Token);
@@ -32,19 +31,24 @@ namespace IdentityAuthentication.Application.Dto
         }
     }
 
-    public class AccessTokenResult
+    public class AccessTokenBaseResult
     {
-        public AccessTokenResult(string token)
+        public AccessTokenBaseResult(IToken token)
         {
-            access_token = token;
+            access_token = token.AccessToken;
+        }
+
+        public AccessTokenBaseResult(string accessToken)
+        {
+            access_token = accessToken;
         }
 
         public string access_token { set; get; }
     }
 
-    public class TokenResult : AccessTokenResult
+    public class AccessTokenResult : AccessTokenBaseResult
     {
-        public TokenResult(IToken token) : base(token.AccessToken)
+        public AccessTokenResult(IToken token) : base(token)
         {
             expires_in = token.ExpiresIn;
             user_info = token.UserInfo;
@@ -55,7 +59,7 @@ namespace IdentityAuthentication.Application.Dto
         public object user_info { set; get; }
     }
 
-    public class RefreshTokenResult : TokenResult
+    public class RefreshTokenResult : AccessTokenResult
     {
         public RefreshTokenResult(IToken token) : base(token)
         {

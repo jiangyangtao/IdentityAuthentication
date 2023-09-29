@@ -20,7 +20,7 @@ namespace IdentityAuthentication.Application.Controllers
 
         [HttpPost]
         [AllowAnonymous]
-        [ProducesResponseType(typeof(TokenResult), 200)]
+        [ProducesResponseType(typeof(AccessTokenResult), 200)]
         public async Task<IActionResult> Generate([FromBody] JObject credentialData)
         {
             var token = await _authenticationProvider.AuthenticateAsync(credentialData);
@@ -33,11 +33,11 @@ namespace IdentityAuthentication.Application.Controllers
         }
 
         [HttpPost]
-        [ProducesResponseType(typeof(AccessTokenResult), 200)]
+        [ProducesResponseType(typeof(AccessTokenBaseResult), 200)]
         public async Task<IActionResult> Refresh()
         {
             var token = await _authenticationProvider.RefreshTokenAsync();
-            return Ok(new AccessTokenResult(token));
+            return Ok(new AccessTokenBaseResult(token));
         }
 
         [HttpPost]

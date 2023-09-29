@@ -10,8 +10,8 @@ namespace IdentityAuthentication.Token
     internal class TokenSignatureProvider : ITokenSignatureProvider
     {
         private readonly IAuthenticationConfigurationProvider _configurationProvider;
-        private readonly Credentials PrivateCredentials;
-        private readonly Credentials PublicCredentials;
+        private readonly Credentials SignatureCredentials;
+        private readonly Credentials ValidateCredentials;
         private readonly JwtSecurityTokenHandler _jwtSecurityTokenHandler;
 
         public TokenSignatureProvider(IAuthenticationConfigurationProvider configurationProvider)
@@ -23,16 +23,16 @@ namespace IdentityAuthentication.Token
             if (configurationProvider.Authentication.TokenSignatureType == TokenSignatureType.Rsa)
             {
                 if (configurationProvider.RsaSignature == null) throw new ArgumentException(nameof(configurationProvider.RsaSignature));
-                PrivateCredentials = configurationProvider.RsaSignature.GetPrivateCredentials();
-                PublicCredentials = configurationProvider.RsaSignature.GetPublicCredentials();
+                SignatureCredentials = configurationProvider.RsaSignature.GetPrivateCredentials();
+                ValidateCredentials = configurationProvider.RsaSignature.GetPublicCredentials();
             }
 
             if (configurationProvider.Authentication.TokenSignatureType == TokenSignatureType.Symmetric)
             {
                 if (configurationProvider.SymmetricSignature == null) throw new ArgumentException(nameof(configurationProvider.SymmetricSignature));
 
-                PrivateCredentials = new(configurationProvider.SymmetricSignature);
-                PublicCredentials = new(configurationProvider.SymmetricSignature);
+                SignatureCredentials = new(configurationProvider.SymmetricSignature);
+                ValidateCredentials = new(configurationProvider.SymmetricSignature);
             }
 
             _configurationProvider = configurationProvider;
@@ -47,7 +47,7 @@ namespace IdentityAuthentication.Token
 
         public string BuildAccessToken(TokenInfo accessToken)
         {
-            AccessTokenSignature ??= new TokenValidation(_configurationProvider.AccessToken, PrivateCredentials);
+            AccessTokenSignature ??= new TokenValidation(_configurationProvider.AccessToken, SignatureCredentials);
 
             var claims = accessToken.BuildClaims();
             var securityToken = AccessTokenSignature.GenerateSecurityToken(claims, accessToken.NotBefore, accessToken.ExpirationTime);
@@ -58,7 +58,7 @@ namespace IdentityAuthentication.Token
 
         public async Task<TokenValidationResult> ValidateAccessTokenAsync(string token)
         {
-            AccessTokenValidation ??= new TokenValidation(_configurationProvider.AccessToken, PublicCredentials);
+            AccessTokenValidation ??= new TokenValidation(_configurationProvider.AccessToken, ValidateCredentials);
 
             var validationParameters = AccessTokenValidation.GenerateTokenValidation();
             return await _jwtSecurityTokenHandler.ValidateTokenAsync(token, validationParameters);
@@ -74,7 +74,7 @@ namespace IdentityAuthentication.Token
         {
             if (_configurationProvider.Authentication.EnableTokenRefresh == false) return string.Empty;
 
-            RefreshTokenSignature ??= new TokenValidation(_configurationProvider.RefreshToken, PrivateCredentials);
+            RefreshTokenSignature ??= new TokenValidation(_configurationProvider.RefreshToken, SignatureCredentials);
             var claims = refreshToken.BuildClaims();
             var securityToken = RefreshTokenSignature.GenerateSecurityToken(claims, refreshToken.NotBefore, refreshToken.ExpirationTime);
 
@@ -88,7 +88,7 @@ namespace IdentityAuthentication.Token
 
             if (_configurationProvider.Authentication.EnableTokenRefresh == false) return null;
 
-            RefreshTokenValidation ??= new TokenValidation(_configurationProvider.RefreshToken, PublicCredentials);
+            RefreshTokenValidation ??= new TokenValidation(_configurationProvider.RefreshToken, ValidateCredentials);
             var validationParameters = RefreshTokenValidation.GenerateTokenValidation();
             return await _jwtSecurityTokenHandler.ValidateTokenAsync(refreshToken, validationParameters);
         }
@@ -97,7 +97,7 @@ namespace IdentityAuthentication.Token
         {
             if (_configurationProvider.Authentication.EnableTokenRefresh == false) return null;
 
-            RefreshTokenValidation ??= new TokenValidation(_configurationProvider.RefreshToken, PublicCredentials);
+            RefreshTokenValidation ??= new TokenValidation(_configurationProvider.RefreshToken, ValidateCredentials);
             return RefreshTokenValidation.GenerateTokenValidation();
         }
 
