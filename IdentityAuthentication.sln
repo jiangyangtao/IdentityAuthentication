@@ -34,8 +34,11 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IdentityAuthentication.Abstractions", "src\IdentityAuthentication.Abstractions\IdentityAuthentication.Abstractions.csproj", "{D1573396-F99A-4F85-9E3A-25669088195E}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "protos", "protos", "{F1AD5862-FCC7-4CE6-B6E4-08873F86D845}"
+	ProjectSection(SolutionItems) = preProject
+		protos\Token.proto = protos\Token.proto
+	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Test.IdentityAuthentication.ConsoleApp", "test\Test.IdentityAuthentication.ConsoleApp\Test.IdentityAuthentication.ConsoleApp.csproj", "{42F5D931-9180-498A-A4CB-13F7C5E7D819}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Test.IdentityAuthentication.ConsoleApp", "test\Test.IdentityAuthentication.ConsoleApp\Test.IdentityAuthentication.ConsoleApp.csproj", "{42F5D931-9180-498A-A4CB-13F7C5E7D819}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
