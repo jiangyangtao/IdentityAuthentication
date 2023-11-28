@@ -40,7 +40,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "protos", "protos", "{F1AD58
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Test.IdentityAuthentication.ConsoleApp", "test\Test.IdentityAuthentication.ConsoleApp\Test.IdentityAuthentication.ConsoleApp.csproj", "{42F5D931-9180-498A-A4CB-13F7C5E7D819}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Authentication.Firm", "src\Authentications\Authentication.Firm\Authentication.Firm.csproj", "{D5632ECC-4457-4F28-BD1E-675E4D965542}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Authentication.Firm", "src\Authentications\Authentication.Firm\Authentication.Firm.csproj", "{D5632ECC-4457-4F28-BD1E-675E4D965542}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
