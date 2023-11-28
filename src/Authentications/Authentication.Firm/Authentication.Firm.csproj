@@ -6,4 +6,8 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Authentication.Abstractions\Authentication.Abstractions.csproj" />
+  </ItemGroup>
+
 </Project>
