@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
@@ -6,6 +6,10 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <PackageReference Include="FirmAccount.Authentication.GrpcClient" Version="1.0.1" />
+  </ItemGroup>
+	
   <ItemGroup>
     <ProjectReference Include="..\Authentication.Abstractions\Authentication.Abstractions.csproj" />
   </ItemGroup>

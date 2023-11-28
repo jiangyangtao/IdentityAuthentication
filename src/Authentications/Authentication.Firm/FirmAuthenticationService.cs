@@ -1,30 +1,41 @@
-﻿using Authentication.Abstractions.Credentials;
-using Authentication.Abstractions;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Authentication.Abstractions;
+using Authentication.Abstractions.Credentials;
+using FirmAccount.Authentication.GrpcClient;
 using IdentityAuthentication.Abstractions;
 
 namespace Authentication.Firm
 {
     public class FirmAuthenticationService : IAuthenticationService<PasswordCredential>
     {
-        public FirmAuthenticationService()
+        private readonly IUserAuthenticationProvider _userAuthenticationProvider;
+
+        public FirmAuthenticationService(IUserAuthenticationProvider userAuthenticationProvider)
         {
+            _userAuthenticationProvider = userAuthenticationProvider;
         }
 
         public string GrantSource => "Firm";
 
-        public Task<IAuthenticationResult> AuthenticateAsync(PasswordCredential credential)
+        public async Task<IAuthenticationResult> AuthenticateAsync(PasswordCredential credential)
         {
-            throw new NotImplementedException();
+            var r = await _userAuthenticationProvider.LoginAsync(credential.Username, credential.Password);
+            if (r.Result == null) throw new Exception(r.Error.Message);
+
+            var user = r.Result;
+            var metadata = new Dictionary<string, string> {
+                {"FirmCode",user.FirmCode },
+                {"FirmAccountName",user.FirmAccountName },
+                {"UserType",user.UserType.ToString() },
+            };
+            return credential.CreateAuthenticationResult(user.UserId, metadata, username: user.Username);
         }
 
-        public Task<bool> IdentityValidationAsync(string id, string username)
+        public async Task<bool> IdentityValidationAsync(string id, string username)
         {
-            throw new NotImplementedException();
+            var r = await _userAuthenticationProvider.ValidationAsync(id);
+            if (r == null) return false;
+
+            return true;
         }
     }
 }
