@@ -11,10 +11,21 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
+
+// Add services to the container.
 var services = builder.Services;
 var configuration = builder.Configuration;
 
-// Add services to the container.
+
+
+services.AddCors(options =>
+{
+    options.AddDefaultPolicy(policy =>
+    {
+        policy.SetIsOriginAllowed(_ => true).AllowAnyHeader().AllowAnyMethod().AllowCredentials();
+    });
+});
+
 services.AddControllers(options =>
 {
     options.Filters.Add<ExceptionFilter>();
@@ -42,15 +53,6 @@ services.AddVersionedApiExplorer(options =>
 });
 services.AddSwaggerGen();
 services.AddIdentityAuthentication();
-
-
-services.AddCors(options =>
-{
-    options.AddDefaultPolicy(policy =>
-    {
-        policy.SetIsOriginAllowed(_ => true).AllowAnyHeader().AllowAnyMethod().AllowCredentials();
-    });
-});
 
 services.AddAuthentication(options =>
 {
@@ -100,7 +102,7 @@ app.UseCors();
 app.UseAuthentication();
 app.UseIdentityAuthentication();
 app.UseAuthorization();
-
+app.UseApiVersioning();
 app.MapControllers();
 app.MapGrpcService<TokenService>();
 
