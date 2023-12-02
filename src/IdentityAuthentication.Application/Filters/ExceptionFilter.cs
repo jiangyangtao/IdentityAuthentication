@@ -28,8 +28,8 @@ namespace IdentityAuthentication.Application.Filters
             context.HttpContext.Response.StatusCode = 400;
             context.HttpContext.Response.ContentType = $"{MediaTypeNames.Text.Plain};charset=utf-8";
 
-            var result = ErrorContext.Exception.Message;
-            await context.HttpContext.Response.WriteAsync(result);
+            //var result = ErrorContext.Exception.Message;
+            await context.HttpContext.Response.CompleteAsync();
         }
     }
 }

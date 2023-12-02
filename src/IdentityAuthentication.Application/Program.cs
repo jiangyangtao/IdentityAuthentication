@@ -97,13 +97,14 @@ if (app.Environment.IsDevelopment())
 }
 
 //app.UseHttpsRedirection();
-app.UseCors();
+
 
 app.UseAuthentication();
 app.UseIdentityAuthentication();
 app.UseAuthorization();
 app.UseApiVersioning();
 app.MapControllers();
+app.UseCors();
 app.MapGrpcService<TokenService>();
 
 app.Map("/", () => "Hello, IdentityAuthentication");
