@@ -19,7 +19,9 @@ namespace IdentityAuthentication.Extensions
         {
             if (request == null) return string.Empty;
 
-            return $"{request.Scheme}://{request.Host}";
+            var r = request.Headers.TryGetValue("X-Forwarded-Proto", out StringValues schemeValues);
+            var scheme = r ? schemeValues.ToString() : request.Scheme;
+            return $"{scheme}://{request.Host}";
         }
     }
 }
